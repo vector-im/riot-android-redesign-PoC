@@ -89,7 +89,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
     private fun handleMarkAsRead(roomId: String) {
         activeSessionHolder.getActiveSession().let { session ->
             session.getRoom(roomId)
-                    ?.markAsRead(ReadService.MarkAsReadParams.READ_RECEIPT, NoOpMatrixCallback())
+                    ?.markAsRead(ReadService.MarkAsReadParams.BOTH, NoOpMatrixCallback())
         }
     }
 

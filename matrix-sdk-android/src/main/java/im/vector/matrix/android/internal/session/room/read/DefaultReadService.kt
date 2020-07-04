@@ -86,6 +86,15 @@ internal class DefaultReadService @AssistedInject constructor(
         return isEventRead(monarchy.realmConfiguration, userId, roomId, eventId)
     }
 
+    override fun getReadMarker(): Optional<String> {
+        var res: String? = null
+        monarchy.doWithRealm { realm ->
+            val readMarkerEntity = ReadMarkerEntity.where(realm, roomId = roomId).findFirst()
+            res = readMarkerEntity?.eventId
+        }
+        return Optional(res)
+    }
+
     override fun getReadMarkerLive(): LiveData<Optional<String>> {
         val liveRealmData = monarchy.findAllMappedWithChanges(
                 { ReadMarkerEntity.where(it, roomId) },

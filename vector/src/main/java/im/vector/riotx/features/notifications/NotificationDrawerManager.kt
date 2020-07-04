@@ -48,8 +48,7 @@ class NotificationDrawerManager @Inject constructor(private val context: Context
                                                     private val stringProvider: StringProvider,
                                                     private val activeSessionHolder: ActiveSessionHolder,
                                                     private val iconLoader: IconLoader,
-                                                    private val bitmapLoader: BitmapLoader,
-                                                    private val outdatedDetector: OutdatedEventDetector?) {
+                                                    private val bitmapLoader: BitmapLoader) {
 
     private val handlerThread: HandlerThread = HandlerThread("NotificationDrawerManager", Thread.MIN_PRIORITY)
     private var backgroundHandler: Handler
@@ -229,7 +228,7 @@ class NotificationDrawerManager @Inject constructor(private val context: Context
                         val roomId = event.roomId
                         val roomEvents = roomIdToEventMap.getOrPut(roomId) { ArrayList() }
 
-                        if (shouldIgnoreMessageEventInRoom(roomId) || outdatedDetector?.isMessageOutdated(event) == true) {
+                        if (shouldIgnoreMessageEventInRoom(roomId)) {
                             // forget this event
                             eventIterator.remove()
                         } else {
@@ -277,7 +276,27 @@ class NotificationDrawerManager @Inject constructor(private val context: Context
 
                 val largeBitmap = getRoomBitmap(events)
 
-                for (event in events) {
+                var unreadEvents : MutableList<NotifiableMessageEvent> = events
+
+                val readMarker = activeSessionHolder.getSafeActiveSession()?.getRoom(roomId)?.getReadMarker()?.getOrNull()
+                if (readMarker != null) {
+                    unreadEvents = ArrayList()
+                    events.sortBy { it.timestamp }
+                    var readFromHere: Boolean = false
+                    for (event in events.reversed()) {
+                        if (readMarker == event.eventId) {
+                            readFromHere = true
+                        }
+                        if (readFromHere) {
+                            eventList.remove(event)
+                        } else {
+                            unreadEvents.add(event)
+                        }
+                    }
+                    unreadEvents.reverse()
+                }
+
+                for (event in unreadEvents) {
                     // if all events in this room have already been displayed there is no need to update it
                     if (!event.hasBeenDisplayed && !event.isRedacted) {
                         roomEventGroupInfo.shouldBing = roomEventGroupInfo.shouldBing || event.noisy

@@ -53,6 +53,11 @@ interface ReadService {
     fun isEventRead(eventId: String): Boolean
 
     /**
+     * Returns the read marker id for the room.
+     */
+    fun getReadMarker(): Optional<String>
+
+    /**
      * Returns a live read marker id for the room.
      */
     fun getReadMarkerLive(): LiveData<Optional<String>>

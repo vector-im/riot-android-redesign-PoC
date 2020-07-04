@@ -5,7 +5,7 @@ Features ✨:
  -
 
 Improvements 🙌:
- -
+ - Use read marker instead of read receipts to handle notifications visibility
 
 Bugfix 🐛:
  - Fix crash when coming from a notification (#1601)
