@@ -11,6 +11,7 @@ Improvements 🙌:
 Bugfix 🐛:
  - Clear the notification when the event is read elsewhere (#1822)
  - Speakerphone is not used for ringback tone (#1644, #1645)
+ - Loudspeaker is always used (#1685)
 
 Translations 🗣:
  -

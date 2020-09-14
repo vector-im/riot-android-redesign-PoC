@@ -55,6 +55,8 @@ class CallAudioManager(
 
     private var bluetoothAdapter: BluetoothAdapter? = null
 
+    private var currentCall: MxCall? = null
+
     init {
         executor.execute {
             audioManager = applicationContext.getSystemService()
@@ -92,6 +94,7 @@ class CallAudioManager(
     }
 
     fun startForCall(mxCall: MxCall) {
+        currentCall = mxCall
         Timber.v("## VOIP: AudioManager startForCall ${mxCall.callId}")
         val audioManager = audioManager ?: return
         savedIsSpeakerPhoneOn = audioManager.isSpeakerphoneOn
@@ -121,6 +124,7 @@ class CallAudioManager(
     }
 
     private fun adjustCurrentSoundDevice(mxCall: MxCall) {
+        currentCall = mxCall
         val audioManager = audioManager ?: return
         executor.execute {
             if (mxCall.state == CallState.LocalRinging && !isHeadsetOn()) {
@@ -250,10 +254,12 @@ class CallAudioManager(
             if (event.plugged && getCurrentSoundDevice() == SoundDevice.SPEAKER) {
                 setCurrentSoundDevice(CallAudioManager.SoundDevice.HEADSET)
             } else if (!event.plugged) {
-                // if it's unplugged ? always route to speaker?
-                // this is questionable?
                 if (!wantsBluetoothConnection) {
-                    setCurrentSoundDevice(SoundDevice.SPEAKER)
+                    if (currentCall?.isVideoCall == true || currentCall?.state == CallState.LocalRinging) {
+                        setCurrentSoundDevice(SoundDevice.SPEAKER)
+                    } else {
+                        setCurrentSoundDevice(SoundDevice.PHONE)
+                    }
                 }
             }
             configChange?.invoke()
