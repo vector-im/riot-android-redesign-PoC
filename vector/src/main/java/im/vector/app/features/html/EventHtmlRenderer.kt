@@ -21,7 +21,12 @@ import android.text.Spannable
 import androidx.core.text.toSpannable
 import im.vector.app.core.resources.ColorProvider
 import io.noties.markwon.Markwon
+import io.noties.markwon.MarkwonPlugin
+import io.noties.markwon.ext.latex.JLatexMathPlugin
+import io.noties.markwon.ext.latex.JLatexMathTheme
 import io.noties.markwon.html.HtmlPlugin
+import io.noties.markwon.html.TagHandlerNoOp
+import io.noties.markwon.inlineparser.MarkwonInlineParserPlugin
 import org.commonmark.node.Node
 import timber.log.Timber
 import javax.inject.Inject
@@ -37,7 +42,14 @@ class EventHtmlRenderer @Inject constructor(htmlConfigure: MatrixHtmlPluginConfi
 
     private val markwon = Markwon.builder(context)
             .usePlugin(HtmlPlugin.create(htmlConfigure))
+            .usePlugin(MarkwonInlineParserPlugin.create())
+            .usePlugin(JLatexMathPlugin.create(44F) { builder ->
+                builder.inlinesEnabled(true)
+                builder.theme().inlinePadding(JLatexMathTheme.Padding.symmetric(24, 8))
+            })
             .build()
+
+    val plugins: List<MarkwonPlugin> = markwon.plugins
 
     fun parse(text: String): Node {
         return markwon.parse(text)
