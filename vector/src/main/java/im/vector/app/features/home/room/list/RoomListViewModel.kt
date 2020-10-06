@@ -22,6 +22,9 @@ import com.airbnb.mvrx.ViewModelContext
 import im.vector.app.core.extensions.exhaustive
 import im.vector.app.core.platform.VectorViewModel
 import im.vector.app.core.utils.DataSource
+import im.vector.app.features.home.RoomListDisplayMode
+import im.vector.app.features.settings.VectorPreferences
+import io.reactivex.schedulers.Schedulers
 import org.matrix.android.sdk.api.MatrixCallback
 import org.matrix.android.sdk.api.NoOpMatrixCallback
 import org.matrix.android.sdk.api.extensions.orFalse
@@ -29,14 +32,14 @@ import org.matrix.android.sdk.api.session.Session
 import org.matrix.android.sdk.api.session.room.model.Membership
 import org.matrix.android.sdk.api.session.room.model.RoomSummary
 import org.matrix.android.sdk.api.session.room.model.tag.RoomTag
-import io.reactivex.schedulers.Schedulers
 import org.matrix.android.sdk.rx.rx
 import timber.log.Timber
 import javax.inject.Inject
 
 class RoomListViewModel @Inject constructor(initialState: RoomListViewState,
                                             private val session: Session,
-                                            private val roomSummariesSource: DataSource<List<RoomSummary>>)
+                                            private val roomSummariesSource: DataSource<List<RoomSummary>>,
+                                            private val vectorPreferences: VectorPreferences)
     : VectorViewModel<RoomListViewState, RoomListAction, RoomListViewEvents>(initialState) {
 
     interface Factory {
@@ -64,6 +67,7 @@ class RoomListViewModel @Inject constructor(initialState: RoomListViewState,
         when (action) {
             is RoomListAction.SelectRoom                  -> handleSelectRoom(action)
             is RoomListAction.ToggleCategory              -> handleToggleCategory(action)
+            is RoomListAction.ChangeCategoryMode          -> handleChangeCategoryMode(action)
             is RoomListAction.AcceptInvitation            -> handleAcceptInvitation(action)
             is RoomListAction.RejectInvitation            -> handleRejectInvitation(action)
             is RoomListAction.FilterWith                  -> handleFilter(action)
@@ -82,6 +86,10 @@ class RoomListViewModel @Inject constructor(initialState: RoomListViewState,
 
     private fun handleToggleCategory(action: RoomListAction.ToggleCategory) = setState {
         this.toggle(action.category)
+    }
+
+    private fun handleChangeCategoryMode(action: RoomListAction.ChangeCategoryMode) = setState {
+        this.setMode(action.category, action.newCategoryMode)
     }
 
     private fun handleFilter(action: RoomListAction.FilterWith) {
@@ -212,34 +220,75 @@ class RoomListViewModel @Inject constructor(initialState: RoomListViewState,
     }
 
     private fun buildRoomSummaries(rooms: List<RoomSummary>): RoomSummaries {
-        // Set up init size on directChats and groupRooms as they are the biggest ones
         val invites = ArrayList<RoomSummary>()
-        val favourites = ArrayList<RoomSummary>()
+        val others = ArrayList<RoomSummary>(rooms.size)
+        val favorite = ArrayList<RoomSummary>()
         val directChats = ArrayList<RoomSummary>(rooms.size)
         val groupRooms = ArrayList<RoomSummary>(rooms.size)
         val lowPriorities = ArrayList<RoomSummary>()
         val serverNotices = ArrayList<RoomSummary>()
 
-        rooms
-                .filter { roomListDisplayModeFilter.test(it) }
-                .forEach { room ->
-                    val tags = room.tags.map { it.name }
-                    when {
-                        room.membership == Membership.INVITE          -> invites.add(room)
-                        tags.contains(RoomTag.ROOM_TAG_SERVER_NOTICE) -> serverNotices.add(room)
-                        tags.contains(RoomTag.ROOM_TAG_FAVOURITE)     -> favourites.add(room)
-                        tags.contains(RoomTag.ROOM_TAG_LOW_PRIORITY)  -> lowPriorities.add(room)
-                        room.isDirect                                 -> directChats.add(room)
-                        else                                          -> groupRooms.add(room)
+        if (vectorPreferences.labUseTabNavigation()) {
+            rooms
+                    .filter { roomListDisplayModeFilter.test(it) }
+                    .forEach { room ->
+                        if (room.membership == Membership.INVITE) {
+                            invites.add(room)
+                        } else {
+                            val tags = room.tags.map { it.name }
+                            if (vectorPreferences.labPinFavInTabNavigation() && tags.contains(RoomTag.ROOM_TAG_FAVOURITE)) {
+                                favorite.add(room)
+                            } else others.add(room)
+                        }
                     }
+            return RoomSummaries().apply {
+                if (vectorPreferences.labPinFavInTabNavigation()) {
+                    put(RoomCategory.FAVOURITE, favorite)
                 }
-        return RoomSummaries().apply {
-            put(RoomCategory.INVITE, invites)
-            put(RoomCategory.FAVOURITE, favourites)
-            put(RoomCategory.DIRECT, directChats)
-            put(RoomCategory.GROUP, groupRooms)
-            put(RoomCategory.LOW_PRIORITY, lowPriorities)
-            put(RoomCategory.SERVER_NOTICE, serverNotices)
+                put(RoomCategory.INVITE, invites)
+                put(RoomCategory.CHATS, others)
+            }
+        } else {
+            rooms
+                    .filter { roomListDisplayModeFilter.test(it) }
+                    .forEach { room ->
+                        val tags = room.tags.map { it.name }
+
+                        if (displayMode == RoomListDisplayMode.ALL) {
+                            if (room.membership == Membership.INVITE) {
+                                invites.add(room)
+                            } else {
+                                if (vectorPreferences.labPinFavInTabNavigation() && tags.contains(RoomTag.ROOM_TAG_FAVOURITE)) {
+                                    favorite.add(room)
+                                } else others.add(room)
+                            }
+                        } else {
+                            when {
+                                room.membership == Membership.INVITE          -> invites.add(room)
+                                tags.contains(RoomTag.ROOM_TAG_SERVER_NOTICE) -> serverNotices.add(room)
+                                tags.contains(RoomTag.ROOM_TAG_FAVOURITE)     -> favorite.add(room)
+                                tags.contains(RoomTag.ROOM_TAG_LOW_PRIORITY)  -> lowPriorities.add(room)
+                                room.isDirect                                 -> directChats.add(room)
+                                else                                          -> groupRooms.add(room)
+                            }
+                        }
+                    }
+            return RoomSummaries().apply {
+                put(RoomCategory.INVITE, invites)
+
+                if (displayMode == RoomListDisplayMode.ALL) {
+                    if (vectorPreferences.labPinFavInTabNavigation())  {
+                        put(RoomCategory.FAVOURITE, favorite)
+                    }
+                    put(RoomCategory.CHATS, others)
+                } else {
+                    put(RoomCategory.FAVOURITE, favorite)
+                    put(RoomCategory.DIRECT, directChats)
+                    put(RoomCategory.GROUP, groupRooms)
+                    put(RoomCategory.LOW_PRIORITY, lowPriorities)
+                    put(RoomCategory.SERVER_NOTICE, serverNotices)
+                }
+            }
         }
     }
 }

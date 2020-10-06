@@ -16,25 +16,44 @@
 
 package im.vector.app.features.home.room.list
 
-import androidx.annotation.StringRes
+import android.os.Handler
+import android.view.View
 import com.airbnb.epoxy.EpoxyController
 import im.vector.app.R
 import im.vector.app.core.epoxy.helpFooterItem
+import im.vector.app.core.resources.ColorProvider
+import im.vector.app.core.resources.DrawableProvider
 import im.vector.app.core.resources.StringProvider
 import im.vector.app.core.resources.UserPreferencesProvider
+import im.vector.app.core.ui.list.genericFooterItem
+import im.vector.app.core.utils.DebouncedClickListener
+import im.vector.app.features.home.AvatarRenderer
 import im.vector.app.features.home.RoomListDisplayMode
+import im.vector.app.features.home.room.detail.timeline.EpoxyControllerDiffHandler
+import im.vector.app.features.home.room.detail.timeline.EpoxyControllerModelHandler
 import im.vector.app.features.home.room.filtered.FilteredRoomFooterItem
 import im.vector.app.features.home.room.filtered.filteredRoomFooterItem
+import im.vector.app.features.home.room.list.grid.roomGridItem
+import im.vector.app.features.settings.VectorPreferences
 import org.matrix.android.sdk.api.session.room.members.ChangeMembershipState
 import org.matrix.android.sdk.api.session.room.model.Membership
 import org.matrix.android.sdk.api.session.room.model.RoomSummary
+import org.matrix.android.sdk.api.util.toMatrixItem
 import javax.inject.Inject
 
 class RoomSummaryController @Inject constructor(private val stringProvider: StringProvider,
                                                 private val roomSummaryItemFactory: RoomSummaryItemFactory,
                                                 private val roomListNameFilter: RoomListNameFilter,
-                                                private val userPreferencesProvider: UserPreferencesProvider
-) : EpoxyController() {
+                                                private val userPreferencesProvider: UserPreferencesProvider,
+                                                private val avatarRenderer: AvatarRenderer,
+                                                private val vectorPreferences: VectorPreferences,
+                                                private val drawableProvider: DrawableProvider,
+                                                private val colorProvider: ColorProvider,
+                                                @EpoxyControllerModelHandler
+                                                private val backgroundModelHandler: Handler,
+                                                @EpoxyControllerDiffHandler
+                                                private val backgroundDiffHandler: Handler
+) : EpoxyController(backgroundModelHandler, backgroundDiffHandler) {
 
     var listener: Listener? = null
 
@@ -73,6 +92,7 @@ class RoomSummaryController @Inject constructor(private val stringProvider: Stri
                 .filter { it.membership == Membership.JOIN && roomListNameFilter.test(it) }
 
         buildRoomModels(filteredSummaries,
+                RoomListViewState.CategoryMode.List,
                 viewState.roomMembershipChanges,
                 emptySet())
 
@@ -82,21 +102,52 @@ class RoomSummaryController @Inject constructor(private val stringProvider: Stri
     private fun buildRooms(viewState: RoomListViewState) {
         var showHelp = false
         val roomSummaries = viewState.asyncFilteredRooms()
+        if (vectorPreferences.labUseTabNavigation() && vectorPreferences.labPinFavInTabNavigation()
+                && !roomSummaries?.get(RoomCategory.FAVOURITE).isNullOrEmpty()) {
+            genericFooterItem {
+                id("Top Spacing")
+                text(" ")
+                spanSizeOverride { _, _, _ -> spanCount }
+            }
+        }
         roomSummaries?.forEach { (category, summaries) ->
             if (summaries.isEmpty()) {
                 return@forEach
             } else {
                 val isExpanded = viewState.isCategoryExpanded(category)
-                buildRoomCategory(viewState, summaries, category.titleRes, viewState.isCategoryExpanded(category)) {
-                    listener?.onToggleRoomCategory(category)
-                }
-                if (isExpanded) {
+                val mode = viewState.getCategoryMode(category)
+                if (vectorPreferences.labUseTabNavigation()) {
                     buildRoomModels(summaries,
+                            mode,
                             viewState.roomMembershipChanges,
                             emptySet())
                     // Never set showHelp to true for invitation
                     if (category != RoomCategory.INVITE) {
                         showHelp = userPreferencesProvider.shouldShowLongClickOnRoomHelp()
+                    }
+                } else {
+                    buildRoomCategory(
+                            viewState,
+                            category,
+                            summaries,
+                            isExpanded,
+                            mode,
+                            { newMode ->
+                                listener?.onChangeModeRoomCategory(category, newMode)
+                            },
+                            {
+                                listener?.onToggleRoomCategory(category)
+                            }
+                    )
+                    if (isExpanded) {
+                        buildRoomModels(summaries,
+                                mode,
+                                viewState.roomMembershipChanges,
+                                emptySet())
+                        // Never set showHelp to true for invitation
+                        if (category != RoomCategory.INVITE) {
+                            showHelp = userPreferencesProvider.shouldShowLongClickOnRoomHelp()
+                        }
                     }
                 }
             }
@@ -111,6 +162,7 @@ class RoomSummaryController @Inject constructor(private val stringProvider: Stri
         helpFooterItem {
             id("long_click_help")
             text(stringProvider.getString(R.string.help_long_click_on_room_for_more_options))
+            spanSizeOverride { _, _, _ -> spanCount }
         }
     }
 
@@ -119,13 +171,16 @@ class RoomSummaryController @Inject constructor(private val stringProvider: Stri
             id("filter_footer")
             listener(listener)
             currentFilter(viewState.roomFilter)
+            spanSizeOverride { _, _, _ -> spanCount }
         }
     }
 
     private fun buildRoomCategory(viewState: RoomListViewState,
+                                  category: RoomCategory,
                                   summaries: List<RoomSummary>,
-                                  @StringRes titleRes: Int,
                                   isExpanded: Boolean,
+                                  mode: RoomListViewState.CategoryMode,
+                                  changeModeListener: (RoomListViewState.CategoryMode) -> Unit,
                                   mutateExpandedState: () -> Unit) {
         // TODO should add some business logic later
         val unreadCount = if (summaries.isEmpty()) {
@@ -135,33 +190,73 @@ class RoomSummaryController @Inject constructor(private val stringProvider: Stri
         }
         val showHighlighted = summaries.any { it.highlightCount > 0 }
         roomCategoryItem {
-            id(titleRes)
-            title(stringProvider.getString(titleRes))
+            id(category.titleRes)
+            title(stringProvider.getString(category.titleRes))
             expanded(isExpanded)
             unreadNotificationCount(unreadCount)
             showHighlighted(showHighlighted)
+            showSwitchMode(category != RoomCategory.INVITE)
+            mode(mode)
             listener {
                 mutateExpandedState()
                 update(viewState)
             }
+            changeModeListener(changeModeListener)
+            spanSizeOverride { _, _, _ -> spanCount }
         }
     }
 
     private fun buildRoomModels(summaries: List<RoomSummary>,
+                                mode: RoomListViewState.CategoryMode,
                                 roomChangedMembershipStates: Map<String, ChangeMembershipState>,
                                 selectedRoomIds: Set<String>) {
-        summaries.forEach { roomSummary ->
-            roomSummaryItemFactory
-                    .create(roomSummary,
-                            roomChangedMembershipStates,
-                            selectedRoomIds,
-                            listener)
-                    .addTo(this)
+        when (mode) {
+            RoomListViewState.CategoryMode.List ->
+                summaries.forEach { roomSummary ->
+                    roomSummaryItemFactory
+                            .create(roomSummary,
+                                    roomChangedMembershipStates,
+                                    selectedRoomIds,
+                                    spanCount,
+                                    listener)
+                            .addTo(this)
+                }
+            RoomListViewState.CategoryMode.Grid -> {
+                // Use breadcrumbs for the moment
+                summaries.forEach { roomSummary ->
+                    roomGridItem {
+                        id(roomSummary.roomId)
+                        hasTypingUsers(roomSummary.typingUsers.isNotEmpty())
+                        avatarRenderer(avatarRenderer)
+                        matrixItem(roomSummary.toMatrixItem())
+                        apply {
+                            if (roomSummary.isFavorite) {
+                                textDrawableLeft(drawableProvider.getDrawable(R.drawable.ic_star_green_24dp))
+                            }
+                        }
+
+                        unreadNotificationCount(roomSummary.notificationCount)
+                        showHighlighted(roomSummary.highlightCount > 0)
+                        hasUnreadMessage(roomSummary.hasUnreadMessages)
+                        hasDraft(roomSummary.userDrafts.isNotEmpty())
+                        itemLongClickListener { _ ->
+                            listener?.onRoomLongClicked(roomSummary) ?: false
+                        }
+                        itemClickListener(
+                                DebouncedClickListener(View.OnClickListener { _ ->
+                                    listener?.onRoomClicked(roomSummary)
+                                })
+                        )
+                        spanCount
+                    }
+                }
+            }
         }
     }
 
     interface Listener : FilteredRoomFooterItem.FilteredRoomFooterItemListener {
         fun onToggleRoomCategory(roomCategory: RoomCategory)
+        fun onChangeModeRoomCategory(roomCategory: RoomCategory, newMode: RoomListViewState.CategoryMode)
         fun onRoomClicked(room: RoomSummary)
         fun onRoomLongClicked(room: RoomSummary): Boolean
         fun onRejectRoomInvitation(room: RoomSummary)

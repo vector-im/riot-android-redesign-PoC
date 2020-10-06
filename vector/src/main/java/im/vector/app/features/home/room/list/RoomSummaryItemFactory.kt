@@ -41,18 +41,25 @@ class RoomSummaryItemFactory @Inject constructor(private val displayableEventFor
     fun create(roomSummary: RoomSummary,
                roomChangeMembershipStates: Map<String, ChangeMembershipState>,
                selectedRoomIds: Set<String>,
+               spanCount: Int,
                listener: RoomSummaryController.Listener?): VectorEpoxyModel<*> {
         return when (roomSummary.membership) {
             Membership.INVITE -> {
                 val changeMembershipState = roomChangeMembershipStates[roomSummary.roomId] ?: ChangeMembershipState.Unknown
-                createInvitationItem(roomSummary, changeMembershipState, listener)
+                createInvitationItem(roomSummary, changeMembershipState, spanCount, listener)
             }
-            else              -> createRoomItem(roomSummary, selectedRoomIds, listener?.let { it::onRoomClicked }, listener?.let { it::onRoomLongClicked })
+            else              -> createRoomItem(roomSummary,
+                    selectedRoomIds,
+                    spanCount,
+                    listener?.let { it::onRoomClicked },
+                    listener?.let { it::onRoomLongClicked }
+            )
         }
     }
 
     private fun createInvitationItem(roomSummary: RoomSummary,
                                      changeMembershipState: ChangeMembershipState,
+                                     spanCount: Int,
                                      listener: RoomSummaryController.Listener?): VectorEpoxyModel<*> {
         val secondLine = if (roomSummary.isDirect) {
             roomSummary.inviterId
@@ -71,11 +78,13 @@ class RoomSummaryItemFactory @Inject constructor(private val displayableEventFor
                 .acceptListener { listener?.onAcceptRoomInvitation(roomSummary) }
                 .rejectListener { listener?.onRejectRoomInvitation(roomSummary) }
                 .listener { listener?.onRoomClicked(roomSummary) }
+                .spanSizeOverride { _, _, _ -> spanCount }
     }
 
     fun createRoomItem(
             roomSummary: RoomSummary,
             selectedRoomIds: Set<String>,
+            spanCount: Int,
             onClick: ((RoomSummary) -> Unit)?,
             onLongClick: ((RoomSummary) -> Boolean)?
     ): VectorEpoxyModel<*> {
@@ -113,5 +122,6 @@ class RoomSummaryItemFactory @Inject constructor(private val displayableEventFor
                             onClick?.invoke(roomSummary)
                         })
                 )
+                .spanSizeOverride { _, _, _ -> spanCount }
     }
 }

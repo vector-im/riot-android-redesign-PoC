@@ -19,5 +19,5 @@ package im.vector.app.features.home
 import im.vector.app.core.platform.VectorViewModelAction
 
 sealed class HomeDetailAction : VectorViewModelAction {
-    data class SwitchDisplayMode(val displayMode: RoomListDisplayMode) : HomeDetailAction()
+    data class SwitchDisplayMode(val displayMode: HomeDisplayMode) : HomeDetailAction()
 }

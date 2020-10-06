@@ -30,5 +30,7 @@ interface UiStateRepository {
 
     fun getDisplayMode(): RoomListDisplayMode
 
+//    fun getHomeDisplayMode(): HomeDisplayMode
+
     fun storeDisplayMode(displayMode: RoomListDisplayMode)
 }

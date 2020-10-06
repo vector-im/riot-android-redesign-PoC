@@ -17,9 +17,10 @@
 package im.vector.app.features.home.room.list
 
 import im.vector.app.features.home.RoomListDisplayMode
+import io.reactivex.functions.Predicate
 import org.matrix.android.sdk.api.session.room.model.Membership
 import org.matrix.android.sdk.api.session.room.model.RoomSummary
-import io.reactivex.functions.Predicate
+import org.matrix.android.sdk.api.session.room.model.tag.RoomTag
 
 class RoomListDisplayModeFilter(private val displayMode: RoomListDisplayMode) : Predicate<RoomSummary> {
 
@@ -30,9 +31,13 @@ class RoomListDisplayModeFilter(private val displayMode: RoomListDisplayMode) : 
         return when (displayMode) {
             RoomListDisplayMode.NOTIFICATIONS ->
                 roomSummary.notificationCount > 0 || roomSummary.membership == Membership.INVITE || roomSummary.userDrafts.isNotEmpty()
-            RoomListDisplayMode.PEOPLE        -> roomSummary.isDirect && roomSummary.membership.isActive()
-            RoomListDisplayMode.ROOMS    -> !roomSummary.isDirect && roomSummary.membership.isActive()
-            RoomListDisplayMode.FILTERED -> roomSummary.membership == Membership.JOIN
+            RoomListDisplayMode.PEOPLE        -> roomSummary.isDirect && roomSummary.membership == Membership.JOIN
+            RoomListDisplayMode.ROOMS         -> !roomSummary.isDirect && roomSummary.membership == Membership.JOIN
+            RoomListDisplayMode.FILTERED      -> roomSummary.membership == Membership.JOIN
+            RoomListDisplayMode.ALL           -> roomSummary.membership.isActive()
+            RoomListDisplayMode.FAVORITES     -> roomSummary.membership == Membership.JOIN && roomSummary.tags.any { it.name == RoomTag.ROOM_TAG_FAVOURITE }
+            RoomListDisplayMode.LOW_PRIORITY  -> roomSummary.membership == Membership.JOIN && roomSummary.tags.any { it.name == RoomTag.ROOM_TAG_LOW_PRIORITY }
+            RoomListDisplayMode.INVITES       -> roomSummary.membership == Membership.INVITE
         }
     }
 }

@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+
+    <item
+        android:id="@+id/bottom_action_chats"
+        android:enabled="true"
+        android:icon="@drawable/ic_home_bottom_house"
+        android:title="@string/bottom_action_home" />
+
+
+    <item
+        android:id="@+id/bottom_action_favourites"
+        android:enabled="true"
+        android:icon="@drawable/ic_star_24dp"
+        android:title="@string/bottom_action_favourites" />
+
+
     <item
         android:id="@+id/bottom_action_people"
         android:enabled="true"
         android:icon="@drawable/ic_home_bottom_chat"
-        android:title="@string/bottom_action_people_x" />
+        android:title="@string/bottom_action_people_short" />
+
 
     <item
         android:id="@+id/bottom_action_rooms"
@@ -13,11 +29,20 @@
         android:icon="@drawable/ic_home_bottom_group"
         android:title="@string/bottom_action_rooms" />
 
+
     <item
         android:id="@+id/bottom_action_notification"
         android:enabled="true"
         android:icon="@drawable/ic_settings_root_notification"
         android:title="@string/bottom_action_notification"
         android:visible="false" />
+
+
+<!--    <item-->
+<!--        android:id="@+id/bottom_action_you"-->
+<!--        android:enabled="true"-->
+<!--        android:icon="@drawable/ic_people"-->
+<!--        android:title="@string/home_bottom_tab_you"-->
+<!--        android:visible="false" />-->
 
 </menu>

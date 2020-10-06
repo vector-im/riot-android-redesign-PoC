@@ -21,3 +21,11 @@ import javax.inject.Qualifier
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class TimelineEventControllerHandler
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class EpoxyControllerModelHandler
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class EpoxyControllerDiffHandler

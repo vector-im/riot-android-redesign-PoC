@@ -26,20 +26,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/roomAvatarImageView"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             tools:src="@tools:sample/avatars" />
 
         <ImageView
             android:id="@+id/roomAvatarCheckedImageView"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_material_done"
             android:tint="@android:color/white"
@@ -54,7 +54,7 @@
         android:src="@drawable/ic_warning_badge"
         app:layout_constraintCircle="@id/roomAvatarContainer"
         app:layout_constraintCircleAngle="45"
-        app:layout_constraintCircleRadius="30dp"
+        app:layout_constraintCircleRadius="20dp"
         tools:ignore="MissingConstraints" />
 
     <ImageView
@@ -63,7 +63,7 @@
         android:layout_height="24dp"
         app:layout_constraintCircle="@id/roomAvatarContainer"
         app:layout_constraintCircleAngle="135"
-        app:layout_constraintCircleRadius="28dp"
+        app:layout_constraintCircleRadius="20dp"
         tools:ignore="MissingConstraints"
         tools:src="@drawable/ic_shield_trusted" />
 
@@ -71,7 +71,7 @@
     <Space
         android:id="@+id/roomAvatarBottomSpace"
         android:layout_width="0dp"
-        android:layout_height="12dp"
+        android:layout_height="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/roomAvatarContainer"
         tools:layout_marginStart="20dp" />
@@ -81,13 +81,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/layout_horizontal_margin"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="8dp"
         android:duplicateParentState="true"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="?riotx_text_primary"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toStartOf="@+id/roomDraftBadge"
@@ -139,7 +139,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:textColor="?riotx_text_secondary"
-        android:textSize="15sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/roomNameView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/roomNameView"
@@ -154,7 +154,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="?riotx_text_secondary"
-        android:textSize="15sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/roomNameView"
         app:layout_constraintTop_toBottomOf="@+id/roomNameView"
@@ -199,7 +199,7 @@
         android:background="?riotx_header_panel_border_mobile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/roomNameView"
         app:layout_constraintTop_toBottomOf="@+id/roomBottomBarrier" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

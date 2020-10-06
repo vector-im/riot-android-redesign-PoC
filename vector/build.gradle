@@ -112,7 +112,7 @@ android {
     ndkVersion "21.3.6528147"
 
     defaultConfig {
-        applicationId "im.vector.app"
+        applicationId "im.vector.app.tabs"
         // Set to API 21: see #405
         minSdkVersion 21
         targetSdkVersion 29
@@ -199,7 +199,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            resValue "string", "app_name", "Element dbg"
+            resValue "string", "app_name", "Element Tabs"
 
             resValue "bool", "debug_mode", "true"
             buildConfigField "boolean", "LOW_PRIVACY_LOG_ENABLE", "false"
@@ -210,7 +210,7 @@ android {
         }
 
         release {
-            resValue "string", "app_name", "Element (Riot.im)"
+            resValue "string", "app_name", "Element Grid"
 
             resValue "bool", "debug_mode", "false"
             buildConfigField "boolean", "LOW_PRIVACY_LOG_ENABLE", "false"

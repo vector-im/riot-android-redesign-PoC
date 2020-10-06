@@ -18,13 +18,19 @@ package im.vector.app.features.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.forEach
+import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Observer
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import im.vector.app.R
+import im.vector.app.core.extensions.addFragment
 import im.vector.app.core.extensions.commitTransaction
 import im.vector.app.core.glide.GlideApp
 import im.vector.app.core.platform.ToolbarConfigurable
@@ -33,11 +39,14 @@ import im.vector.app.core.platform.VectorBaseFragment
 import im.vector.app.core.ui.views.ActiveCallView
 import im.vector.app.core.ui.views.ActiveCallViewHolder
 import im.vector.app.core.ui.views.KeysBackupBanner
+import im.vector.app.core.utils.DimensionConverter
 import im.vector.app.features.call.SharedActiveCallViewModel
 import im.vector.app.features.call.VectorCallActivity
 import im.vector.app.features.call.WebRtcPeerConnectionManager
 import im.vector.app.features.home.room.list.RoomListFragment
 import im.vector.app.features.home.room.list.RoomListParams
+import im.vector.app.features.home.room.list.tabs.RoomListTabsFragment
+import im.vector.app.features.home.room.list.widget.FabMenuView
 import im.vector.app.features.popup.PopupAlertManager
 import im.vector.app.features.popup.VerificationVectorAlert
 import im.vector.app.features.settings.VectorPreferences
@@ -63,8 +72,9 @@ class HomeDetailFragment @Inject constructor(
         private val avatarRenderer: AvatarRenderer,
         private val alertManager: PopupAlertManager,
         private val webRtcPeerConnectionManager: WebRtcPeerConnectionManager,
-        private val vectorPreferences: VectorPreferences
-) : VectorBaseFragment(), KeysBackupBanner.Delegate, ActiveCallView.Callback, ServerBackupStatusViewModel.Factory {
+        private val vectorPreferences: VectorPreferences,
+        private val dimensionConverter: DimensionConverter
+) : VectorBaseFragment(), KeysBackupBanner.Delegate, ActiveCallView.Callback, ServerBackupStatusViewModel.Factory, FabMenuView.Listener {
 
     private val viewModel: HomeDetailViewModel by fragmentViewModel()
     private val unknownDeviceDetectorSharedViewModel: UnknownDeviceDetectorSharedViewModel by activityViewModel()
@@ -81,7 +91,7 @@ class HomeDetailFragment @Inject constructor(
         super.onViewCreated(view, savedInstanceState)
         sharedActionViewModel = activityViewModelProvider.get(HomeSharedActionViewModel::class.java)
         sharedCallActionViewModel = activityViewModelProvider.get(SharedActiveCallViewModel::class.java)
-
+        setupCreateRoomButton()
         setupBottomNavigationView()
         setupToolbar()
         setupKeysBackupBanner()
@@ -95,7 +105,9 @@ class HomeDetailFragment @Inject constructor(
         viewModel.selectSubscribe(this, HomeDetailViewState::groupSummary) { groupSummary ->
             onGroupChange(groupSummary.orNull())
         }
+
         viewModel.selectSubscribe(this, HomeDetailViewState::displayMode) { displayMode ->
+            if (vectorPreferences.labUseTabNavigation()) return@selectSubscribe
             switchDisplayMode(displayMode)
         }
 
@@ -117,12 +129,74 @@ class HomeDetailFragment @Inject constructor(
             }
         }
 
+        sharedActionViewModel.observe()
+                .subscribe {
+                    when (it) {
+                        is HomeActivitySharedAction.OnDisplayModeSelected -> renderDisplayMode(it.displayMode)
+                    }
+                }
+                .disposeOnDestroyView()
+
         sharedCallActionViewModel
                 .activeCall
                 .observe(viewLifecycleOwner, Observer {
                     activeCallViewHolder.updateCall(it, webRtcPeerConnectionManager)
                     invalidateOptionsMenu()
                 })
+
+        if (vectorPreferences.labUseTabNavigation()) {
+            addFragment(R.id.roomListContainer, RoomListTabsFragment::class.java)
+            bottomNavigationView.isVisible = false
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        createChatFabMenu.listener = null
+    }
+
+    private fun renderDisplayMode(displayMode: RoomListDisplayMode) {
+        when (displayMode) {
+            RoomListDisplayMode.ALL,
+            RoomListDisplayMode.NOTIFICATIONS,
+            RoomListDisplayMode.FAVORITES,
+            RoomListDisplayMode.LOW_PRIORITY,
+            RoomListDisplayMode.INVITES -> {
+                createChatFabMenu.getHideBottomViewOnScrollBehavior().slideUp(createChatFabMenu)
+                createChatFabMenu.show()
+                createChatRoomButton.isVisible = false
+                createGroupRoomButton.isVisible = false
+            }
+            RoomListDisplayMode.PEOPLE  -> {
+                createChatFabMenu.isVisible = false
+                createChatRoomButton.isVisible = true
+                createChatRoomButton.getHideBottomViewOnScrollBehavior().slideUp(createChatRoomButton)
+                createChatRoomButton.show()
+                createGroupRoomButton.isVisible = false
+            }
+            RoomListDisplayMode.ROOMS   -> {
+                createChatFabMenu.isVisible = false
+                createChatRoomButton.isVisible = false
+                createGroupRoomButton.isVisible = true
+                createGroupRoomButton.getHideBottomViewOnScrollBehavior().slideUp(createGroupRoomButton)
+                createGroupRoomButton.show()
+            }
+            else                        -> {
+                createChatFabMenu.isVisible = false
+                createChatRoomButton.isVisible = false
+                createGroupRoomButton.isVisible = false
+            }
+        }
+    }
+
+    private fun setupCreateRoomButton() {
+        createChatFabMenu.listener = this
+        createChatRoomButton.debouncedClicks {
+            createDirectChat()
+        }
+        createGroupRoomButton.debouncedClicks {
+            openRoomDirectory()
+        }
     }
 
     override fun onResume() {
@@ -131,17 +205,46 @@ class HomeDetailFragment @Inject constructor(
         checkNotificationTabStatus()
     }
 
-    private fun checkNotificationTabStatus() {
-        val wasVisible = bottomNavigationView.menu.findItem(R.id.bottom_action_notification).isVisible
-        bottomNavigationView.menu.findItem(R.id.bottom_action_notification).isVisible = vectorPreferences.labAddNotificationTab()
-        if (wasVisible && !vectorPreferences.labAddNotificationTab()) {
-            // As we hide it check if it's not the current item!
-            withState(viewModel) {
-                if (it.displayMode.toMenuId() == R.id.bottom_action_notification) {
-                    viewModel.handle(HomeDetailAction.SwitchDisplayMode(RoomListDisplayMode.PEOPLE))
-                }
+    private fun checkNotificationTabStatus() = withState(viewModel) { state ->
+        bottomNavigationView.menu.forEach { menuItem ->
+            menuItem.isVisible = state.tabList.indexOfFirst { it.toMenuId() == menuItem.itemId } != -1
+        }
+
+        if (vectorPreferences.labUseTabNavigation()) {
+            addFragment(R.id.roomListContainer, RoomListTabsFragment::class.java)
+            bottomNavigationView.isVisible = false
+            createGroupRoomButton.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                this.bottomMargin = dimensionConverter.dpToPx(16)
+            }
+            createChatRoomButton.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                this.bottomMargin = dimensionConverter.dpToPx(16)
+            }
+            createChatFabMenu.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                this.bottomMargin = dimensionConverter.dpToPx(0)
+            }
+        } else {
+            bottomNavigationView.isVisible = true
+            switchDisplayMode(state.displayMode)
+            createGroupRoomButton.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                this.bottomMargin = dimensionConverter.dpToPx(64)
+            }
+            createChatRoomButton.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                this.bottomMargin = dimensionConverter.dpToPx(64)
+            }
+            createChatFabMenu.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                this.bottomMargin = dimensionConverter.dpToPx(48)
             }
         }
+//        val wasVisible = bottomNavigationView.menu.findItem(R.id.bottom_action_notification).isVisible
+//        bottomNavigationView.menu.findItem(R.id.bottom_action_notification).isVisible = vectorPreferences.labAddNotificationTab()
+//        if (wasVisible && !vectorPreferences.labAddNotificationTab()) {
+//            // As we hide it check if it's not the current item!
+//            withState(viewModel) {
+//                if (it.displayMode.toMenuId() == R.id.bottom_action_notification) {
+//                    viewModel.handle(HomeDetailAction.SwitchDisplayMode(HomeDisplayMode.CHATS))
+//                }
+//            }
+//        }
     }
 
     private fun promptForNewUnknownDevices(uid: String, state: UnknownDevicesState, newest: DeviceInfo) {
@@ -205,6 +308,7 @@ class HomeDetailFragment @Inject constructor(
         groupSummary?.let {
             // Use GlideApp with activity context to avoid the glideRequests to be paused
             avatarRenderer.render(it.toMatrixItem(), groupToolbarAvatarImageView, GlideApp.with(requireActivity()))
+            groupToolbarTitleView.text = it.displayName
         }
     }
 
@@ -245,9 +349,12 @@ class HomeDetailFragment @Inject constructor(
         bottomNavigationView.menu.findItem(R.id.bottom_action_notification).isVisible = vectorPreferences.labAddNotificationTab()
         bottomNavigationView.setOnNavigationItemSelectedListener {
             val displayMode = when (it.itemId) {
-                R.id.bottom_action_people -> RoomListDisplayMode.PEOPLE
-                R.id.bottom_action_rooms  -> RoomListDisplayMode.ROOMS
-                else                      -> RoomListDisplayMode.NOTIFICATIONS
+                R.id.bottom_action_chats      -> HomeDisplayMode.CHATS
+                // R.id.bottom_action_you        -> HomeDisplayMode.YOU
+                R.id.bottom_action_favourites -> HomeDisplayMode.FAVORITES
+                R.id.bottom_action_people     -> HomeDisplayMode.PEOPLE
+                R.id.bottom_action_rooms      -> HomeDisplayMode.ROOMS
+                else                          -> HomeDisplayMode.NOTIFICATIONS
             }
             viewModel.handle(HomeDetailAction.SwitchDisplayMode(displayMode))
             true
@@ -265,12 +372,12 @@ class HomeDetailFragment @Inject constructor(
 //        }
     }
 
-    private fun switchDisplayMode(displayMode: RoomListDisplayMode) {
+    private fun switchDisplayMode(displayMode: HomeDisplayMode) {
         groupToolbarTitleView.setText(displayMode.titleRes)
         updateSelectedFragment(displayMode)
     }
 
-    private fun updateSelectedFragment(displayMode: RoomListDisplayMode) {
+    private fun updateSelectedFragment(displayMode: HomeDisplayMode) {
         val fragmentTag = "FRAGMENT_TAG_${displayMode.name}"
         val fragmentToShow = childFragmentManager.findFragmentByTag(fragmentTag)
         childFragmentManager.commitTransaction {
@@ -280,8 +387,16 @@ class HomeDetailFragment @Inject constructor(
                         detach(it)
                     }
             if (fragmentToShow == null) {
-                val params = RoomListParams(displayMode)
+//                if (displayMode == HomeDisplayMode.CHATS) {
+//                    add(R.id.roomListContainer, RoomListTabsFragment::class.java, Bundle.EMPTY, fragmentTag)
+//                }
+//                else if (displayMode == HomeDisplayMode.YOU) {
+//                    add(R.id.roomListContainer, VectorSettingsGeneralFragment::class.java, Bundle.EMPTY, fragmentTag)
+//                }
+//                else {
+                val params = RoomListParams(displayMode.toRoomMode())
                 add(R.id.roomListContainer, RoomListFragment::class.java, params.toMvRxBundle(), fragmentTag)
+//                }
             } else {
                 attach(fragmentToShow)
             }
@@ -302,9 +417,9 @@ class HomeDetailFragment @Inject constructor(
 
     override fun invalidate() = withState(viewModel) {
         Timber.v(it.toString())
-        bottomNavigationView.getOrCreateBadge(R.id.bottom_action_people).render(it.notificationCountPeople, it.notificationHighlightPeople)
-        bottomNavigationView.getOrCreateBadge(R.id.bottom_action_rooms).render(it.notificationCountRooms, it.notificationHighlightRooms)
-        bottomNavigationView.getOrCreateBadge(R.id.bottom_action_notification).render(it.notificationCountCatchup, it.notificationHighlightCatchup)
+//        bottomNavigationView.getOrCreateBadge(R.id.bottom_action_people).render(it.notificationCountPeople, it.notificationHighlightPeople)
+//        bottomNavigationView.getOrCreateBadge(R.id.bottom_action_rooms).render(it.notificationCountRooms, it.notificationHighlightRooms)
+//        bottomNavigationView.getOrCreateBadge(R.id.bottom_action_notification).render(it.notificationCountCatchup, it.notificationHighlightCatchup)
         syncStateView.render(it.syncState)
     }
 
@@ -320,10 +435,28 @@ class HomeDetailFragment @Inject constructor(
         }
     }
 
-    private fun RoomListDisplayMode.toMenuId() = when (this) {
-        RoomListDisplayMode.PEOPLE -> R.id.bottom_action_people
-        RoomListDisplayMode.ROOMS  -> R.id.bottom_action_rooms
-        else                       -> R.id.bottom_action_notification
+//    private fun RoomListDisplayMode.toMenuId() = when (this) {
+// //        RoomListDisplayMode.PEOPLE -> R.id.bottom_action_people
+// //        RoomListDisplayMode.ROOMS  -> R.id.bottom_action_rooms
+//        else                       -> R.id.bottom_action_notification
+//    }
+
+    private fun HomeDisplayMode.toMenuId() = when (this) {
+        HomeDisplayMode.CHATS         -> R.id.bottom_action_chats
+        HomeDisplayMode.FAVORITES     -> R.id.bottom_action_favourites
+        HomeDisplayMode.ROOMS         -> R.id.bottom_action_rooms
+        HomeDisplayMode.PEOPLE        -> R.id.bottom_action_people
+        HomeDisplayMode.NOTIFICATIONS -> R.id.bottom_action_notification
+//        HomeDisplayMode.YOU       -> R.id.bottom_action_you
+    }
+
+    private fun HomeDisplayMode.toRoomMode() = when (this) {
+        HomeDisplayMode.CHATS         -> RoomListDisplayMode.ALL
+        HomeDisplayMode.FAVORITES     -> RoomListDisplayMode.FAVORITES
+        HomeDisplayMode.NOTIFICATIONS -> RoomListDisplayMode.NOTIFICATIONS
+        HomeDisplayMode.ROOMS         -> RoomListDisplayMode.ROOMS
+        HomeDisplayMode.PEOPLE        -> RoomListDisplayMode.PEOPLE
+//        else                      -> RoomListDisplayMode.ROOMS
     }
 
     override fun onTapToReturnToCall() {
@@ -342,7 +475,19 @@ class HomeDetailFragment @Inject constructor(
         }
     }
 
+    override fun openRoomDirectory(initialFilter: String) {
+        navigator.openRoomDirectory(requireActivity(), initialFilter)
+    }
+
+    override fun createDirectChat() {
+        navigator.openCreateDirectRoom(requireActivity())
+    }
+
     override fun create(initialState: ServerBackupStatusViewState): ServerBackupStatusViewModel {
         return serverBackupStatusViewModelFactory.create(initialState)
+    }
+
+    private fun View.getHideBottomViewOnScrollBehavior(): HideBottomViewOnScrollBehavior<View> {
+        return (layoutParams as CoordinatorLayout.LayoutParams).behavior as HideBottomViewOnScrollBehavior
     }
 }

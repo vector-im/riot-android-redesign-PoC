@@ -5,52 +5,12 @@
     android:id="@+id/stateView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?riotx_header_panel_background">
+    android:background="?riotx_background">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/roomListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="always" />
-
-    <im.vector.app.features.home.room.list.widget.FabMenuView
-        android:id="@+id/createChatFabMenu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layoutDescription="@xml/motion_scene_fab_menu"
-        tools:showPaths="true"
-        tools:visibility="visible" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/createChatRoomButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:accessibilityTraversalBefore="@+id/roomListView"
-        android:contentDescription="@string/a11y_create_direct_message"
-        android:scaleType="center"
-        android:src="@drawable/ic_fab_add_chat"
-        android:visibility="gone"
-        app:maxImageSize="34dp"
-        tools:layout_marginEnd="80dp"
-        tools:visibility="visible" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/createGroupRoomButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:accessibilityTraversalBefore="@+id/roomListView"
-        android:contentDescription="@string/a11y_create_room"
-        android:src="@drawable/ic_fab_add_room"
-        android:visibility="gone"
-        app:maxImageSize="32dp"
-        tools:layout_marginEnd="144dp"
-        tools:visibility="visible" />
 
 </im.vector.app.core.platform.StateView>

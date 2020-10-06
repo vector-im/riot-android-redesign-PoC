@@ -27,7 +27,8 @@ import org.matrix.android.sdk.api.session.sync.SyncState
 data class HomeDetailViewState(
         val groupSummary: Option<GroupSummary> = Option.empty(),
         val asyncRooms: Async<List<RoomSummary>> = Uninitialized,
-        val displayMode: RoomListDisplayMode = RoomListDisplayMode.PEOPLE,
+        val displayMode: HomeDisplayMode = HomeDisplayMode.CHATS,
+        val tabList: List<HomeDisplayMode> = listOf(HomeDisplayMode.CHATS, HomeDisplayMode.FAVORITES, HomeDisplayMode.ROOMS, HomeDisplayMode.PEOPLE),
         val notificationCountCatchup: Int = 0,
         val notificationHighlightCatchup: Boolean = false,
         val notificationCountPeople: Int = 0,

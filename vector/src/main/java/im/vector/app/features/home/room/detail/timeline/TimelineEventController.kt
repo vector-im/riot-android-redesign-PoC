@@ -73,8 +73,10 @@ class TimelineEventController @Inject constructor(private val dateFormatter: Vec
                                                   private val mergedHeaderItemFactory: MergedHeaderItemFactory,
                                                   private val session: Session,
                                                   @TimelineEventControllerHandler
-                                                  private val backgroundHandler: Handler
-) : EpoxyController(backgroundHandler, backgroundHandler), Timeline.Listener, EpoxyController.Interceptor {
+                                                  private val backgroundHandler: Handler,
+                                                  @EpoxyControllerModelHandler
+                                                  private val modelBuilderHandler: Handler
+) : EpoxyController(modelBuilderHandler, backgroundHandler), Timeline.Listener, EpoxyController.Interceptor {
 
     interface Callback : BaseCallback, ReactionPillCallback, AvatarCallback, UrlClickCallback, ReadReceiptsCallback {
         fun onLoadMore(direction: Timeline.Direction)

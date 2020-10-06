@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:912726360885:android:4ef8f3a0021e774d",
         "android_client_info": {
-          "package_name": "im.vector.app"
+          "package_name": "im.vector.app.tabs"
         }
       },
       "oauth_client": [

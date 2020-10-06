@@ -42,7 +42,22 @@
     <im.vector.app.core.preference.VectorSwitchPreference
         android:defaultValue="false"
         android:key="SETTINGS_LABS_UNREAD_NOTIFICATIONS_AS_TAB"
-        android:title="@string/labs_show_unread_notifications_as_tab" />
+        android:title="@string/labs_experimental_nav_title" />
+
+    <im.vector.app.core.preference.VectorPreferenceCategory android:title="@string/labs_experimental_nav_title">
+
+        <im.vector.app.core.preference.VectorSwitchPreference
+            android:defaultValue="false"
+            android:key="SETTINGS_LABS_USE_TOP_TAB_NAVIGATION"
+            android:title="@string/labs_experimental_top_tabs" />
+
+
+        <im.vector.app.core.preference.VectorSwitchPreference
+            android:defaultValue="false"
+            android:dependency="SETTINGS_LABS_USE_TOP_TAB_NAVIGATION"
+            android:key="SETTINGS_LABS_PIN_FAVORITE"
+            android:title="@string/labs_experimental_pin_favorites" />
+    </im.vector.app.core.preference.VectorPreferenceCategory>
     <!--</im.vector.app.core.preference.VectorPreferenceCategory>-->
 
 </androidx.preference.PreferenceScreen>

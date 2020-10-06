@@ -37,7 +37,14 @@ data class RoomListViewState(
         val isDirectRoomsExpanded: Boolean = true,
         val isGroupRoomsExpanded: Boolean = true,
         val isLowPriorityRoomsExpanded: Boolean = true,
-        val isServerNoticeRoomsExpanded: Boolean = true
+        val isServerNoticeRoomsExpanded: Boolean = true,
+        val isChatRoomsExpanded: Boolean = true,
+        val favouriteRoomsMode: CategoryMode = CategoryMode.Grid,
+        val directRoomsMode: CategoryMode = CategoryMode.List,
+        val groupRoomsMode: CategoryMode = CategoryMode.List,
+        val lowPriorityRoomsMode: CategoryMode = CategoryMode.List,
+        val serverNoticeRoomsMode: CategoryMode = CategoryMode.List,
+        val chatsRoomsMode: CategoryMode = CategoryMode.List
 ) : MvRxState {
 
     constructor(args: RoomListParams) : this(displayMode = args.displayMode)
@@ -50,6 +57,26 @@ data class RoomListViewState(
             RoomCategory.GROUP         -> isGroupRoomsExpanded
             RoomCategory.LOW_PRIORITY  -> isLowPriorityRoomsExpanded
             RoomCategory.SERVER_NOTICE -> isServerNoticeRoomsExpanded
+//            else                       -> true
+            RoomCategory.CHATS         -> isChatRoomsExpanded
+        }
+    }
+
+    enum class CategoryMode {
+        List,
+        Grid
+    }
+
+    fun getCategoryMode(roomCategory: RoomCategory): CategoryMode {
+        return when (roomCategory) {
+            RoomCategory.INVITE        -> CategoryMode.List
+            RoomCategory.FAVOURITE     -> CategoryMode.Grid
+            RoomCategory.DIRECT        -> directRoomsMode
+            RoomCategory.GROUP         -> groupRoomsMode
+            RoomCategory.LOW_PRIORITY  -> lowPriorityRoomsMode
+            RoomCategory.SERVER_NOTICE -> serverNoticeRoomsMode
+            RoomCategory.CHATS         -> chatsRoomsMode
+//            else                       -> CategoryMode.List
         }
     }
 
@@ -61,6 +88,19 @@ data class RoomListViewState(
             RoomCategory.GROUP         -> copy(isGroupRoomsExpanded = !isGroupRoomsExpanded)
             RoomCategory.LOW_PRIORITY  -> copy(isLowPriorityRoomsExpanded = !isLowPriorityRoomsExpanded)
             RoomCategory.SERVER_NOTICE -> copy(isServerNoticeRoomsExpanded = !isServerNoticeRoomsExpanded)
+            RoomCategory.CHATS         -> copy(isChatRoomsExpanded = !isChatRoomsExpanded)
+        }
+    }
+
+    fun setMode(roomCategory: RoomCategory, newCategoryMode: CategoryMode): RoomListViewState {
+        return when (roomCategory) {
+            RoomCategory.INVITE        -> this
+            RoomCategory.FAVOURITE     -> copy(favouriteRoomsMode = newCategoryMode)
+            RoomCategory.DIRECT        -> copy(directRoomsMode = newCategoryMode)
+            RoomCategory.GROUP         -> copy(groupRoomsMode = newCategoryMode)
+            RoomCategory.LOW_PRIORITY  -> copy(lowPriorityRoomsMode = newCategoryMode)
+            RoomCategory.SERVER_NOTICE -> copy(serverNoticeRoomsMode = newCategoryMode)
+            RoomCategory.CHATS         -> copy(chatsRoomsMode = newCategoryMode)
         }
     }
 
@@ -76,6 +116,7 @@ typealias RoomSummaries = LinkedHashMap<RoomCategory, List<RoomSummary>>
 
 enum class RoomCategory(@StringRes val titleRes: Int) {
     INVITE(R.string.invitations_header),
+    CHATS(R.string.room_list_tabs_all),
     FAVOURITE(R.string.bottom_action_favourites),
     DIRECT(R.string.bottom_action_people_x),
     GROUP(R.string.bottom_action_rooms),

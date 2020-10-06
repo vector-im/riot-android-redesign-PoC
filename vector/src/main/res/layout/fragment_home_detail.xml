@@ -1,118 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/groupToolbar"
-        style="@style/VectorToolbarStyle"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
 
-        <LinearLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/groupToolbar"
+            style="@style/VectorToolbarStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_scrollFlags="scroll|enterAlways">
 
-            <ImageView
-                android:id="@+id/groupToolbarAvatarImageView"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:contentDescription="@string/a11y_open_drawer"
-                tools:src="@tools:sample/avatars" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/groupToolbarTitleView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="?riotx_text_primary"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                tools:text="@tools:sample/lorem/random" />
+                <ImageView
+                    android:id="@+id/groupToolbarAvatarImageView"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:contentDescription="@string/a11y_open_drawer"
+                    tools:src="@tools:sample/avatars" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/groupToolbarTitleView"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textColor="?riotx_text_primary"
+                    android:textStyle="bold"
+                    app:autoSizeMaxTextSize="16sp"
+                    app:autoSizeMinTextSize="10sp"
+                    app:autoSizeStepGranularity="1sp"
+                    app:autoSizeTextType="uniform"
+                    tools:text="@tools:sample/full_names" />
 
-    </androidx.appcompat.widget.Toolbar>
+            </LinearLayout>
 
-    <im.vector.app.features.sync.widget.SyncStateView
-        android:id="@+id/syncStateView"
+        </androidx.appcompat.widget.Toolbar>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/groupToolbar" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <im.vector.app.core.ui.views.KeysBackupBanner
-        android:id="@+id/homeKeysBackupBanner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?riotx_keys_backup_banner_accent_color"
-        android:minHeight="67dp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/syncStateView" />
+        <im.vector.app.features.sync.widget.SyncStateView
+            android:id="@+id/syncStateView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <im.vector.app.core.ui.views.ActiveCallView
-        android:id="@+id/activeCallView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/homeKeysBackupBanner"
-        tools:visibility="visible" />
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/roomListContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="?riotx_header_panel_background"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintTop_toBottomOf="@+id/activeCallView" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/activeCallPiPWrap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:cardCornerRadius="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/activeCallView">
-
-        <org.webrtc.SurfaceViewRenderer
-            android:id="@+id/activeCallPiP"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+        <im.vector.app.core.ui.views.KeysBackupBanner
+            android:id="@+id/homeKeysBackupBanner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?riotx_keys_backup_banner_accent_color"
+            android:minHeight="67dp"
             android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/syncStateView"
             tools:visibility="visible" />
 
-    </androidx.cardview.widget.CardView>
+        <im.vector.app.core.ui.views.ActiveCallView
+            android:id="@+id/activeCallView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/homeKeysBackupBanner"
+            tools:visibility="visible" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/roomListContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="?riotx_header_panel_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activeCallView" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/activeCallPiPWrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/activeCallView">
+
+            <org.webrtc.SurfaceViewRenderer
+                android:id="@+id/activeCallPiP"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        </androidx.cardview.widget.CardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <im.vector.app.features.home.room.list.widget.FabMenuView
+        android:id="@+id/createChatFabMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="48dp"
+        android:visibility="gone"
+        app:layoutDescription="@xml/motion_scene_fab_menu"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="-56dp"
+        tools:showPaths="true"
+        tools:visibility="visible" />
+
+
+    <!-- TODO check accessibilityTraversalBefore as we changed layout -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/createChatRoomButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="64dp"
+        android:accessibilityTraversalBefore="@+id/roomListView"
+        android:contentDescription="@string/a11y_create_direct_message"
+        android:scaleType="center"
+        android:src="@drawable/ic_fab_add_chat"
+        android:visibility="gone"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        app:maxImageSize="34dp"
+        tools:layout_marginEnd="80dp"
+        tools:visibility="visible" />
+
+    <!-- TODO check accessibilityTraversalBefore as we changed layout -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/createGroupRoomButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="64dp"
+        android:accessibilityTraversalBefore="@+id/roomListView"
+        android:contentDescription="@string/a11y_create_room"
+        android:src="@drawable/ic_fab_add_room"
+        android:visibility="gone"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        app:maxImageSize="32dp"
+        tools:layout_marginEnd="144dp"
+        tools:visibility="visible" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:background="?riotx_background"
         app:itemIconSize="20dp"
         app:itemIconTint="@color/bottom_navigation_icon_tint_selector"
-        app:labelVisibilityMode="unlabeled"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/roomListContainer"
+        app:layout_insetEdge="bottom"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
         app:menu="@menu/home_bottom_navigation" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

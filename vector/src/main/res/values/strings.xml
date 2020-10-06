@@ -147,11 +147,15 @@
 
     <!-- Bottom navigation buttons -->
     <string name="bottom_action_home">Home</string>
-    <string name="bottom_action_notification">Notifications</string>
+    <string name="bottom_action_notification">Unread</string>
     <string name="bottom_action_favourites">Favourites</string>
     <string name="bottom_action_people">People</string>
     <string name="bottom_action_rooms">Rooms</string>
     <string name="bottom_action_groups">Communities</string>
+    <string name="room_list_tabs_all">Chats</string>
+
+    <string name="home_bottom_tab_chats">Chats</string>
+    <string name="home_bottom_tab_you">You</string>
 
     <!-- Home screen -->
     <string name="home_filter_placeholder_home">Filter room names</string>
@@ -1716,6 +1720,7 @@
     <string name="settings_labs_show_complete_history_in_encrypted_room">"Show complete history in encrypted rooms"</string>
 
     <string name="bottom_action_people_x">Direct Messages</string>
+    <string name="bottom_action_people_short">DMs</string>
 
     <string name="send_file_step_idle">Waiting…</string>
     <string name="send_file_step_encrypting_thumbnail">Encrypting thumbnail…</string>
@@ -1743,6 +1748,9 @@
     <string name="labs_swipe_to_reply_in_timeline">Enable swipe to reply in timeline</string>
     <string name="labs_merge_e2e_in_timeline">Merge failed to decrypt message in timeline</string>
     <string name="labs_show_unread_notifications_as_tab">Add a dedicated tab for unread notifications on main screen.</string>
+    <string name="labs_experimental_nav_title">Experimental Navigation</string>
+    <string name="labs_experimental_top_tabs">Use top tabs</string>
+    <string name="labs_experimental_pin_favorites">Pin favorites</string>
 
     <string name="link_copied_to_clipboard">Link copied to clipboard</string>
 

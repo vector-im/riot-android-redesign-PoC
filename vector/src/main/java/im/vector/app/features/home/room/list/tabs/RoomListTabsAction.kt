@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 New Vector Ltd
+ * Copyright (c) 2020 New Vector Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-package im.vector.app.features.home
+package im.vector.app.features.home.room.list.tabs
 
-import im.vector.app.core.platform.VectorSharedAction
+import im.vector.app.core.platform.VectorViewModelAction
 
-/**
- * Supported navigation actions for [HomeActivity]
- */
-sealed class HomeActivitySharedAction : VectorSharedAction {
-    object OpenDrawer : HomeActivitySharedAction()
-    object CloseDrawer : HomeActivitySharedAction()
-    object OpenGroup : HomeActivitySharedAction()
-    data class OnDisplayModeSelected(val displayMode: RoomListDisplayMode): HomeActivitySharedAction()
-}
+sealed class RoomListTabsAction : VectorViewModelAction

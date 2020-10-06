@@ -17,9 +17,13 @@
 package im.vector.app.features.home
 
 import android.os.Handler
+import android.os.HandlerThread
 import dagger.Module
 import dagger.Provides
+import im.vector.app.features.home.room.detail.timeline.EpoxyControllerDiffHandler
+import im.vector.app.features.home.room.detail.timeline.EpoxyControllerModelHandler
 import im.vector.app.features.home.room.detail.timeline.TimelineEventControllerHandler
+import im.vector.app.features.home.room.detail.timeline.helper.EpoxyHandlerHelper
 import im.vector.app.features.home.room.detail.timeline.helper.TimelineAsyncHelper
 
 @Module
@@ -30,5 +34,19 @@ object HomeModule {
     @TimelineEventControllerHandler
     fun providesTimelineBackgroundHandler(): Handler {
         return TimelineAsyncHelper.getBackgroundHandler()
+    }
+
+    @Provides
+    @JvmStatic
+    @EpoxyControllerModelHandler
+    fun providesEpoxyControllerModelHandler(): Handler {
+        return EpoxyHandlerHelper.modelBuildingHandler
+    }
+
+    @Provides
+    @JvmStatic
+    @EpoxyControllerDiffHandler
+    fun providesEpoxyControllerDiffHandler(): Handler {
+        return EpoxyHandlerHelper.diffingHandler
     }
 }
