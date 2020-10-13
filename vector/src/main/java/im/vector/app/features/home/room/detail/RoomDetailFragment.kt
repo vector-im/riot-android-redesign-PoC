@@ -349,6 +349,7 @@ class RoomDetailFragment @Inject constructor(
                 is RoomDetailViewEvents.SendMessageResult                -> renderSendMessageResult(it)
                 is RoomDetailViewEvents.ShowE2EErrorMessage              -> displayE2eError(it.withHeldCode)
                 RoomDetailViewEvents.DisplayPromptForIntegrationManager  -> displayPromptForIntegrationManager()
+                is RoomDetailViewEvents.OpenRoomMemberProfile            -> openRoomMemberProfile(it.userId)
                 is RoomDetailViewEvents.OpenStickerPicker                -> openStickerPicker(it)
                 is RoomDetailViewEvents.DisplayEnableIntegrationsWarning -> displayDisabledIntegrationDialog()
                 is RoomDetailViewEvents.OpenIntegrationManager           -> openIntegrationManager()

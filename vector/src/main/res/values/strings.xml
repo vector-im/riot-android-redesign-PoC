@@ -1297,16 +1297,23 @@
     <string name="command_description_emote">Displays action</string>
     <string name="command_description_ban_user">Bans user with given id</string>
     <string name="command_description_unban_user">Unbans user with given id</string>
+    <string name="command_description_ignore_user">Ignores a user, hiding their messages from you</string>
+    <string name="command_description_unignore_user">Stops ignoring a user, showing their messages going forward</string>
     <string name="command_description_op_user">Define the power level of a user</string>
     <string name="command_description_deop_user">Deops user with given id</string>
+    <string name="command_description_room_name">Sets the room name</string>
     <string name="command_description_invite_user">Invites user with given id to current room</string>
     <string name="command_description_join_room">Joins room with given alias</string>
     <string name="command_description_part_room">Leave room</string>
     <string name="command_description_topic">Set the room topic</string>
     <string name="command_description_kick_user">Kicks user with given id</string>
     <string name="command_description_nick">Changes your display nickname</string>
+    <string name="command_description_nick_for_room">Changes your display nickname in the current room only</string>
+    <string name="command_description_room_avatar">Changes the avatar of the current room</string>
+    <string name="command_description_avatar_for_room">Changes your avatar in this current room only</string>
     <string name="command_description_markdown">On/Off markdown</string>
     <string name="command_description_clear_scalar_token">To fix Matrix Apps management</string>
+    <string name="command_description_whois">Displays information about a user</string>
 
     <string name="markdown_has_been_enabled">Markdown has been enabled.</string>
     <string name="markdown_has_been_disabled">Markdown has been disabled.</string>
@@ -2072,6 +2079,7 @@
     <string name="settings_developer_mode_fail_fast_summary">Element may crash more often when an unexpected error occurs</string>
 
     <string name="command_description_shrug">Prepends ¯\\_(ツ)_/¯ to a plain-text message</string>
+    <string name="command_description_lenny">Prepends ( ͡° ͜ʖ ͡°) to a plain-text message</string>
 
     <string name="create_room_encryption_title">"Enable encryption"</string>
     <string name="create_room_encryption_description">"Once enabled, encryption cannot be disabled."</string>

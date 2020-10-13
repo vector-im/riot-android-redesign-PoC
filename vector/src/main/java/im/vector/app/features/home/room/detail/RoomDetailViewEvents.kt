@@ -64,14 +64,16 @@ sealed class RoomDetailViewEvents : VectorViewEvents {
 
     abstract class SendMessageResult : RoomDetailViewEvents()
 
-    object DisplayPromptForIntegrationManager: RoomDetailViewEvents()
+    object DisplayPromptForIntegrationManager : RoomDetailViewEvents()
 
-    object DisplayEnableIntegrationsWarning: RoomDetailViewEvents()
+    object DisplayEnableIntegrationsWarning : RoomDetailViewEvents()
 
-    data class OpenStickerPicker(val widget: Widget): RoomDetailViewEvents()
+    data class OpenRoomMemberProfile(val userId: String) : RoomDetailViewEvents()
 
-    object OpenIntegrationManager: RoomDetailViewEvents()
-    object OpenActiveWidgetBottomSheet: RoomDetailViewEvents()
+    data class OpenStickerPicker(val widget: Widget) : RoomDetailViewEvents()
+
+    object OpenIntegrationManager : RoomDetailViewEvents()
+    object OpenActiveWidgetBottomSheet : RoomDetailViewEvents()
     data class RequestNativeWidgetPermission(val widget: Widget,
                                              val domain: String,
                                              val grantedEvents: RoomDetailViewEvents) : RoomDetailViewEvents()
