@@ -45,6 +45,7 @@ import im.vector.app.core.preference.UserAvatarPreference
 import im.vector.app.core.preference.VectorPreference
 import im.vector.app.core.preference.VectorSwitchPreference
 import im.vector.app.core.resources.ColorProvider
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.core.utils.TextUtils
 import im.vector.app.core.utils.getSizeOfFiles
 import im.vector.app.core.utils.toast
@@ -268,6 +269,7 @@ class VectorSettingsGeneralFragment @Inject constructor(
         mIdentityServerPreference.summary = session.identityService().getCurrentIdentityServerUrl() ?: getString(R.string.identity_server_not_defined)
         refreshIntegrationManagerSettings()
         session.integrationManagerService().addListener(integrationServiceListener)
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SettingsView("general"))
     }
 
     override fun onPause() {

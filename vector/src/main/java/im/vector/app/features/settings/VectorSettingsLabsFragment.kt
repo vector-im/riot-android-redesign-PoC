@@ -17,6 +17,7 @@
 package im.vector.app.features.settings
 
 import im.vector.app.R
+import im.vector.app.core.utils.AnalyticsEngine
 import javax.inject.Inject
 
 class VectorSettingsLabsFragment @Inject constructor(
@@ -28,5 +29,10 @@ class VectorSettingsLabsFragment @Inject constructor(
 
     override fun bindPref() {
         // Nothing to do
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SettingsView("root"))
     }
 }

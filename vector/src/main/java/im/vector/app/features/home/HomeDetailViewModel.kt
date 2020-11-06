@@ -24,7 +24,7 @@ import com.squareup.inject.assisted.AssistedInject
 import im.vector.app.core.di.HasScreenInjector
 import im.vector.app.core.platform.EmptyViewEvents
 import im.vector.app.core.platform.VectorViewModel
-import im.vector.app.core.resources.StringProvider
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.features.grouplist.SelectedGroupDataSource
 import im.vector.app.features.ui.UiStateRepository
 import io.reactivex.schedulers.Schedulers
@@ -41,7 +41,7 @@ class HomeDetailViewModel @AssistedInject constructor(@Assisted initialState: Ho
                                                       private val uiStateRepository: UiStateRepository,
                                                       private val selectedGroupStore: SelectedGroupDataSource,
                                                       private val homeRoomListStore: HomeRoomListDataSource,
-                                                      private val stringProvider: StringProvider)
+                                                      private val analyticsEngine: AnalyticsEngine)
     : VectorViewModel<HomeDetailViewState, HomeDetailAction, EmptyViewEvents>(initialState) {
 
     @AssistedInject.Factory
@@ -82,7 +82,7 @@ class HomeDetailViewModel @AssistedInject constructor(@Assisted initialState: Ho
             setState {
                 copy(displayMode = action.displayMode)
             }
-
+            analyticsEngine.report(AnalyticsEngine.AnalyticEvent.HomeView(action.displayMode))
             uiStateRepository.storeDisplayMode(action.displayMode)
         }
     }

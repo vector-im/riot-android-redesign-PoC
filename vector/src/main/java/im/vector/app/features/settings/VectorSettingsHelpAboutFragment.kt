@@ -23,6 +23,7 @@ import androidx.preference.Preference
 import im.vector.app.BuildConfig
 import im.vector.app.R
 import im.vector.app.core.preference.VectorPreference
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.core.utils.copyToClipboard
 import im.vector.app.core.utils.displayInWebView
 import im.vector.app.core.utils.openUrlInChromeCustomTab
@@ -124,6 +125,10 @@ class VectorSettingsHelpAboutFragment @Inject constructor(
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SettingsView("about"))
+    }
     companion object {
         private const val APP_INFO_LINK_PREFERENCE_KEY = "APP_INFO_LINK_PREFERENCE_KEY"
     }

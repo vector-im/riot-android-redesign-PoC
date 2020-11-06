@@ -203,7 +203,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            resValue "string", "app_name", "Element dbg"
+            resValue "string", "app_name", "Element Countly dbg"
 
             resValue "bool", "debug_mode", "true"
             buildConfigField "boolean", "LOW_PRIVACY_LOG_ENABLE", "false"
@@ -440,6 +440,10 @@ dependencies {
     // Stick to 3.3.3 because of https://github.com/zxing/zxing/issues/1170
     implementation 'com.google.zxing:core:3.3.3'
     implementation 'me.dm7.barcodescanner:zxing:1.9.13'
+
+    // Analytics
+    implementation 'ly.count.android:sdk:20.04.5'
+    implementation 'ly.count.android:sdk-native:20.04.5'
 
     // TESTS
     testImplementation 'junit:junit:4.13'

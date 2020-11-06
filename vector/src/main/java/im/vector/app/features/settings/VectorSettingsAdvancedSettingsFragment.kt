@@ -21,6 +21,7 @@ import androidx.preference.SeekBarPreference
 import im.vector.app.R
 import im.vector.app.core.platform.VectorBaseActivity
 import im.vector.app.core.preference.VectorSwitchPreference
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.features.rageshake.RageShake
 
 class VectorSettingsAdvancedSettingsFragment : VectorSettingsBaseFragment() {
@@ -37,6 +38,7 @@ class VectorSettingsAdvancedSettingsFragment : VectorSettingsBaseFragment() {
         rageshake?.interceptor = {
             (activity as? VectorBaseActivity)?.showSnackbar(getString(R.string.rageshake_detected))
         }
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SettingsView("advanced"))
     }
 
     override fun onPause() {

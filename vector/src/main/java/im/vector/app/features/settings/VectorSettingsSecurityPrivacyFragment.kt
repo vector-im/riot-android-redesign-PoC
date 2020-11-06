@@ -47,6 +47,7 @@ import im.vector.app.core.intent.getFilenameFromUri
 import im.vector.app.core.platform.SimpleTextWatcher
 import im.vector.app.core.preference.VectorPreference
 import im.vector.app.core.preference.VectorPreferenceCategory
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.core.utils.copyToClipboard
 import im.vector.app.core.utils.openFileSelection
 import im.vector.app.core.utils.toast
@@ -161,6 +162,8 @@ class VectorSettingsSecurityPrivacyFragment @Inject constructor(
                             .getElementWellknown(session.myUserId)
                             ?.isE2EByDefault() == false
         }
+
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SettingsView("privacy"))
     }
 
     private val secureBackupCategory by lazy {

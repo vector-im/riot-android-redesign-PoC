@@ -38,6 +38,7 @@ import im.vector.app.core.extensions.replaceFragment
 import im.vector.app.core.platform.ToolbarConfigurable
 import im.vector.app.core.platform.VectorBaseActivity
 import im.vector.app.core.pushers.PushersManager
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.features.disclaimer.showDisclaimerDialog
 import im.vector.app.features.notifications.NotificationDrawerManager
 import im.vector.app.features.popup.DefaultVectorAlert
@@ -82,6 +83,7 @@ class HomeActivity : VectorBaseActivity(), ToolbarConfigurable, UnknownDeviceDet
     @Inject lateinit var popupAlertManager: PopupAlertManager
     @Inject lateinit var shortcutsHandler: ShortcutsHandler
     @Inject lateinit var unknownDeviceViewModelFactory: UnknownDeviceDetectorSharedViewModel.Factory
+    @Inject lateinit var analyticsEngine: AnalyticsEngine
 
     private val drawerListener = object : DrawerLayout.SimpleDrawerListener() {
         override fun onDrawerStateChanged(newState: Int) {
@@ -306,7 +308,17 @@ class HomeActivity : VectorBaseActivity(), ToolbarConfigurable, UnknownDeviceDet
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_home_suggestion -> {
-                bugReporter.openBugReportScreen(this, true)
+                if (analyticsEngine.isEnabled()) {
+                    analyticsEngine.report(
+                            AnalyticsEngine.AnalyticEvent.GetFeedBacks(
+                                    "5f987e2370c8d359e50687eb",
+                                    getString(R.string.action_close),
+                                    this
+                            )
+                    )
+                } else {
+                    bugReporter.openBugReportScreen(this, true)
+                }
                 return true
             }
             R.id.menu_home_report_bug -> {

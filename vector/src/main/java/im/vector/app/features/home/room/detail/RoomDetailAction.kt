@@ -90,4 +90,5 @@ sealed class RoomDetailAction : VectorViewModelAction {
 
     data class OpenOrCreateDm(val userId: String) : RoomDetailAction()
     data class JumpToReadReceipt(val userId: String) : RoomDetailAction()
+    object ReportView: RoomDetailAction()
 }

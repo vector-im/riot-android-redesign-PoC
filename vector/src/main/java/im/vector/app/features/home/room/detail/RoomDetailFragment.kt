@@ -90,6 +90,7 @@ import im.vector.app.core.ui.views.ActiveCallViewHolder
 import im.vector.app.core.ui.views.ActiveConferenceView
 import im.vector.app.core.ui.views.JumpToReadMarkerView
 import im.vector.app.core.ui.views.NotificationAreaView
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.core.utils.Debouncer
 import im.vector.app.core.utils.KeyboardStateUtils
 import im.vector.app.core.utils.PERMISSIONS_FOR_AUDIO_IP_CALL
@@ -221,7 +222,8 @@ class RoomDetailFragment @Inject constructor(
         private val webRtcPeerConnectionManager: WebRtcPeerConnectionManager,
         private val matrixItemColorProvider: MatrixItemColorProvider,
         private val imageContentRenderer: ImageContentRenderer,
-        private val roomDetailPendingActionStore: RoomDetailPendingActionStore
+        private val roomDetailPendingActionStore: RoomDetailPendingActionStore,
+        private val analyticsEngine: AnalyticsEngine
 ) :
         VectorBaseFragment(),
         TimelineEventController.Callback,
@@ -372,6 +374,11 @@ class RoomDetailFragment @Inject constructor(
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        roomDetailViewModel.handle(RoomDetailAction.ReportView)
+    }
+
     private fun handleOpenRoom(openRoom: RoomDetailViewEvents.OpenRoom) {
         navigator.openRoom(requireContext(), openRoom.roomId, null)
     }
@@ -445,6 +452,7 @@ class RoomDetailFragment @Inject constructor(
 
     private fun joinJitsiRoom(jitsiWidget: Widget, enableVideo: Boolean) {
         navigator.openRoomWidget(requireContext(), roomDetailArgs.roomId, jitsiWidget, mapOf(JitsiCallViewModel.ENABLE_VIDEO_OPTION to enableVideo))
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.JoinConference(roomId = roomDetailArgs.roomId, isVideo = enableVideo))
     }
 
     private fun openStickerPicker(event: RoomDetailViewEvents.OpenStickerPicker) {
@@ -653,36 +661,36 @@ class RoomDetailFragment @Inject constructor(
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.invite              -> {
+            R.id.invite           -> {
                 navigator.openInviteUsersToRoom(requireActivity(), roomDetailArgs.roomId)
                 true
             }
-            R.id.timeline_setting    -> {
+            R.id.timeline_setting -> {
                 navigator.openRoomProfile(requireActivity(), roomDetailArgs.roomId)
                 true
             }
-            R.id.resend_all          -> {
+            R.id.resend_all       -> {
                 roomDetailViewModel.handle(RoomDetailAction.ResendAll)
                 true
             }
-            R.id.open_matrix_apps    -> {
+            R.id.open_matrix_apps -> {
                 roomDetailViewModel.handle(RoomDetailAction.ManageIntegrations)
                 true
             }
             R.id.voice_call,
-            R.id.video_call          -> {
+            R.id.video_call       -> {
                 handleCallRequest(item)
                 true
             }
-            R.id.hangup_call         -> {
+            R.id.hangup_call      -> {
                 roomDetailViewModel.handle(RoomDetailAction.EndCall)
                 true
             }
-            R.id.search              -> {
+            R.id.search           -> {
                 handleSearchAction()
                 true
             }
-            else                     -> super.onOptionsItemSelected(item)
+            else                  -> super.onOptionsItemSelected(item)
         }
     }
 

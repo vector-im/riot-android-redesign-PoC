@@ -18,6 +18,7 @@ package im.vector.app.features.settings
 
 import im.vector.app.R
 import im.vector.app.core.preference.VectorPreference
+import im.vector.app.core.utils.AnalyticsEngine
 import javax.inject.Inject
 
 class VectorSettingsRootFragment @Inject constructor() : VectorSettingsBaseFragment() {
@@ -33,5 +34,10 @@ class VectorSettingsRootFragment @Inject constructor() : VectorSettingsBaseFragm
         for (i in 0 until preferenceScreen.preferenceCount) {
             (preferenceScreen.getPreference(i) as? VectorPreference)?.let { it.tintIcon = true }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SettingsView("root"))
     }
 }

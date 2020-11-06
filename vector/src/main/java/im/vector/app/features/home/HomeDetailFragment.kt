@@ -164,9 +164,7 @@ class HomeDetailFragment @Inject constructor(
                         )
                     }
                     dismissedAction = Runnable {
-                        unknownDeviceDetectorSharedViewModel.handle(
-                                UnknownDeviceDetectorSharedViewModel.Action.IgnoreDevice(newest.deviceId?.let { listOf(it) }.orEmpty())
-                        )
+                        unknownDeviceDetectorSharedViewModel.handle(UnknownDeviceDetectorSharedViewModel.Action.IgnoreNewDevices)
                     }
                 }
         )

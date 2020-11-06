@@ -63,6 +63,7 @@ class UnknownDeviceDetectorSharedViewModel @AssistedInject constructor(@Assisted
 
     sealed class Action : VectorViewModelAction {
         data class IgnoreDevice(val deviceIds: List<String>) : Action()
+        object IgnoreNewDevices : Action()
     }
 
     @AssistedInject.Factory
@@ -156,6 +157,17 @@ class UnknownDeviceDetectorSharedViewModel @AssistedInject constructor(@Assisted
                         setState {
                             copy(unknownSessions = Success(updated))
                         }
+                    }
+                }
+            }
+            Action.IgnoreNewDevices -> {
+                withState { state ->
+                    val detected = state.unknownSessions.invoke() ?: emptyList()
+                    val allNew = detected.filter { it.isNew }.mapNotNull { it.deviceInfo.deviceId }
+                    ignoredDeviceList.addAll(allNew)
+                    val updated = detected.filter { !ignoredDeviceList.contains(it.deviceInfo.deviceId) }
+                    setState {
+                        copy(unknownSessions = Success(updated))
                     }
                 }
             }

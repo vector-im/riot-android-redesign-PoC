@@ -24,15 +24,22 @@ import com.squareup.inject.assisted.AssistedInject
 import im.vector.app.R
 import im.vector.app.core.platform.VectorViewModel
 import im.vector.app.core.resources.StringProvider
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.features.userdirectory.PendingInvitee
 import io.reactivex.Observable
+import org.matrix.android.sdk.api.query.QueryStringValue
 import org.matrix.android.sdk.api.session.Session
+import org.matrix.android.sdk.api.session.events.model.EventType
+import org.matrix.android.sdk.api.session.events.model.toModel
+import org.matrix.android.sdk.api.session.room.model.RoomJoinRules
+import org.matrix.android.sdk.api.session.room.model.RoomJoinRulesContent
 import org.matrix.android.sdk.rx.rx
 
 class InviteUsersToRoomViewModel @AssistedInject constructor(@Assisted
                                                              initialState: InviteUsersToRoomViewState,
                                                              session: Session,
-                                                             val stringProvider: StringProvider)
+                                                             val stringProvider: StringProvider,
+                                                             private val analyticsEngine: AnalyticsEngine)
     : VectorViewModel<InviteUsersToRoomViewState, InviteUsersToRoomAction, InviteUsersToRoomViewEvents>(initialState) {
 
     private val room = session.getRoom(initialState.roomId)!!
@@ -54,6 +61,38 @@ class InviteUsersToRoomViewModel @AssistedInject constructor(@Assisted
     override fun handle(action: InviteUsersToRoomAction) {
         when (action) {
             is InviteUsersToRoomAction.InviteSelectedUsers -> inviteUsersToRoom(action.invitees)
+            InviteUsersToRoomAction.AnalyticsReportStartEvent -> handleReportInviteStart()
+        }
+    }
+
+    private fun handleReportInviteStart() {
+        val joinRules = room.getStateEvent(EventType.STATE_ROOM_JOIN_RULES, QueryStringValue.IsNotEmpty)
+                ?.content.toModel<RoomJoinRulesContent>()
+                ?.joinRules
+
+        room.roomSummary()?.let { sum ->
+            analyticsEngine.report(event = AnalyticsEngine.AnalyticEvent.BeginInvite(
+                    roomId = room.roomId,
+                    isEncrypted = sum.isEncrypted,
+                    memberCount = sum.joinedMembersCount ?: 0,
+                    isPublic = joinRules == RoomJoinRules.PUBLIC
+            ))
+        }
+    }
+
+    private fun handleReportSendInvites(invitees: Set<PendingInvitee>) {
+        val joinRules = room.getStateEvent(EventType.STATE_ROOM_JOIN_RULES, QueryStringValue.IsNotEmpty)
+                ?.content.toModel<RoomJoinRulesContent>()
+                ?.joinRules
+
+        room.roomSummary()?.let { sum ->
+            analyticsEngine.report(event = AnalyticsEngine.AnalyticEvent.SendInvite(
+                    roomId = room.roomId,
+                    inviteeCount = invitees.size,
+                    isEncrypted = sum.isEncrypted,
+                    memberCount = sum.joinedMembersCount ?: 0,
+                    isPublic = joinRules == RoomJoinRules.PUBLIC
+            ))
         }
     }
 
@@ -79,6 +118,7 @@ class InviteUsersToRoomViewModel @AssistedInject constructor(@Assisted
                                 invitees.size - 1)
                     }
                     _viewEvents.post(InviteUsersToRoomViewEvents.Success(successMessage))
+                    handleReportSendInvites(invitees)
                 },
                 {
                     _viewEvents.post(InviteUsersToRoomViewEvents.Failure(it))

@@ -36,6 +36,7 @@ import im.vector.app.core.extensions.cleanup
 import im.vector.app.core.extensions.registerStartForActivityResult
 import im.vector.app.core.platform.VectorBaseActivity
 import im.vector.app.core.platform.VectorBaseFragment
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.features.notifications.NotificationUtils
 import im.vector.app.features.rageshake.BugReporter
 import im.vector.app.features.settings.troubleshoot.NotificationTroubleshootTestManager
@@ -47,7 +48,8 @@ import javax.inject.Inject
 
 class VectorSettingsNotificationsTroubleshootFragment @Inject constructor(
         private val bugReporter: BugReporter,
-        private val testManagerFactory: NotificationTroubleshootTestManagerFactory
+        private val testManagerFactory: NotificationTroubleshootTestManagerFactory,
+        private val analyticsEngine: AnalyticsEngine
 ) : VectorBaseFragment() {
 
     @BindView(R.id.troubleshoot_test_recycler_view)
@@ -172,6 +174,8 @@ class VectorSettingsNotificationsTroubleshootFragment @Inject constructor(
             LocalBroadcastManager.getInstance(requireContext())
                     .registerReceiver(broadcastReceiverNotification, IntentFilter(NotificationUtils.DIAGNOSTIC_ACTION))
         }
+
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SettingsView("troubleshoot_notification"))
     }
 
     override fun onPause() {

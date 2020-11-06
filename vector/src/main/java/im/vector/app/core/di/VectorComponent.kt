@@ -28,6 +28,7 @@ import im.vector.app.core.dialogs.UnrecognizedCertificateDialog
 import im.vector.app.core.error.ErrorFormatter
 import im.vector.app.core.pushers.PushersManager
 import im.vector.app.core.utils.AssetReader
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.core.utils.DimensionConverter
 import im.vector.app.features.call.WebRtcPeerConnectionManager
 import im.vector.app.features.configuration.VectorConfiguration
@@ -150,6 +151,8 @@ interface VectorComponent {
     fun alertManager(): PopupAlertManager
 
     fun reAuthHelper(): ReAuthHelper
+
+    fun analyticsEngine(): AnalyticsEngine
 
     fun pinLocker(): PinLocker
 

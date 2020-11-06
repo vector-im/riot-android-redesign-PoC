@@ -43,6 +43,7 @@ import im.vector.app.core.di.VectorComponent
 import im.vector.app.core.extensions.configureAndStart
 import im.vector.app.core.rx.RxConfig
 import im.vector.app.features.call.WebRtcPeerConnectionManager
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.features.configuration.VectorConfiguration
 import im.vector.app.features.disclaimer.doNotShowDisclaimerDialog
 import im.vector.app.features.lifecycle.VectorActivityLifecycleCallbacks
@@ -91,6 +92,7 @@ class VectorApplication :
     @Inject lateinit var popupAlertManager: PopupAlertManager
     @Inject lateinit var pinLocker: PinLocker
     @Inject lateinit var webRtcPeerConnectionManager: WebRtcPeerConnectionManager
+    @Inject lateinit var analyticsEngine: AnalyticsEngine
 
     lateinit var vectorComponent: VectorComponent
 
@@ -114,7 +116,6 @@ class VectorApplication :
         vectorComponent.inject(this)
         vectorUncaughtExceptionHandler.activate(this)
         rxConfig.setupRxPlugin()
-
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
@@ -128,7 +129,7 @@ class VectorApplication :
 
         EpoxyController.defaultDiffingHandler = EpoxyAsyncUtil.getAsyncBackgroundHandler()
         EpoxyController.defaultModelBuildingHandler = EpoxyAsyncUtil.getAsyncBackgroundHandler()
-        registerActivityLifecycleCallbacks(VectorActivityLifecycleCallbacks(popupAlertManager))
+        registerActivityLifecycleCallbacks(VectorActivityLifecycleCallbacks(popupAlertManager, analyticsEngine))
         val fontRequest = FontRequest(
                 "com.google.android.gms.fonts",
                 "com.google.android.gms",
@@ -155,6 +156,7 @@ class VectorApplication :
             val lastAuthenticatedSession = authenticationService.getLastAuthenticatedSession()!!
             activeSessionHolder.setActiveSession(lastAuthenticatedSession)
             lastAuthenticatedSession.configureAndStart(applicationContext)
+            analyticsEngine.report(AnalyticsEngine.AnalyticEvent.Init(lastAuthenticatedSession))
         }
         ProcessLifecycleOwner.get().lifecycle.addObserver(object : LifecycleObserver {
             @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)

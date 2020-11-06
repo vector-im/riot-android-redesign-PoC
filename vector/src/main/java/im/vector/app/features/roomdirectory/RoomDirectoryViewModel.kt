@@ -26,6 +26,7 @@ import com.airbnb.mvrx.appendAt
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import im.vector.app.core.platform.VectorViewModel
+import im.vector.app.core.utils.AnalyticsEngine
 import org.matrix.android.sdk.api.MatrixCallback
 import org.matrix.android.sdk.api.extensions.orFalse
 import org.matrix.android.sdk.api.failure.Failure
@@ -43,6 +44,7 @@ import timber.log.Timber
 private const val PUBLIC_ROOMS_LIMIT = 20
 
 class RoomDirectoryViewModel @AssistedInject constructor(@Assisted initialState: PublicRoomsViewState,
+                                                         private val analyticsEngine: AnalyticsEngine,
                                                          private val session: Session)
     : VectorViewModel<PublicRoomsViewState, RoomDirectoryAction, RoomDirectoryViewEvents>(initialState) {
 
@@ -105,6 +107,12 @@ class RoomDirectoryViewModel @AssistedInject constructor(@Assisted initialState:
             is RoomDirectoryAction.FilterWith           -> filterWith(action)
             RoomDirectoryAction.LoadMore                -> loadMore()
             is RoomDirectoryAction.JoinRoom             -> joinRoom(action)
+            RoomDirectoryAction.StartReport             -> {
+                analyticsEngine.report(AnalyticsEngine.AnalyticEvent.StartRoomDirectory)
+            }
+            RoomDirectoryAction.EndReport               ->  {
+                analyticsEngine.report(AnalyticsEngine.AnalyticEvent.EndRoomDirectory)
+            }
         }
     }
 
@@ -154,6 +162,7 @@ class RoomDirectoryViewModel @AssistedInject constructor(@Assisted initialState:
     }
 
     private fun load(filter: String, roomDirectoryData: RoomDirectoryData) {
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.StartRoomDirectorySearch)
         currentTask = session.getPublicRooms(roomDirectoryData.homeServer,
                 PublicRoomsParams(
                         limit = PUBLIC_ROOMS_LIMIT,
@@ -178,11 +187,13 @@ class RoomDirectoryViewModel @AssistedInject constructor(@Assisted initialState:
                                     hasMore = since != null
                             )
                         }
+                        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.EndRoomDirectorySearch(data.chunk?.size ?: 0))
                     }
 
                     override fun onFailure(failure: Throwable) {
                         if (failure is Failure.Cancelled) {
                             // Ignore, another request should be already started
+                            analyticsEngine.report(AnalyticsEngine.AnalyticEvent.EndRoomDirectorySearch(0))
                             return
                         }
 
@@ -193,6 +204,7 @@ class RoomDirectoryViewModel @AssistedInject constructor(@Assisted initialState:
                                     asyncPublicRoomsRequest = Fail(failure)
                             )
                         }
+                        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.EndRoomDirectorySearch(0))
                     }
                 })
     }
@@ -207,15 +219,23 @@ class RoomDirectoryViewModel @AssistedInject constructor(@Assisted initialState:
         val viaServers = state.roomDirectoryData.homeServer?.let {
             listOf(it)
         } ?: emptyList()
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.StartJoinRoomEvent)
         session.joinRoom(action.roomId, viaServers = viaServers, callback = object : MatrixCallback<Unit> {
             override fun onSuccess(data: Unit) {
                 // We do not update the joiningRoomsIds here, because, the room is not joined yet regarding the sync data.
                 // Instead, we wait for the room to be joined
+                analyticsEngine.report(AnalyticsEngine.AnalyticEvent.EndJoinRoomEvent(
+                        roomId = action.roomId,
+                        isPublic = true,
+                        memberCount = 0,
+                        isEncrypted = false
+                ))
             }
 
             override fun onFailure(failure: Throwable) {
                 // Notify the user
                 _viewEvents.post(RoomDirectoryViewEvents.Failure(failure))
+                analyticsEngine.report(AnalyticsEngine.AnalyticEvent.CancelJoinRoomEvent)
             }
         })
     }

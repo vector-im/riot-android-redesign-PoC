@@ -19,9 +19,12 @@ package im.vector.app.features.lifecycle
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.features.popup.PopupAlertManager
 
-class VectorActivityLifecycleCallbacks constructor(private val popupAlertManager: PopupAlertManager) : Application.ActivityLifecycleCallbacks {
+class VectorActivityLifecycleCallbacks constructor(
+        private val popupAlertManager: PopupAlertManager,
+        private val analyticsEngine: AnalyticsEngine) : Application.ActivityLifecycleCallbacks {
     override fun onActivityPaused(activity: Activity) {
     }
 
@@ -30,6 +33,7 @@ class VectorActivityLifecycleCallbacks constructor(private val popupAlertManager
     }
 
     override fun onActivityStarted(activity: Activity) {
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.StartActivity(activity))
     }
 
     override fun onActivityDestroyed(activity: Activity) {
@@ -39,6 +43,7 @@ class VectorActivityLifecycleCallbacks constructor(private val popupAlertManager
     }
 
     override fun onActivityStopped(activity: Activity) {
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.EndActivity(activity))
     }
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {

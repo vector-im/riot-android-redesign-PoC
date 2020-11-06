@@ -95,6 +95,16 @@ class PublicRoomsFragment @Inject constructor(
         }.exhaustive
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.handle(RoomDirectoryAction.StartReport)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.handle(RoomDirectoryAction.EndReport)
+    }
+
     override fun onDestroyView() {
         publicRoomsController.callback = null
         publicRoomsList.cleanup()

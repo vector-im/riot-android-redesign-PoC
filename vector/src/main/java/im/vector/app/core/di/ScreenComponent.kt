@@ -67,6 +67,7 @@ import im.vector.app.features.roommemberprofile.RoomMemberProfileActivity
 import im.vector.app.features.roommemberprofile.devices.DeviceListBottomSheet
 import im.vector.app.features.roomprofile.RoomProfileActivity
 import im.vector.app.features.settings.VectorSettingsActivity
+import im.vector.app.features.settings.VectorSettingsBaseFragment
 import im.vector.app.features.settings.devices.DeviceVerificationInfoBottomSheet
 import im.vector.app.features.share.IncomingShareActivity
 import im.vector.app.features.signout.soft.SoftLogoutActivity
@@ -166,7 +167,7 @@ interface ScreenComponent {
     fun inject(view: VectorInviteView)
     fun inject(preference: UserAvatarPreference)
     fun inject(button: ReactionButton)
-
+    fun inject(baseFragment: VectorSettingsBaseFragment)
     /* ==========================================================================================
      * Factory
      * ========================================================================================== */

@@ -21,6 +21,7 @@ import android.os.Build
 import androidx.core.content.edit
 import im.vector.app.core.di.DefaultSharedPreferences
 import im.vector.app.core.resources.VersionCodeProvider
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.features.version.VersionProvider
 import org.matrix.android.sdk.api.Matrix
 import timber.log.Timber
@@ -32,7 +33,8 @@ import javax.inject.Singleton
 @Singleton
 class VectorUncaughtExceptionHandler @Inject constructor(private val bugReporter: BugReporter,
                                                          private val versionProvider: VersionProvider,
-                                                         private val versionCodeProvider: VersionCodeProvider) : Thread.UncaughtExceptionHandler {
+                                                         private val versionCodeProvider: VersionCodeProvider,
+                                                         private val analyticsEngine: AnalyticsEngine) : Thread.UncaughtExceptionHandler {
 
     // key to save the crash status
     companion object {
@@ -107,6 +109,8 @@ class VectorUncaughtExceptionHandler @Inject constructor(private val bugReporter
 
         // Show the classical system popup
         previousHandler?.uncaughtException(thread, throwable)
+
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.UnHandledCrash(throwable))
     }
 
     /**

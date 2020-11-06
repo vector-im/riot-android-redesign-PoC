@@ -17,6 +17,7 @@
 package org.matrix.android.sdk.internal.util
 
 import java.security.MessageDigest
+import java.util.Locale
 
 /**
  * Compute a Hash of a String, using md5 algorithm
@@ -27,6 +28,17 @@ fun String.md5() = try {
     digest.digest()
             .joinToString("") { String.format("%02X", it) }
             .toLowerCase()
+} catch (exc: Exception) {
+    // Should not happen, but just in case
+    hashCode().toString()
+}
+
+fun String.sha256() = try {
+    val digest = MessageDigest.getInstance("SHA-256")
+    digest.update(toByteArray())
+    digest.digest()
+            .joinToString("") { String.format("%02X", it) }
+            .toLowerCase(Locale.getDefault())
 } catch (exc: Exception) {
     // Should not happen, but just in case
     hashCode().toString()

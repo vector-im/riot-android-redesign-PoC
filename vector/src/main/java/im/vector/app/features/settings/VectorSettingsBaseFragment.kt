@@ -27,11 +27,13 @@ import im.vector.app.core.di.HasScreenInjector
 import im.vector.app.core.di.ScreenComponent
 import im.vector.app.core.error.ErrorFormatter
 import im.vector.app.core.platform.VectorBaseActivity
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.core.utils.toast
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import org.matrix.android.sdk.api.session.Session
 import timber.log.Timber
+import javax.inject.Inject
 
 abstract class VectorSettingsBaseFragment : PreferenceFragmentCompat(), HasScreenInjector {
 
@@ -62,7 +64,11 @@ abstract class VectorSettingsBaseFragment : PreferenceFragmentCompat(), HasScree
         injectWith(injector())
     }
 
-    protected open fun injectWith(injector: ScreenComponent) = Unit
+    @Inject protected lateinit var analyticsEngine: AnalyticsEngine
+
+    protected fun injectWith(injector: ScreenComponent) {
+        injector.inject(this)
+    }
 
     override fun injector(): ScreenComponent {
         return screenComponent

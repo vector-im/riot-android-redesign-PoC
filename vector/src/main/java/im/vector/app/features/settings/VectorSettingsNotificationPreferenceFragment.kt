@@ -33,6 +33,7 @@ import im.vector.app.core.preference.VectorPreference
 import im.vector.app.core.preference.VectorPreferenceCategory
 import im.vector.app.core.preference.VectorSwitchPreference
 import im.vector.app.core.pushers.PushersManager
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.core.utils.isIgnoringBatteryOptimizations
 import im.vector.app.core.utils.requestDisablingBatteryOptimization
 import im.vector.app.features.notifications.NotificationUtils
@@ -244,6 +245,7 @@ class VectorSettingsNotificationPreferenceFragment @Inject constructor(
         }
 
         refreshPref()
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SettingsView("notifications"))
     }
 
     private fun refreshPref() {

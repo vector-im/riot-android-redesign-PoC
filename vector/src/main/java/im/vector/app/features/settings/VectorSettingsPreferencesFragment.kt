@@ -27,6 +27,7 @@ import im.vector.app.R
 import im.vector.app.core.extensions.restart
 import im.vector.app.core.preference.VectorListPreference
 import im.vector.app.core.preference.VectorPreference
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.features.configuration.VectorConfiguration
 import im.vector.app.features.themes.ThemeUtils
 import javax.inject.Inject
@@ -44,6 +45,11 @@ class VectorSettingsPreferencesFragment @Inject constructor(
     }
     private val textSizePreference by lazy {
         findPreference<VectorPreference>(VectorPreferences.SETTINGS_INTERFACE_TEXT_SIZE_KEY)!!
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SettingsView("preferences"))
     }
 
     override fun bindPref() {

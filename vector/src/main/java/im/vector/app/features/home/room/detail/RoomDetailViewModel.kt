@@ -31,6 +31,7 @@ import im.vector.app.R
 import im.vector.app.core.extensions.exhaustive
 import im.vector.app.core.platform.VectorViewModel
 import im.vector.app.core.resources.StringProvider
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.core.utils.subscribeLogError
 import im.vector.app.features.call.WebRtcPeerConnectionManager
 import im.vector.app.features.command.CommandParser
@@ -74,6 +75,8 @@ import org.matrix.android.sdk.api.session.room.members.ChangeMembershipState
 import org.matrix.android.sdk.api.session.room.members.roomMemberQueryParams
 import org.matrix.android.sdk.api.session.room.model.Membership
 import org.matrix.android.sdk.api.session.room.model.PowerLevelsContent
+import org.matrix.android.sdk.api.session.room.model.RoomJoinRules
+import org.matrix.android.sdk.api.session.room.model.RoomJoinRulesContent
 import org.matrix.android.sdk.api.session.room.model.RoomMemberSummary
 import org.matrix.android.sdk.api.session.room.model.RoomSummary
 import org.matrix.android.sdk.api.session.room.model.message.MessageContent
@@ -115,7 +118,8 @@ class RoomDetailViewModel @AssistedInject constructor(
         private val roomSummaryHolder: RoomSummaryHolder,
         private val typingHelper: TypingHelper,
         private val webRtcPeerConnectionManager: WebRtcPeerConnectionManager,
-        timelineSettingsFactory: TimelineSettingsFactory
+        timelineSettingsFactory: TimelineSettingsFactory,
+        private val analyticsEngine: AnalyticsEngine
 ) : VectorViewModel<RoomDetailViewState, RoomDetailAction, RoomDetailViewEvents>(initialState), Timeline.Listener {
 
     private val room = session.getRoom(initialState.roomId)!!
@@ -275,6 +279,7 @@ class RoomDetailViewModel @AssistedInject constructor(
             is RoomDetailAction.CancelSend                       -> handleCancel(action)
             is RoomDetailAction.OpenOrCreateDm                   -> handleOpenOrCreateDm(action)
             is RoomDetailAction.JumpToReadReceipt                -> handleJumpToReadReceipt(action)
+            RoomDetailAction.ReportView                          -> handleReportView()
         }.exhaustive
     }
 
@@ -295,6 +300,23 @@ class RoomDetailViewModel @AssistedInject constructor(
         }
     }
 
+    private fun handleReportView() {
+        viewModelScope.launch {
+            val roomSummary = room.roomSummary()
+            val joinRules = room.getStateEvent(EventType.STATE_ROOM_JOIN_RULES, QueryStringValue.IsNotEmpty)
+                    ?.content.toModel<RoomJoinRulesContent>()
+                    ?.joinRules
+            analyticsEngine.report(
+                    AnalyticsEngine.AnalyticEvent.RoomView(
+                            roomId = room.roomId,
+                            isEncrypted = roomSummary?.isEncrypted ?: false,
+                            memberCount = roomSummary?.joinedMembersCount ?: 0,
+                            isPublic = joinRules == RoomJoinRules.PUBLIC
+                    )
+            )
+        }
+    }
+
     private fun handleJumpToReadReceipt(action: RoomDetailAction.JumpToReadReceipt) {
         room.getUserReadReceipt(action.userId)
                 ?.let { handleNavigateToEvent(RoomDetailAction.NavigateToEvent(it, true)) }
@@ -307,6 +329,12 @@ class RoomDetailViewModel @AssistedInject constructor(
     private fun handleStartCall(action: RoomDetailAction.StartCall) {
         room.roomSummary()?.otherMemberIds?.firstOrNull()?.let {
             webRtcPeerConnectionManager.startOutgoingCall(room.roomId, it, action.isVideo)
+        }
+        viewModelScope.launch {
+            analyticsEngine.report(AnalyticsEngine.AnalyticEvent.StartCall(
+                    roomId = room.roomId,
+                    isVideo = action.isVideo
+            ))
         }
     }
 
@@ -402,6 +430,15 @@ class RoomDetailViewModel @AssistedInject constructor(
             } finally {
                 _viewEvents.post(RoomDetailViewEvents.HideWaitingView)
             }
+        }
+
+        viewModelScope.launch {
+            analyticsEngine.report(
+                    AnalyticsEngine.AnalyticEvent.StartJitsiConf(
+                            roomId = room.roomId,
+                            isVideo = action.withVideo
+                    )
+            )
         }
     }
 
@@ -559,16 +596,16 @@ class RoomDetailViewModel @AssistedInject constructor(
             return@withState false
         }
         when (itemId) {
-            R.id.resend_all          -> state.asyncRoomSummary()?.hasFailedSending == true
-            R.id.timeline_setting    -> true
-            R.id.invite              -> state.canInvite
-            R.id.clear_all           -> state.asyncRoomSummary()?.hasFailedSending == true
-            R.id.open_matrix_apps    -> true
+            R.id.resend_all       -> state.asyncRoomSummary()?.hasFailedSending == true
+            R.id.timeline_setting -> true
+            R.id.invite           -> state.canInvite
+            R.id.clear_all        -> state.asyncRoomSummary()?.hasFailedSending == true
+            R.id.open_matrix_apps -> true
             R.id.voice_call,
-            R.id.video_call          -> true // always show for discoverability
-            R.id.hangup_call         -> webRtcPeerConnectionManager.currentCall != null
-            R.id.search              -> true
-            else                     -> false
+            R.id.video_call       -> true // always show for discoverability
+            R.id.hangup_call      -> webRtcPeerConnectionManager.currentCall != null
+            R.id.search           -> true
+            else                  -> false
         }
     }
 
@@ -582,6 +619,9 @@ class RoomDetailViewModel @AssistedInject constructor(
                         is ParsedCommand.ErrorNotACommand         -> {
                             // Send the text message to the room
                             room.sendTextMessage(action.text, autoMarkdown = action.autoMarkdown)
+                            viewModelScope.launch {
+                                analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SendText(room.roomId))
+                            }
                             _viewEvents.post(RoomDetailViewEvents.MessageSent)
                             popDraft()
                         }
@@ -598,6 +638,9 @@ class RoomDetailViewModel @AssistedInject constructor(
                             // Send the text message to the room, without markdown
                             room.sendTextMessage(slashCommandResult.message, autoMarkdown = false)
                             _viewEvents.post(RoomDetailViewEvents.MessageSent)
+                            viewModelScope.launch {
+                                analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SendText(room.roomId))
+                            }
                             popDraft()
                         }
                         is ParsedCommand.Invite                   -> {
@@ -650,6 +693,9 @@ class RoomDetailViewModel @AssistedInject constructor(
                         is ParsedCommand.SendRainbow              -> {
                             slashCommandResult.message.toString().let {
                                 room.sendFormattedTextMessage(it, rainbowGenerator.generate(it))
+                                viewModelScope.launch {
+                                    analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SendText(room.roomId))
+                                }
                             }
                             _viewEvents.post(RoomDetailViewEvents.SlashCommandHandled())
                             popDraft()
@@ -657,6 +703,9 @@ class RoomDetailViewModel @AssistedInject constructor(
                         is ParsedCommand.SendRainbowEmote         -> {
                             slashCommandResult.message.toString().let {
                                 room.sendFormattedTextMessage(it, rainbowGenerator.generate(it), MessageType.MSGTYPE_EMOTE)
+                                viewModelScope.launch {
+                                    analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SendText(room.roomId))
+                                }
                             }
                             _viewEvents.post(RoomDetailViewEvents.SlashCommandHandled())
                             popDraft()
@@ -728,6 +777,9 @@ class RoomDetailViewModel @AssistedInject constructor(
                                     messageContent?.msgType ?: MessageType.MSGTYPE_TEXT,
                                     action.text,
                                     action.autoMarkdown)
+                            viewModelScope.launch {
+                                analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SendEdit(room.roomId))
+                            }
                         } else {
                             Timber.w("Same message content, do not send edition")
                         }
@@ -755,12 +807,19 @@ class RoomDetailViewModel @AssistedInject constructor(
                     } else {
                         room.sendFormattedTextMessage(finalText, htmlText)
                     }
+                    viewModelScope.launch {
+                        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SendText(room.roomId))
+                    }
                     _viewEvents.post(RoomDetailViewEvents.MessageSent)
                     popDraft()
                 }
                 is SendMode.REPLY   -> {
                     state.sendMode.timelineEvent.let {
                         room.replyToMessage(it, action.text.toString(), action.autoMarkdown)
+                        viewModelScope.launch {
+                            analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SendReply(room.roomId))
+                        }
+
                         _viewEvents.post(RoomDetailViewEvents.MessageSent)
                         popDraft()
                     }
@@ -920,6 +979,11 @@ class RoomDetailViewModel @AssistedInject constructor(
                         tooBigFile.size,
                         maxUploadFileSize
                 ))
+            }
+        }
+        viewModelScope.launch {
+            attachments.forEach {
+                analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SendMedia(roomId = room.roomId, type = it.type))
             }
         }
     }

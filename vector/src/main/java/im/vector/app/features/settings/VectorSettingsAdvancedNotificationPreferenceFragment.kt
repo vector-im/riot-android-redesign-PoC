@@ -19,6 +19,7 @@ import androidx.preference.Preference
 import im.vector.app.R
 import im.vector.app.core.preference.PushRulePreference
 import im.vector.app.core.preference.VectorPreference
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.core.utils.toast
 import org.matrix.android.sdk.api.MatrixCallback
 import org.matrix.android.sdk.api.pushrules.RuleIds
@@ -79,6 +80,11 @@ class VectorSettingsAdvancedNotificationPreferenceFragment @Inject constructor()
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SettingsView("advanced_notification"))
     }
 
     private fun refreshDisplay() {

@@ -68,6 +68,10 @@ class InviteUsersToRoomActivity : SimpleFragmentActivity() {
         injector.inject(this)
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.handle(InviteUsersToRoomAction.AnalyticsReportStartEvent)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

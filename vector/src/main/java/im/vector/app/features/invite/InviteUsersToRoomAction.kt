@@ -21,4 +21,5 @@ import im.vector.app.features.userdirectory.PendingInvitee
 
 sealed class InviteUsersToRoomAction : VectorViewModelAction {
     data class InviteSelectedUsers(val invitees: Set<PendingInvitee>) : InviteUsersToRoomAction()
+    object AnalyticsReportStartEvent : InviteUsersToRoomAction()
 }

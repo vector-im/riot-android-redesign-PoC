@@ -34,6 +34,7 @@ import im.vector.app.core.extensions.configureAndStart
 import im.vector.app.core.extensions.exhaustive
 import im.vector.app.core.platform.VectorViewModel
 import im.vector.app.core.resources.StringProvider
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.core.utils.ensureTrailingSlash
 import im.vector.app.features.signout.soft.SoftLogoutActivity
 import org.matrix.android.sdk.api.MatrixCallback
@@ -63,7 +64,8 @@ class LoginViewModel @AssistedInject constructor(
         private val activeSessionHolder: ActiveSessionHolder,
         private val homeServerConnectionConfigFactory: HomeServerConnectionConfigFactory,
         private val reAuthHelper: ReAuthHelper,
-        private val stringProvider: StringProvider
+        private val stringProvider: StringProvider,
+        private val analyticsEngine: AnalyticsEngine
 ) : VectorViewModel<LoginViewState, LoginAction, LoginViewEvents>(initialState) {
 
     @AssistedInject.Factory
@@ -686,6 +688,7 @@ class LoginViewModel @AssistedInject constructor(
         activeSessionHolder.setActiveSession(session)
         authenticationService.reset()
         session.configureAndStart(applicationContext)
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.Init(session))
         setState {
             copy(
                     asyncLoginAction = Success(Unit)

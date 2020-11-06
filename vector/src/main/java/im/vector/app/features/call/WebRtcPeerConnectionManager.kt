@@ -27,6 +27,7 @@ import im.vector.app.core.services.BluetoothHeadsetReceiver
 import im.vector.app.core.services.CallService
 import im.vector.app.core.services.WiredHeadsetStateReceiver
 import im.vector.app.push.fcm.FcmHelper
+import im.vector.app.core.utils.AnalyticsEngine
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
@@ -75,7 +76,8 @@ import javax.inject.Singleton
 @Singleton
 class WebRtcPeerConnectionManager @Inject constructor(
         private val context: Context,
-        private val activeSessionDataSource: ActiveSessionDataSource
+        private val activeSessionDataSource: ActiveSessionDataSource,
+        private val analyticsEngine: AnalyticsEngine
 ) : CallsListener, LifecycleObserver {
 
     private val currentSession: Session?
@@ -543,6 +545,7 @@ class WebRtcPeerConnectionManager @Inject constructor(
             getTurnServer { turnServer ->
                 internalAcceptIncomingCall(currentCall!!, turnServer)
             }
+            analyticsEngine.report(AnalyticsEngine.AnalyticEvent.JoinCall(mxCall.roomId, mxCall.isVideoCall))
         }
     }
 

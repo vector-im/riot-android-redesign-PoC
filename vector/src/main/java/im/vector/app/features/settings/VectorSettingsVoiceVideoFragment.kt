@@ -25,6 +25,7 @@ import androidx.preference.SwitchPreference
 import im.vector.app.R
 import im.vector.app.core.extensions.registerStartForActivityResult
 import im.vector.app.core.preference.VectorPreference
+import im.vector.app.core.utils.AnalyticsEngine
 import im.vector.app.core.utils.getCallRingtoneName
 import im.vector.app.core.utils.getCallRingtoneUri
 import im.vector.app.core.utils.setCallRingtoneUri
@@ -56,6 +57,11 @@ class VectorSettingsVoiceVideoFragment : VectorSettingsBaseFragment() {
                 false
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analyticsEngine.report(AnalyticsEngine.AnalyticEvent.SettingsView("voice_and_video"))
     }
 
     private val ringtoneStartForActivityResult = registerStartForActivityResult { activityResult ->
