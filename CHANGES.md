@@ -7,6 +7,7 @@ Features ✨:
 
 Improvements 🙌:
  - Add System theme option and set as default (#904, #2387)
+ - Use WebView cache for widgets to avoid excessive data use (#2648)
  - Warn user when they are leaving a not public room (#1460)
 
 Bugfix 🐛:
