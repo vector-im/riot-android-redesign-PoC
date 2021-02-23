@@ -31,6 +31,7 @@ import org.matrix.android.sdk.api.session.sync.SyncState
 import org.matrix.android.sdk.api.util.Cancelable
 import org.matrix.android.sdk.internal.session.SessionScope
 import org.matrix.android.sdk.internal.task.TaskExecutor
+import org.matrix.android.sdk.internal.util.exhaustive
 import timber.log.Timber
 import java.io.IOException
 import java.net.InetAddress
@@ -117,7 +118,8 @@ internal class EventSenderProcessor @Inject constructor(
     }
 
     companion object {
-        private const val RETRY_WAIT_TIME_MS = 10_000L
+        private const val RETRY_DELAY_TIME_MS = 500L
+        private const val RETRY_PERIOD_TIME_MS = 10_000L
     }
 
     private var currentTask: QueuedTask? = null
@@ -126,10 +128,13 @@ internal class EventSenderProcessor @Inject constructor(
 
     private var networkAvailableLock = Object()
     private var canReachServer = true
-    private var retryNoNetworkTask: TimerTask? = null
+    private lateinit var retryNoNetworkTask: TimerTask
 
     override fun run() {
         Timber.v("## SendThread started ts:${System.currentTimeMillis()}")
+
+        initTimer()
+
         try {
             while (!isInterrupted) {
                 Timber.v("## SendThread wait for task to process")
@@ -212,12 +217,12 @@ internal class EventSenderProcessor @Inject constructor(
         }
 //        state = State.KILLED
         // is this needed?
-        retryNoNetworkTask?.cancel()
+        retryNoNetworkTask.cancel()
         Timber.w("## SendThread finished ${System.currentTimeMillis()}")
     }
 
-    private fun waitForNetwork() {
-        retryNoNetworkTask = Timer(SyncState.NoNetwork.toString(), false).schedule(RETRY_WAIT_TIME_MS) {
+    private fun initTimer() {
+        retryNoNetworkTask = Timer(SyncState.NoNetwork.toString(), false).schedule(RETRY_DELAY_TIME_MS, RETRY_PERIOD_TIME_MS) {
             synchronized(networkAvailableLock) {
                 canReachServer = checkHostAvailable().also {
                     Timber.v("## SendThread checkHostAvailable $it")
@@ -225,6 +230,10 @@ internal class EventSenderProcessor @Inject constructor(
                 networkAvailableLock.notify()
             }
         }
+    }
+
+    private fun waitForNetwork() {
+        retryNoNetworkTask.exhaustive // ensure retryNoNetworkTask is initialized
         synchronized(networkAvailableLock) { networkAvailableLock.wait() }
     }
 

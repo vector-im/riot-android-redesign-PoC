@@ -5,6 +5,7 @@ Features ✨:
  -
 
 Improvements 🙌:
+ - Improve event processing backoff time on bad networks.
  - Fetch homeserver type and version and display in a new setting screen and add info in rageshakes (#2831)
  - Improve initial sync performance (#983)
 
