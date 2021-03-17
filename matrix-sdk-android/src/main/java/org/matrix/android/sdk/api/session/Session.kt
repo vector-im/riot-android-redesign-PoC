@@ -111,10 +111,9 @@ interface Session :
 
     /**
      * Launches infinite periodic background syncs
-     * This does not work in doze mode :/
-     * If battery optimization is on it can work in app standby but that's all :/
+     * Doze mode will probably interrupt rapid sync, but it should start up again the next time we run a periodic sync
      */
-    fun startAutomaticBackgroundSync(timeOutInSeconds: Long, repeatDelayInSeconds: Long)
+    fun startAutomaticBackgroundSync(timeOutInSeconds: Long, rapidSync: Boolean, repeatDelayInSeconds: Long)
 
     fun stopAnyBackgroundSync()
 

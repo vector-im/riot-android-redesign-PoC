@@ -17,7 +17,9 @@ package org.matrix.android.sdk.internal.session.sync.job
 
 import android.content.Context
 import androidx.work.BackoffPolicy
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
 import com.squareup.moshi.JsonClass
 import org.matrix.android.sdk.api.failure.isTokenError
@@ -73,7 +75,7 @@ internal class SyncWorker(context: Context,
                     Result.success().also {
                         if (params.periodic) {
                             // we want to schedule another one after delay
-                            automaticallyBackgroundSync(workManagerProvider, params.sessionId, params.timeout, params.delay)
+                            automaticallyRapidBackgroundSync(workManagerProvider, params.sessionId, params.timeout, params.delay)
                         }
                     }
                 },
@@ -101,34 +103,53 @@ internal class SyncWorker(context: Context,
 
     companion object {
         private const val BG_SYNC_WORK_NAME = "BG_SYNCP"
+        private const val BG_RAPID_SYNC_WORK_NAME = "BG_RAPID_SYNCP"
+        private const val BG_PERIODIC_SYNC_WORK_NAME = "BG_PERIODIC_SYNCP"
 
         fun requireBackgroundSync(workManagerProvider: WorkManagerProvider, sessionId: String, serverTimeout: Long = 0) {
             val data = WorkerParamsFactory.toData(Params(sessionId, serverTimeout, 0L, false))
             val workRequest = workManagerProvider.matrixOneTimeWorkRequestBuilder<SyncWorker>()
                     .setConstraints(WorkManagerProvider.workConstraints)
-                    .setBackoffCriteria(BackoffPolicy.LINEAR, 1_000, TimeUnit.MILLISECONDS)
+                    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, WorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
                     .setInputData(data)
                     .build()
+            // If we've already scheduled a sync that's not yet run, defer to the existing one
             workManagerProvider.workManager
-                    .enqueueUniqueWork(BG_SYNC_WORK_NAME, ExistingWorkPolicy.APPEND_OR_REPLACE, workRequest)
+                    .enqueueUniqueWork(BG_SYNC_WORK_NAME, ExistingWorkPolicy.KEEP, workRequest)
         }
 
-        fun automaticallyBackgroundSync(workManagerProvider: WorkManagerProvider, sessionId: String, serverTimeout: Long = 0, delayInSeconds: Long = 30) {
+        fun automaticallyRapidBackgroundSync(workManagerProvider: WorkManagerProvider, sessionId: String, serverTimeout: Long = 0, delayInSeconds: Long = 30) {
             val data = WorkerParamsFactory.toData(Params(sessionId, serverTimeout, delayInSeconds, true))
             val workRequest = workManagerProvider.matrixOneTimeWorkRequestBuilder<SyncWorker>()
                     .setConstraints(WorkManagerProvider.workConstraints)
                     .setInputData(data)
-                    .setBackoffCriteria(BackoffPolicy.LINEAR, 1_000, TimeUnit.MILLISECONDS)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, WorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
                     .setInitialDelay(delayInSeconds, TimeUnit.SECONDS)
+                    .build()
+            // Avoid risking multiple chains of syncs by replacing the existing chain
+            workManagerProvider.workManager
+                    .enqueueUniqueWork(BG_RAPID_SYNC_WORK_NAME, ExistingWorkPolicy.REPLACE, workRequest)
+        }
+
+        fun automaticallyPeriodicBackgroundSync(workManagerProvider: WorkManagerProvider, sessionId: String, serverTimeout: Long = 0, restartRapidSync: Boolean = true, delayInSeconds: Long = 30) {
+            val data = WorkerParamsFactory.toData(Params(sessionId, serverTimeout, delayInSeconds, restartRapidSync))
+            val workRequest = workManagerProvider.matrixPeriodicWorkRequestBuilder<SyncWorker>(1, TimeUnit.HOURS, 15, TimeUnit.MINUTES)
+                    .setConstraints(WorkManagerProvider.workConstraints)
+                    .setInputData(data)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, WorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
                     .build()
 
             workManagerProvider.workManager
-                    .enqueueUniqueWork(BG_SYNC_WORK_NAME, ExistingWorkPolicy.APPEND_OR_REPLACE, workRequest)
+                    .enqueueUniquePeriodicWork(BG_PERIODIC_SYNC_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, workRequest)
         }
 
         fun stopAnyBackgroundSync(workManagerProvider: WorkManagerProvider) {
             workManagerProvider.workManager
                     .cancelUniqueWork(BG_SYNC_WORK_NAME)
+            workManagerProvider.workManager
+                    .cancelUniqueWork(BG_RAPID_SYNC_WORK_NAME)
+            workManagerProvider.workManager
+                    .cancelUniqueWork(BG_PERIODIC_SYNC_WORK_NAME)
         }
     }
 }

@@ -50,6 +50,16 @@ internal class WorkManagerProvider @Inject constructor(
                     .addTag(tag)
 
     /**
+     * Create a PeriodicWorkRequestBuilder, with the Matrix SDK tag
+     */
+    inline fun <reified W : ListenableWorker> matrixPeriodicWorkRequestBuilder(repeatInterval: Long,
+                                                                               repeatIntervalTimeUnit: TimeUnit,
+                                                                               flexTimeInterval: Long,
+                                                                               flexTimeIntervalUnit: TimeUnit) =
+            PeriodicWorkRequestBuilder<W>(repeatInterval, repeatIntervalTimeUnit, flexTimeInterval, flexTimeIntervalUnit)
+                    .addTag(tag)
+
+    /**
      * Cancel all works instantiated by the Matrix SDK for the current session, and not those from the SDK client, or for other sessions
      */
     fun cancelAllWorks() {

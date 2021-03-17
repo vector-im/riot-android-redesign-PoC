@@ -34,6 +34,7 @@ object BackgroundSyncStarter {
                     Timber.i("## Sync: Work scheduled to periodically sync in ${vectorPreferences.backgroundSyncDelay()}s")
                     activeSession.startAutomaticBackgroundSync(
                             vectorPreferences.backgroundSyncTimeOut().toLong(),
+                            true,
                             vectorPreferences.backgroundSyncDelay().toLong()
                     )
                 }
