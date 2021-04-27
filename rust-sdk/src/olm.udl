@@ -1,0 +1,147 @@
+namespace olm {
+    void set_logger(Logger logger);
+};
+
+callback interface Logger {
+    void log(string log_line);
+};
+
+callback interface ProgressListener {
+    void on_progress(i32 progress, i32 total);
+};
+
+[Error]
+enum MachineCreationError {
+    "Identifier",
+    "CryptoStore",
+};
+
+[Error]
+enum KeyImportError {
+    "Export",
+    "CryptoStore",
+};
+
+[Error]
+enum CryptoStoreError {
+    "CryptoStore",
+    "OlmError",
+    "Serialization",
+    "Identifier",
+};
+
+[Error]
+enum DecryptionError {
+    "Identifier",
+    "Serialization",
+    "Megolm",
+};
+
+dictionary DeviceLists {
+    sequence<string> changed;
+    sequence<string> left;
+};
+
+dictionary KeysImportResult {
+    i32 total;
+    i32 imported;
+};
+
+dictionary DecryptedEvent {
+    string clear_event;
+    string sender_curve25519_key;
+    string? claimed_ed25519_key;
+    sequence<string> forwarding_curve25519_chain;
+};
+
+dictionary Device {
+    string user_id;
+    string device_id;
+    record<DOMString, string> keys;
+    sequence<string> algorithms;
+    string? display_name;
+    boolean is_blocked;
+};
+
+dictionary Sas {
+    string other_user_id;
+    string other_device_id;
+    string flow_id;
+    Request request;
+};
+
+dictionary KeyRequestPair {
+    Request? cancellation;
+    Request key_request;
+};
+
+[Enum]
+interface Request {
+    ToDevice(string request_id, string event_type, string body);
+    KeysUpload(string request_id, string body);
+    KeysQuery(string request_id, sequence<string> users);
+    KeysClaim(string request_id, record<DOMString, record<DOMString, string>> one_time_keys);
+};
+
+enum RequestType {
+    "KeysQuery",
+    "KeysClaim",
+    "KeysUpload",
+    "ToDevice",
+};
+
+[Threadsafe]
+interface OlmMachine {
+    [Throws=MachineCreationError]
+    constructor([ByRef] string user_id, [ByRef] string device_id, [ByRef] string path);
+
+    record<DOMString, string> identity_keys();
+    string user_id();
+    string device_id();
+
+    [Throws=CryptoStoreError]
+    string receive_sync_changes([ByRef] string events,
+                              DeviceLists device_changes,
+                              record<DOMString, i32> key_counts);
+    [Throws=CryptoStoreError]
+    sequence<Request> outgoing_requests();
+    [Throws=CryptoStoreError]
+    void mark_request_as_sent(
+        [ByRef] string request_id,
+        RequestType request_type,
+        [ByRef] string response
+    );
+
+    [Throws=DecryptionError]
+    DecryptedEvent decrypt_room_event([ByRef] string event, [ByRef] string room_id);
+    [Throws=CryptoStoreError]
+    string encrypt([ByRef] string room_id, [ByRef] string event_type, [ByRef] string content);
+
+    [Throws=CryptoStoreError]
+    Device? get_device([ByRef] string user_id, [ByRef] string device_id);
+    [Throws=CryptoStoreError]
+    sequence<Device> get_user_devices([ByRef] string user_id);
+
+    void update_tracked_users(sequence<string> users);
+    [Throws=CryptoStoreError]
+    Request? get_missing_sessions(sequence<string> users);
+    [Throws=CryptoStoreError]
+    sequence<Request> share_room_key([ByRef] string room_id, sequence<string> users);
+
+    [Throws=CryptoStoreError]
+    Sas start_verification([ByRef] Device device);
+
+    [Throws=DecryptionError]
+    KeyRequestPair request_room_key([ByRef] string event, [ByRef] string room_id);
+
+    [Throws=CryptoStoreError]
+    string export_keys([ByRef] string passphrase, i32 rounds);
+    [Throws=KeyImportError]
+    KeysImportResult import_keys(
+        [ByRef] string keys,
+        [ByRef] string passphrase,
+        ProgressListener progress_listener
+    );
+    [Throws=CryptoStoreError]
+    void discard_room_key([ByRef] string room_id);
+};

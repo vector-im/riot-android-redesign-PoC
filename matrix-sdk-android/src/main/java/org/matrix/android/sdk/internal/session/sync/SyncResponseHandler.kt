@@ -48,7 +48,6 @@ internal class SyncResponseHandler @Inject constructor(
         private val roomSyncHandler: RoomSyncHandler,
         private val userAccountDataSyncHandler: UserAccountDataSyncHandler,
         private val groupSyncHandler: GroupSyncHandler,
-        private val cryptoSyncHandler: CryptoSyncHandler,
         private val aggregatorHandler: SyncResponsePostTreatmentAggregatorHandler,
         private val cryptoService: DefaultCryptoService,
         private val tokenStore: SyncTokenStore,
@@ -64,9 +63,10 @@ internal class SyncResponseHandler @Inject constructor(
         measureTimeMillis {
             if (!cryptoService.isStarted()) {
                 Timber.v("Should start cryptoService")
+                // TODO shirley there's a better place for this than the sync
+                // loop?
                 cryptoService.start()
             }
-            cryptoService.onSyncWillProcess(isInitialSync)
         }.also {
             Timber.v("Finish handling start cryptoService in $it ms")
         }
@@ -75,11 +75,12 @@ internal class SyncResponseHandler @Inject constructor(
         // to ensure to decrypt them properly
         measureTimeMillis {
             Timber.v("Handle toDevice")
-            reportSubtask(reporter, InitSyncStep.ImportingAccountCrypto, 100, 0.1f) {
-                if (syncResponse.toDevice != null) {
-                    cryptoSyncHandler.handleToDevice(syncResponse.toDevice, reporter)
-                }
-            }
+
+            cryptoService.receiveSyncChanges(
+                syncResponse.toDevice,
+                syncResponse.deviceLists,
+                syncResponse.deviceOneTimeKeysCount
+            )
         }.also {
             Timber.v("Finish handling toDevice in $it ms")
         }
@@ -131,7 +132,7 @@ internal class SyncResponseHandler @Inject constructor(
         }
 
         Timber.v("On sync completed")
-        cryptoSyncHandler.onSyncCompleted(syncResponse)
+        cryptoService.onSyncCompleted()
     }
 
     /**

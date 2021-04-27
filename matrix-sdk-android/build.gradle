@@ -93,6 +93,20 @@ android {
     }
 }
 
+android.libraryVariants.all { variant ->
+    def t = tasks.register("generate${variant.name.capitalize()}UniffiBindings", Exec) {
+        // Runs the bindings generation, note that you must have uniffi-bindgen installed 
+        // and in your PATH environment variable
+        commandLine 'uniffi-bindgen', 'generate', '../rust-sdk/src/olm.udl',
+                    '--language', 'kotlin',
+                    '--out-dir', "${buildDir}/generated/source/uniffi/${variant.name}/java"
+    }
+
+    variant.javaCompileProvider.get().dependsOn(t)
+    def sourceSet = variant.sourceSets.find { it.name == variant.name }
+    sourceSet.java.srcDir new File(buildDir, "generated/source/uniffi/${variant.name}/java")
+}
+
 static def gitRevision() {
     def cmd = "git rev-parse --short=8 HEAD"
     return cmd.execute().text.trim()
@@ -118,6 +132,8 @@ dependencies {
     def daggerVersion = '2.35'
     def work_version = '2.5.0'
     def retrofit_version = '2.9.0'
+
+    implementation 'net.java.dev.jna:jna:5.6.0@aar'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"

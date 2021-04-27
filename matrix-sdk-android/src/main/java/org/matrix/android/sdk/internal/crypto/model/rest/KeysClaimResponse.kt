@@ -24,6 +24,11 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 internal data class KeysClaimResponse(
+        /// If any remote homeservers could not be reached, they are recorded here.
+        /// The names of the properties are the names of the unreachable servers.
+        @Json(name = "failures")
+        val failures: Map<String, Any>,
+
         /**
          * The requested keys ordered by device by user.
          * TODO Type does not match spec, should be Map<String, JsonDict>

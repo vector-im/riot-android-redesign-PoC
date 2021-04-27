@@ -10,6 +10,9 @@
 /build
 /captures
 .externalNativeBuild
+rust-sdk/target/*
+rust-sdk/src/uniffi/*
+Cargo.lock
 
 /tmp
 

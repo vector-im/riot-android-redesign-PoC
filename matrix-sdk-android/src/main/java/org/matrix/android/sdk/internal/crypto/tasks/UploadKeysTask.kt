@@ -29,10 +29,7 @@ import javax.inject.Inject
 
 internal interface UploadKeysTask : Task<UploadKeysTask.Params, KeysUploadResponse> {
     data class Params(
-            // the device keys to send.
-            val deviceKeys: DeviceKeys?,
-            // the one-time keys to send.
-            val oneTimeKeys: JsonDict?
+            val body: JsonDict
     )
 }
 
@@ -42,15 +39,10 @@ internal class DefaultUploadKeysTask @Inject constructor(
 ) : UploadKeysTask {
 
     override suspend fun execute(params: UploadKeysTask.Params): KeysUploadResponse {
-        val body = KeysUploadBody(
-                deviceKeys = params.deviceKeys,
-                oneTimeKeys = params.oneTimeKeys
-        )
-
-        Timber.i("## Uploading device keys -> $body")
+        Timber.i("## Uploading device keys -> $params.body")
 
         return executeRequest(globalErrorReceiver) {
-            cryptoApi.uploadKeys(body)
+            cryptoApi.uploadKeys(params.body)
         }
     }
 }

@@ -1,0 +1,39 @@
+[package]
+name = "matrix-crypto-bindings"
+version = "0.1.0"
+authors = ["Damir Jelić <poljar@termina.org.uk>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "matrix_crypto"
+
+[dependencies]
+serde_json = "1.0.64"
+http = "0.2.4"
+
+thiserror = "1.0.24"
+tracing = "0.1.25"
+tracing-subscriber = "0.2.17"
+uniffi = "0.8.0"
+
+[dependencies.js_int]
+version = "0.2.0"
+features = ["lax_deserialize"]
+
+[dependencies.matrix-sdk-common]
+git = "https://github.com/matrix-org/matrix-rust-sdk/"
+branch = "corroded-android"
+
+[dependencies.matrix-sdk-crypto]
+git = "https://github.com/matrix-org/matrix-rust-sdk/"
+branch = "corroded-android"
+features = ["sled_cryptostore"]
+
+[dependencies.tokio]
+version = "1.4.0"
+default_features = false
+features = ["rt-multi-thread"]
+
+[build-dependencies]
+uniffi_build = "0.8.0"

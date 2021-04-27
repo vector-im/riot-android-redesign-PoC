@@ -68,10 +68,6 @@ interface CryptoService {
 
     fun getUserDevices(userId: String): MutableList<CryptoDeviceInfo>
 
-    fun setDevicesKnown(devices: List<MXDeviceInfo>, callback: MatrixCallback<Unit>?)
-
-    fun deviceWithIdentityKey(senderKey: String, algorithm: String): CryptoDeviceInfo?
-
     fun getMyDevice(): CryptoDeviceInfo
 
     fun getGlobalBlacklistUnverifiedDevices(): Boolean
@@ -90,11 +86,7 @@ interface CryptoService {
 
     fun getDeviceInfo(userId: String, deviceId: String?): CryptoDeviceInfo?
 
-    fun requestRoomKeyForEvent(event: Event)
-
     fun reRequestRoomKeyForEvent(event: Event)
-
-    fun cancelRoomKeyRequest(requestBody: RoomKeyRequestBody)
 
     fun addRoomKeysRequestListener(listener: GossipingRequestListener)
 
@@ -131,8 +123,6 @@ interface CryptoService {
     fun downloadKeys(userIds: List<String>, forceDownload: Boolean, callback: MatrixCallback<MXUsersDevicesMap<CryptoDeviceInfo>>)
 
     fun getCryptoDeviceInfo(userId: String): List<CryptoDeviceInfo>
-
-    fun getLiveCryptoDeviceInfo(): LiveData<List<CryptoDeviceInfo>>
 
     fun getLiveCryptoDeviceInfo(userId: String): LiveData<List<CryptoDeviceInfo>>
 

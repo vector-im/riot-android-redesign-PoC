@@ -86,7 +86,7 @@ internal class RoomSyncHandler @Inject constructor(private val readReceiptHandle
         data class LEFT(val data: Map<String, RoomSync>) : HandlingStrategy()
     }
 
-    fun handle(realm: Realm,
+    suspend fun handle(realm: Realm,
                roomsSyncResponse: RoomsSyncResponse,
                isInitialSync: Boolean,
                aggregator: SyncResponsePostTreatmentAggregator,
@@ -99,7 +99,7 @@ internal class RoomSyncHandler @Inject constructor(private val readReceiptHandle
 
     // PRIVATE METHODS *****************************************************************************
 
-    private fun handleRoomSync(realm: Realm,
+    private suspend fun handleRoomSync(realm: Realm,
                                handlingStrategy: HandlingStrategy,
                                isInitialSync: Boolean,
                                aggregator: SyncResponsePostTreatmentAggregator,
@@ -136,7 +136,7 @@ internal class RoomSyncHandler @Inject constructor(private val readReceiptHandle
         realm.insertOrUpdate(rooms)
     }
 
-    private fun insertJoinRoomsFromInitSync(realm: Realm,
+    private suspend fun insertJoinRoomsFromInitSync(realm: Realm,
                                             handlingStrategy: HandlingStrategy.JOINED,
                                             syncLocalTimeStampMillis: Long,
                                             aggregator: SyncResponsePostTreatmentAggregator,
@@ -162,7 +162,7 @@ internal class RoomSyncHandler @Inject constructor(private val readReceiptHandle
                                                 roomSync = handlingStrategy.data[it] ?: error("Should not happen"),
                                                 insertType = EventInsertType.INITIAL_SYNC,
                                                 syncLocalTimestampMillis = syncLocalTimeStampMillis,
-                                                aggregator
+                                                aggregator = aggregator,
                                         )
                                     }
                             realm.insertOrUpdate(roomEntities)
@@ -178,7 +178,7 @@ internal class RoomSyncHandler @Inject constructor(private val readReceiptHandle
         }
     }
 
-    private fun handleJoinedRoom(realm: Realm,
+    private suspend fun handleJoinedRoom(realm: Realm,
                                  roomId: String,
                                  roomSync: RoomSync,
                                  insertType: EventInsertType,
@@ -326,7 +326,7 @@ internal class RoomSyncHandler @Inject constructor(private val readReceiptHandle
         return roomEntity
     }
 
-    private fun handleTimelineEvents(realm: Realm,
+    private suspend fun handleTimelineEvents(realm: Realm,
                                      roomId: String,
                                      roomEntity: RoomEntity,
                                      eventList: List<Event>,

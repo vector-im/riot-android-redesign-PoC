@@ -115,6 +115,10 @@ class MXUsersDevicesMap<E> {
         }
     }
 
+    fun join(other: Map<out String, HashMap<String, E>>) {
+        map.putAll(other)
+    }
+
     override fun toString(): String {
         return "MXUsersDevicesMap $map"
     }
