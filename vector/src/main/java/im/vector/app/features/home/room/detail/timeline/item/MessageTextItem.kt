@@ -16,6 +16,7 @@
 
 package im.vector.app.features.home.room.detail.timeline.item
 
+import android.text.Spanned
 import android.text.method.MovementMethod
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.PrecomputedTextCompat
@@ -30,6 +31,7 @@ import im.vector.app.features.home.room.detail.timeline.url.PreviewUrlRetriever
 import im.vector.app.features.home.room.detail.timeline.url.PreviewUrlUiState
 import im.vector.app.features.home.room.detail.timeline.url.PreviewUrlView
 import im.vector.app.features.media.ImageContentRenderer
+import io.noties.markwon.MarkwonPlugin
 
 @EpoxyModelClass(layout = R.layout.item_timeline_event_base)
 abstract class MessageTextItem : AbsMessageItem<MessageTextItem.Holder>() {
@@ -54,6 +56,8 @@ abstract class MessageTextItem : AbsMessageItem<MessageTextItem.Holder>() {
 
     @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
     var movementMethod: MovementMethod? = null
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    var markwonPlugins: (List<MarkwonPlugin>)? = null
 
     private val previewUrlViewUpdater = PreviewUrlViewUpdater()
 
@@ -80,6 +84,7 @@ abstract class MessageTextItem : AbsMessageItem<MessageTextItem.Holder>() {
                 it.bind(holder.messageView)
             }
         }
+        markwonPlugins?.forEach { plugin -> plugin.beforeSetText(holder.messageView, message as Spanned) }
         val textFuture = PrecomputedTextCompat.getTextFuture(
                 message ?: "",
                 TextViewCompat.getTextMetricsParams(holder.messageView),
@@ -91,6 +96,7 @@ abstract class MessageTextItem : AbsMessageItem<MessageTextItem.Holder>() {
         holder.messageView.setOnClickListener(attributes.itemClickListener)
         holder.messageView.setOnLongClickListener(attributes.itemLongClickListener)
         holder.messageView.setTextFuture(textFuture)
+        markwonPlugins?.forEach { plugin -> plugin.afterSetText(holder.messageView) }
     }
 
     override fun unbind(holder: Holder) {

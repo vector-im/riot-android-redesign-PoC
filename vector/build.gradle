@@ -293,7 +293,8 @@ dependencies {
     def epoxy_version = '4.6.1'
     def fragment_version = '1.3.3'
     def arrow_version = "0.8.2"
-    def markwon_version = '4.1.2'
+    def coroutines_version = "1.3.8"
+    def markwon_version = '4.3.0'
     def big_image_viewer_version = '1.8.0'
     def glide_version = '4.12.0'
     def moshi_version = '1.12.0'
@@ -377,6 +378,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'me.gujun.android:span:1.7'
     implementation "io.noties.markwon:core:$markwon_version"
+    implementation "io.noties.markwon:ext-latex:$markwon_version"
+    implementation "io.noties.markwon:inline-parser:$markwon_version"
     implementation "io.noties.markwon:html:$markwon_version"
     implementation 'com.googlecode.htmlcompressor:htmlcompressor:1.5.2'
     implementation 'me.saket:better-link-movement-method:2.2.0'

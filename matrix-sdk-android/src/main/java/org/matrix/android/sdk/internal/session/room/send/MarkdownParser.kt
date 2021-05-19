@@ -32,7 +32,7 @@ internal class MarkdownParser @Inject constructor(
         private val textPillsUtils: TextPillsUtils
 ) {
 
-    private val mdSpecialChars = "[`_\\-*>.\\[\\]#~]".toRegex()
+    private val mdSpecialChars = "[`_\\-*>.\\[\\]#~$]".toRegex()
 
     fun parse(text: CharSequence): TextContent {
         val source = textPillsUtils.processSpecialSpansToMarkdown(text) ?: text.toString()
