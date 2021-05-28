@@ -34,6 +34,9 @@ abstract class SettingsContinueCancelItem : EpoxyModelWithHolder<SettingsContinu
     var continueOnClick: ClickListener? = null
 
     @EpoxyAttribute
+    var canContinue: Boolean = true
+
+    @EpoxyAttribute
     var cancelOnClick: ClickListener? = null
 
     override fun bind(holder: Holder) {
@@ -43,6 +46,7 @@ abstract class SettingsContinueCancelItem : EpoxyModelWithHolder<SettingsContinu
 
         continueText?.let { holder.continueButton.text = it }
         holder.continueButton.onClick(continueOnClick)
+        holder.continueButton.isEnabled = canContinue
     }
 
     class Holder : VectorEpoxyHolder() {

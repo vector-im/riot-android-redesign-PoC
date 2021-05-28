@@ -71,7 +71,7 @@ internal class RealmKeysUtils @Inject constructor(context: Context,
         val encodedKey = Base64.encodeToString(key, Base64.NO_PADDING)
         val toStore = secretStoringUtils.securelyStoreString(encodedKey, alias)
         sharedPreferences.edit {
-            putString("${ENCRYPTED_KEY_PREFIX}_$alias", Base64.encodeToString(toStore!!, Base64.NO_PADDING))
+            putString("${ENCRYPTED_KEY_PREFIX}_$alias", Base64.encodeToString(toStore, Base64.NO_PADDING))
         }
         return key
     }
@@ -84,7 +84,7 @@ internal class RealmKeysUtils @Inject constructor(context: Context,
         val encryptedB64 = sharedPreferences.getString("${ENCRYPTED_KEY_PREFIX}_$alias", null)
         val encryptedKey = Base64.decode(encryptedB64, Base64.NO_PADDING)
         val b64 = secretStoringUtils.loadSecureSecret(encryptedKey, alias)
-        return Base64.decode(b64!!, Base64.NO_PADDING)
+        return Base64.decode(b64, Base64.NO_PADDING)
     }
 
     fun configureEncryption(realmConfigurationBuilder: RealmConfiguration.Builder, alias: String) {

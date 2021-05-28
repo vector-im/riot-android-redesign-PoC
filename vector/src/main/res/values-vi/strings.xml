@@ -35,7 +35,7 @@
     <string name="home_filter_placeholder_rooms">Lọc tên phòng</string>
     <string name="home_filter_placeholder_people">Lọc người</string>
     <string name="dialog_title_confirmation">Xác nhận</string>
-    <string name="disable">Vô hiệu hóa</string>
+    <string name="disable">Tắt</string>
     <string name="home_filter_placeholder_home">Lọc tên phòng</string>
     <string name="bottom_action_groups">Cộng đồng</string>
     <string name="bottom_action_rooms">Phòng</string>
@@ -45,7 +45,7 @@
     <string name="dialog_title_success">Thành công</string>
     <string name="dialog_title_error">Lỗi</string>
     <string name="dialog_title_warning">Cảnh báo</string>
-    <string name="copied_to_clipboard">Sao chép vào bộ nhớ tạm</string>
+    <string name="copied_to_clipboard">Đã sao chép vào bộ nhớ tạm</string>
     <string name="action_add">Thêm</string>
     <string name="action_copy">Sao chép</string>
     <string name="action_close">Đóng</string>
@@ -60,7 +60,7 @@
     <string name="action_sign_out">Đăng xuất</string>
     <string name="actions">Hành động</string>
     <string name="action_exit">Thoát</string>
-    <string name="call_notification_hangup">Chờ</string>
+    <string name="call_notification_hangup">Cúp máy</string>
     <string name="call_notification_reject">Từ chối</string>
     <string name="call_notification_answer">Đồng ý</string>
     <string name="decline">Từ chối</string>
@@ -195,7 +195,7 @@
     <string name="option_take_photo">Chụp ảnh</string>
     <string name="option_take_photo_video">Chụp ảnh hoặc quay video</string>
     <string name="option_send_sticker">Gửi nhãn dán</string>
-    <string name="option_send_files">Gửi tệp tin</string>
+    <string name="option_send_files">Gửi tệp</string>
     <string name="call_format_turn_hd_on">Bật HD</string>
     <string name="call_format_turn_hd_off">Tắt HD</string>
     <string name="call_camera_back">Sau</string>
@@ -248,7 +248,7 @@
     <string name="auth_home_server">Máy chủ chính:</string>
     <string name="call_failed_no_connection_description">Thiết lập kết nối thời gian thực thất bại.
 \nXin vui lòng yêu cầu quản trị viên máy chủ nhà của bạn thiết lập máy chủ TURN để có thể gọi điện bình thường.</string>
-    <string name="bottom_action_home">Trang đầu</string>
+    <string name="bottom_action_home">Trang chủ</string>
     <string name="call_connecting">Cuộc gọi đang được kết nối…</string>
     <string name="call_connected">Cuộc gọi đã được kết nối</string>
     <string name="call">Gọi</string>
@@ -270,8 +270,8 @@
     <string name="people_no_identity_server">Máy chủ định danh chưa được cài đặt.</string>
     <string name="send_bug_report_app_crashed">Chương trình đã gặp sự cố lần trước. Bạn có muốn mở trang tường thuật sự cố không\?</string>
     <string name="send_bug_report_progress">Tiến độ (%s%%)</string>
-    <string name="send_bug_report_include_crash_logs">Gửi bản tường thuật sự cố</string>
-    <string name="send_bug_report_include_logs">Gửi bản tường thuật</string>
+    <string name="send_bug_report_include_crash_logs">Gửi nhật ký dừng đột ngột</string>
+    <string name="send_bug_report_include_logs">Gửi nhật ký</string>
     <string name="auth_submit">Gửi</string>
     <string name="startup_notification_fdroid_battery_optim_title">Kết nối trong nền</string>
     <string name="startup_notification_privacy_button_other">Chọn tuỳ chọn khác</string>
@@ -465,4 +465,88 @@
     <string name="room_alias_preview_not_found">Bí danh này không truy cập được vào lúc này.
 \nHãy thử lại sau, hoặc yêu cầu một quản trị viên của phòng kiểm tra xem bạn có quyền truy cập không.</string>
     <string name="join_anyway">Vẫn tham gia</string>
+    <string name="disclaimer_positive_button">TÌM HIỂU THÊM</string>
+    <string name="disclaimer_negative_button">HIỂU RỒI</string>
+    <string name="disclaimer_content">Chúng tôi rất háo hức muốn tuyên bố rằng chúng tôi đã đổi tên! Ứng dụng của bạn đã được cập nhật và bạn đã đăng nhập vào tài khoản của bạn.</string>
+    <string name="disclaimer_title">Riot bây giờ là Element!</string>
+    <string name="notice_crypto_unable_to_decrypt_merged">Đang đợi lịch sử mã hoá</string>
+    <string name="crypto_error_withheld_generic">Bạn không thể truy cập tin nhắn này vì người gửi đã cố tình không gửi các mã khoá</string>
+    <string name="crypto_error_withheld_unverified">Bạn không thể truy cập tin nhắn này vì phiên làm việc của bạn không được người gửi tin cậy</string>
+    <string name="crypto_error_withheld_blacklisted">Bạn không thể truy cập tin nhắn này vì bạn đã bị người gửi chặn</string>
+    <string name="notice_crypto_unable_to_decrypt_friendly_desc">Bởi vì mã hoá đầu cuối, bạn có thể sẽ cần đợi tin nhắn của một ai đó đến nơi vì các mã khoá mã hoá đã không được gửi đến bạn một cách đúng.</string>
+    <string name="crypto_utd">Không thể giải mã</string>
+    <string name="notice_crypto_unable_to_decrypt_friendly">Đang đợi tin nhắn này, việc này có thể mất một lúc</string>
+    <string name="notice_room_leave_with_reason_by_you">Bạn đã rời phòng. Lý do: %1$s</string>
+    <string name="notice_room_leave_with_reason">%1$s đã rời phòng. Lý do: %2$s</string>
+    <string name="auth_reset_password_email_validation_message">Một email đã được gửi đến %s. Khi bạn đã đi theo liên kết mà email đó chứa, hãy nhấn ở dưới.</string>
+    <string name="auth_reset_password_missing_password">Mật khẩu mới phải được nhập.</string>
+    <string name="auth_reset_password_missing_email">Địa chỉ email được liên kết đến tài khoản của bạn phải được nhập.</string>
+    <string name="auth_reset_password_message">Để đặt lại mật khẩu, hãy nhập địa chỉ email được liên kết đến tài khoản của bạn:</string>
+    <string name="auth_username_in_use">Tên người dùng đã được sử dụng</string>
+    <string name="auth_recaptcha_message">Máy chủ nhà này muốn chắc chắn là bạn không phải rô bốt</string>
+    <string name="auth_threepid_warning_message">Việc đăng ký bằng cả email và số điện thoại ngay một lúc chưa được hỗ trợ cho đến khi api có tồn tại. Chỉ có số điện thoại sẽ được tính đến.
+\n
+\nBạn có thể thêm email vào hồ sơ của bạn trong cài đặt.</string>
+    <string name="auth_use_server_options">Sử dụng tuỳ chọn máy chủ tuỳ chỉnh (nâng cao)</string>
+    <string name="auth_msisdn_already_defined">Số điện thoại này đã được định nghĩa rồi.</string>
+    <string name="auth_email_already_defined">Địa chỉ email này đã được định nghĩa rồi.</string>
+    <string name="auth_login_sso">Đăng nhập bằng đăng nhập một lần</string>
+    <string name="use_as_default_and_do_not_ask_again">Sử dụng làm mặc định và không hỏi lại</string>
+    <string name="option_always_ask">Luôn hỏi</string>
+    <string name="send_files_in">Gửi vào</string>
+    <string name="send_bug_report_logs_description">Để chẩn đoán vấn đề, nhật ký từ ứng dụng này sẽ được gửi cùng với báo cáo lỗi này. Báo cáo lỗi này, bao gồm cả nhật ký và ảnh chụp màn hình, sẽ không thể được nhìn thấy công khai. Nếu bạn muốn chỉ gửi văn bản ở trên, hãy vui lòng bỏ đánh dấu:</string>
+    <string name="spaces_header">Không gian</string>
+    <string name="spaces_invited_header">Lời mời</string>
+    <string name="no_public_room_placeholder">Không có phòng công khai có sẵn</string>
+    <string name="suggested_header">Phòng được đề xuất</string>
+    <string name="dialog_edit_hint">Giá trị mới</string>
+    <string name="action_return">Quay lại</string>
+    <string name="action_unpublish">Huỷ xuất bản</string>
+    <string name="failed_to_remove_widget">Xoá tiện ích thất bại</string>
+    <string name="failed_to_add_widget">Thêm tiện ích thất bại</string>
+    <string name="review">Xem xét</string>
+    <string name="action_switch">Chuyển</string>
+    <string name="encryption_information_blocked">Đã cho vào danh sách đen</string>
+    <string name="encryption_information_verified">Đã xác minh</string>
+    <string name="encryption_information_not_verified">Chưa xác minh</string>
+    <plurals name="encryption_import_room_keys_success">
+        <item quantity="other">Nhập %1$d/%2$d mã khoá thành công.</item>
+    </plurals>
+    <string name="encryption_message_recovery">Phục hồi các tin nhắn được mã hoá</string>
+    <string name="encryption_exported_successfully">Xuất các mã khoá thành công</string>
+    <string name="encryption_export_saved_as">Các mã khoá phòng E2E đã được lưu ra \'%s\'.
+\n
+\nCảnh báo: tệp này có thể bị xoá nếu ứng dụng bị gỡ cài đặt.</string>
+    <string name="encryption_export_notice">Vui lòng tạo một mật khẩu để mã hoá các mã khoá được xuất. Bạn sẽ cần nhập mật khẩu đó để có thể nhập các mã khoá đó.</string>
+    <string name="encryption_export_export">Xuất</string>
+    <string name="encryption_export_room_keys_summary">Xuất các mã khoá ra tệp cục bộ</string>
+    <string name="encryption_export_room_keys">Xuất các mã khoá phòng</string>
+    <string name="encryption_export_e2e_room_keys">Xuất các mã khoá phòng E2E</string>
+    <string name="encryption_information_ed25519_fingerprint">Mã kiểm tra Ed25519</string>
+    <string name="encryption_information_verification">Xác minh</string>
+    <string name="encryption_import_import">Nhập</string>
+    <string name="encryption_import_room_keys_summary">Nhập các mã khoá từ tệp cục bộ</string>
+    <string name="encryption_import_room_keys">Nhập các mã khoá phòng</string>
+    <string name="encryption_import_e2e_room_keys">Nhập các mã khoá phòng E2E</string>
+    <string name="encryption_settings_manage_message_recovery_summary">Quản lý bản sao lưu mã khoá</string>
+    <string name="encryption_information_none">không có</string>
+    <string name="encryption_information_unknown_ip">ip không xác định</string>
+    <string name="encryption_information_unknown_device">phiên làm việc không xác định</string>
+    <string name="directory_server_fail_to_retrieve_server">Máy chủ có thể là không có sẵn hoặc bị quá tải</string>
+    <string name="unknown_devices_alert_message">Phòng này chứa các phiên làm việc không xác định chưa được xác minh.
+\nĐiều này có nghĩa là không có bảo đảm rằng các phiên làm việc đó thuộc về những người dùng mà chúng nói rằng chúng thuộc về họ.
+\nChúng tôi khuyên bạn thực hiện quá trình xác minh cho mỗi phiên làm việc trước khi tiếp tục, nhưng bạn có thể gửi lại tin nhắn mà không xác minh nếu bạn muốn.
+\n
+\nCác phiên làm việc không xác định:</string>
+    <string name="unknown_devices_alert_title">Phòng chứa các phiên làm việc không xác định</string>
+    <string name="encryption_information_verify_key_match">Tôi xác minh rằng các mã khoá có trùng khớp</string>
+    <string name="encryption_information_verify_device_warning2">Nếu chúng không khớp, sự bảo mật của việc giao tiếp của bạn có thể bị can thiệp.</string>
+    <string name="encryption_information_verify_device_warning">Xác nhận bằng cách so sánh những điều sau đây với Cài đặt người dùng trong phiên làm việc kia của bạn:</string>
+    <string name="encryption_information_verify_device">Xác minh phiên làm việc</string>
+    <string name="encryption_information_unblock">Xoá khỏi danh sách đen</string>
+    <string name="encryption_information_block">Cho vào danh sách đen</string>
+    <string name="encryption_information_unverify">Huỷ xác minh</string>
+    <string name="encryption_information_verify">Xác minh</string>
+    <string name="hs_url">URL máy chủ nhà</string>
+    <string name="action_historical">Lịch sử</string>
 </resources>

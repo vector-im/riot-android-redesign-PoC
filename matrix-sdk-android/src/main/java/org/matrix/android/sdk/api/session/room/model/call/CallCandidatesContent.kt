@@ -41,4 +41,4 @@ data class CallCandidatesContent(
          * Required. The version of the VoIP specification this messages adheres to.
          */
         @Json(name = "version") override val version: String?
-): CallSignallingContent
+): CallSignalingContent

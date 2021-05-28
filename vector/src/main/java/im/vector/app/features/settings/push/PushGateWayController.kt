@@ -27,11 +27,12 @@ class PushGateWayController @Inject constructor(
 ) : TypedEpoxyController<PushGatewayViewState>() {
 
     override fun buildModels(data: PushGatewayViewState?) {
+        val host = this
         data?.pushGateways?.invoke()?.let { pushers ->
             if (pushers.isEmpty()) {
                 genericFooterItem {
                     id("footer")
-                    text(stringProvider.getString(R.string.settings_push_gateway_no_pushers))
+                    text(host.stringProvider.getString(R.string.settings_push_gateway_no_pushers))
                 }
             } else {
                 pushers.forEach {
@@ -44,7 +45,7 @@ class PushGateWayController @Inject constructor(
         } ?: run {
             genericFooterItem {
                 id("loading")
-                text(stringProvider.getString(R.string.loading))
+                text(host.stringProvider.getString(R.string.loading))
             }
         }
     }

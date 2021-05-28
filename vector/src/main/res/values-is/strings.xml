@@ -1,9 +1,8 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="summary_message">%1$s: %2$s</string>
     <string name="summary_user_sent_image">%1$s sendi mynd.</string>
     <string name="summary_user_sent_sticker">%1$s sendi límmerki.</string>
-
     <string name="notice_room_invite_no_invitee">%s sendi boð um þátttöku</string>
     <string name="notice_room_invite">%1$s bauð %2$s</string>
     <string name="notice_room_invite_you">%1$s bauð þér</string>
@@ -21,20 +20,14 @@
     <string name="notice_room_visibility_unknown">óþekktur (%s).</string>
     <string name="notice_voip_started">VoIP-símafundur hafinn</string>
     <string name="notice_voip_finished">VoIP-símafundi lokið</string>
-
     <string name="notice_avatar_changed_too">(einnig var skipt um auðkennismynd)</string>
     <string name="notice_crypto_unable_to_decrypt">** Mistókst að afkóða: %s **</string>
-
     <string name="unable_to_send_message">Gat ekki sent skilaboð</string>
-
     <string name="message_failed_to_upload">Gat ekki sent inn mynd</string>
-
     <string name="network_error">Villa í netkerfi</string>
     <string name="matrix_error">Villa í Matrix</string>
-
     <string name="medium_email">Tölvupóstfang</string>
     <string name="medium_phone_number">Símanúmer</string>
-
     <string name="notice_room_withdraw">%1$s tók til baka boð frá %2$s</string>
     <string name="notice_display_name_set">%1$s setti birtingarnafn sitt sem %2$s</string>
     <string name="notice_display_name_changed_from">%1$s breytti birtingarnafni sínu úr %2$s í %3$s</string>
@@ -46,7 +39,6 @@
     <string name="notice_answered_call">%s svaraði símtalinu.</string>
     <string name="notice_ended_call">%s lauk símtalinu.</string>
     <string name="notice_end_to_end">%1$s kveikti á enda-í-enda dulritun (%2$s)</string>
-
     <string name="notice_requested_voip_conference">%1$s bað um VoIP-símafund</string>
     <string name="notice_room_name_removed">%1$s fjarlægði heiti spjallrásar</string>
     <string name="notice_room_topic_removed">%1$s fjarlægði umfjöllunarefni spjallrásar</string>
@@ -54,31 +46,24 @@
     <string name="notice_profile_change_redacted">%1$s uppfærði notandasniðið sitt %2$s</string>
     <string name="notice_room_third_party_invite">%1$s sendi boð til %2$s um þátttöku í spjallrásinni</string>
     <string name="notice_room_third_party_registered_invite">%1$s samþykkti boð um að taka þátt í %2$s</string>
-
     <string name="notice_crypto_error_unkwown_inbound_session_id">Tæki sendandans hefur ekki sent okkur dulritunarlyklana fyrir þessi skilaboð.</string>
-
     <string name="could_not_redact">Gat ekki ritstýrt</string>
     <string name="room_error_join_failed_empty_room">Ekki er í augnablikinu hægt að taka aftur þátt í spjallrás sem er tóm.</string>
-
     <string name="room_displayname_room_invite">Boð á spjallrás</string>
     <string name="room_displayname_two_members">%1$s og %2$s</string>
-
     <plurals name="room_displayname_three_and_more_members">
         <item quantity="one">%1$s og 1 annar</item>
         <item quantity="other">%1$s og %2$d aðrir</item>
     </plurals>
-
     <string name="room_displayname_empty_room">Tóm spjallrás</string>
     <string name="room_displayname_invite_from">Boð frá %s</string>
     <string name="light_theme">Ljóst þema</string>
     <string name="dark_theme">Dökkt þema</string>
     <string name="black_theme">Svart þema</string>
-
-    <string name="notification_sync_in_progress">Samstilli</string>
+    <string name="notification_sync_in_progress">Samstilli…</string>
     <string name="notification_listening_for_events">Hlusta eftir atburðum</string>
     <string name="notification_noisy_notifications">Háværar tilkynningar</string>
     <string name="notification_silent_notifications">Hljóðlegar tilkynningar</string>
-
     <string name="title_activity_home">Skilaboð</string>
     <string name="title_activity_room">Spjallrás</string>
     <string name="title_activity_settings">Stillingar</string>
@@ -86,9 +71,7 @@
     <string name="title_activity_historical">Ferilskráning</string>
     <string name="title_activity_bug_report">Villuskýrsla</string>
     <string name="title_activity_group_details">Nánar um samfélag</string>
-
     <string name="loading">Hleð inn…</string>
-
     <string name="ok">Í lagi</string>
     <string name="cancel">Hætta við</string>
     <string name="save">Vista</string>
@@ -109,7 +92,6 @@
     <string name="or">eða</string>
     <string name="invite">Bjóða</string>
     <string name="offline">Ónettengt</string>
-
     <string name="action_exit">Fara út</string>
     <string name="actions">Aðgerðir</string>
     <string name="action_sign_out">Skrá út</string>
@@ -122,32 +104,26 @@
     <string name="action_close">Loka</string>
     <string name="copied_to_clipboard">Afritað á klippispjald</string>
     <string name="disable">Gera óvirkt</string>
-
     <string name="dialog_title_confirmation">Staðfesting</string>
     <string name="dialog_title_warning">Aðvörun</string>
-
     <string name="bottom_action_home">Heim</string>
     <string name="bottom_action_favourites">Eftirlæti</string>
     <string name="bottom_action_people">Fólk</string>
     <string name="bottom_action_rooms">Spjallrásir</string>
     <string name="invitations_header">Boðsgestir</string>
     <string name="low_priority_header">Lítill forgangur</string>
-
     <string name="direct_chats_header">Samtöl</string>
     <string name="local_address_book_header">Nafnaskrá á þessari tölvu</string>
     <string name="no_conversation_placeholder">Engin samtöl</string>
     <string name="no_result_placeholder">Engar niðurstöður</string>
-
     <string name="rooms_header">Spjallrásir</string>
     <string name="no_room_placeholder">Engar spjallrásir</string>
     <plurals name="public_room_nb_users">
         <item quantity="one">%d notandi</item>
         <item quantity="other">%d notendur</item>
     </plurals>
-
     <string name="groups_invite_header">Bjóða</string>
     <string name="no_group_placeholder">Engir hópar</string>
-
     <string name="send_bug_report_include_logs">Senda atvikaskrá</string>
     <string name="send_bug_report_include_crash_logs">Senda hrunskrár</string>
     <string name="send_bug_report_include_screenshot">Senda skjámynd</string>
@@ -155,23 +131,19 @@
     <string name="send_bug_report_placeholder">Lýstu vandamálinu þínu hér</string>
     <string name="send_files_in">Senda inn í</string>
     <string name="read_receipt">Lesið</string>
-
     <string name="join_room">Taka þátt í spjallrás</string>
     <string name="username">Notandanafn</string>
     <string name="create_account">Skrá þig</string>
     <string name="login">Innskráning</string>
     <string name="logout">Útskráning</string>
     <string name="search">Leita</string>
-
     <string name="start_new_chat">Hefja nýtt spjall</string>
     <string name="start_voice_call">Hefja raddsamtal</string>
     <string name="start_video_call">Hefja myndsamtal</string>
-
     <string name="option_send_files">Senda skrár</string>
     <string name="option_take_photo_video">Taka ljósmynd eða myndskeið</string>
     <string name="option_take_photo">Taka ljósmynd</string>
     <string name="option_take_video">Taka myndskeið</string>
-
     <string name="auth_login">Innskráning</string>
     <string name="auth_register">Nýskrá</string>
     <string name="auth_submit">Senda inn</string>
@@ -197,49 +169,40 @@
     <string name="auth_password_dont_match">Lykilorðin stemma ekki</string>
     <string name="auth_forgot_password">Gleymt lykilorð?</string>
     <string name="auth_username_in_use">Notandanafn er í notkun</string>
-
     <string name="login_error_bad_json">Gallað JSON</string>
     <plurals name="membership_changes">
         <item quantity="one">%d breyting á aðild</item>
         <item quantity="other">%d breytingar á aðild</item>
     </plurals>
-
-    <string name="compression_options">"Senda sem "</string>
+    <string name="compression_options">Senda sem</string>
     <string name="compression_opt_list_original">Upprunalegt</string>
     <string name="compression_opt_list_large">Stórt</string>
     <string name="compression_opt_list_medium">Miðlungs</string>
     <string name="compression_opt_list_small">Lítið</string>
-
     <string name="attachment_cancel_download">Hætta við niðurhalið?</string>
     <string name="attachment_cancel_upload">Hætta við innsendinguna?</string>
     <string name="attachment_remaining_time_seconds">%d sek</string>
     <string name="attachment_remaining_time_minutes">%1$dm %2$ds</string>
-
     <string name="yesterday">Í gær</string>
     <string name="today">Í dag</string>
-
     <string name="room_info_room_name">Nafn spjallrásar</string>
     <string name="room_info_room_topic">Umfjöllunarefni spjallrásar</string>
-
     <string name="call">Samtal</string>
     <string name="call_ring">Hringi…</string>
     <string name="incoming_call">Innhringing</string>
     <string name="incoming_video_call">Innhringing myndsamtals</string>
     <string name="incoming_voice_call">Innhringing raddsamtals</string>
-    <string name="call_in_progress">Samtal í gangi</string>
-
+    <string name="call_in_progress">Samtal í gangi…</string>
     <string name="permissions_rationale_popup_title">Upplýsingar</string>
     <string name="media_slider_saved">Vistað</string>
-    <string name="media_slider_saved_message">Vista í niðurhalsmöppu</string>
+    <string name="media_slider_saved_message">Vista í niðurhalsmöppu\?</string>
     <string name="yes">JÁ</string>
     <string name="no">NEI</string>
     <string name="_continue">Halda áfram</string>
-
     <string name="remove">Fjarlægja</string>
     <string name="join">Taka þátt</string>
     <string name="preview">Forskoðun</string>
     <string name="reject">Hafna</string>
-
     <string name="list_members">Listi yfir meðlimi</string>
     <string name="open_chat_header">Opna haus</string>
     <string name="room_sync_in_progress">Samstilli…</string>
@@ -254,20 +217,16 @@
         <item quantity="other">%d meðlimir</item>
     </plurals>
     <string name="room_title_one_member">1 meðlimur</string>
-
     <string name="room_participants_leave_prompt_title">Fara af spjallrás</string>
     <string name="room_participants_leave_prompt_msg">Ertu viss um að þú viljir fara út spjallrásinni?</string>
     <string name="room_participants_create">Búa til</string>
-
     <string name="room_participants_online">Nettengt</string>
     <string name="room_participants_offline">Ónettengt</string>
     <string name="room_participants_idle">Iðjulaust</string>
-
     <string name="room_participants_header_admin_tools">KERFISSTJÓRNUNARTÓL</string>
     <string name="room_participants_header_call">SAMTAL</string>
     <string name="room_participants_header_direct_chats">BEINT SPJALL</string>
     <string name="room_participants_header_devices">TÆKI</string>
-
     <string name="room_participants_action_invite">Bjóða</string>
     <string name="room_participants_action_leave">Fara af spjallrás</string>
     <string name="room_participants_action_remove">Fjarlægja úr þessari spjallrás</string>
@@ -283,7 +242,6 @@
         <item quantity="one">%d ný skilaboð</item>
         <item quantity="other">%d ný skilaboð</item>
     </plurals>
-
     <string name="ssl_trust">Treysta</string>
     <string name="ssl_do_not_trust">Ekki treysta</string>
     <string name="ssl_logout_account">Útskráning</string>
@@ -294,8 +252,6 @@
     <string name="room_details_files">Skrár</string>
     <string name="room_details_settings">Stillingar</string>
     <string name="room_event_action_cancel_download">Hætta við niðurhal</string>
-
-
     <string name="search_hint">Leita</string>
     <string name="search_members_hint">Sía meðlimi spjallrásar</string>
     <string name="search_no_results">Engar niðurstöður</string>
@@ -303,7 +259,6 @@
     <string name="tab_title_search_messages">SKILABOÐ</string>
     <string name="tab_title_search_people">FÓLK</string>
     <string name="tab_title_search_files">SKRÁR</string>
-
     <string name="room_recents_join">TAKA ÞÁTT</string>
     <string name="room_recents_directory">MAPPA</string>
     <string name="room_recents_favourites">EFTIRLÆTI</string>
@@ -331,16 +286,14 @@
     <string name="room_sliding_menu_third_party_notices">Athugasemdir frá þriðja aðila</string>
     <string name="room_sliding_menu_copyright">Höfundarréttur</string>
     <string name="room_sliding_menu_privacy_policy">Meðferð persónuupplýsinga</string>
-
     <string name="settings_profile_picture">Notandamynd</string>
     <string name="settings_display_name">Birtingarnafn</string>
     <string name="settings_email_address">Tölvupóstfang</string>
     <string name="settings_add_email_address">Bæta við tölvupóstfangi</string>
     <string name="settings_phone_number">Símanúmer</string>
     <string name="settings_add_phone_number">Bæta við símanúmeri</string>
-    <string name="settings_app_info_link_summary">Kerfisupplýsingar forrits</string>
+    <string name="settings_app_info_link_summary">Kerfisupplýsingar forrits.</string>
     <string name="settings_app_info_link_title">Upplýsingar um forrit</string>
-
     <string name="settings_version">Útgáfa</string>
     <string name="settings_olm_version">Útgáfa olm</string>
     <string name="settings_app_term_conditions">Skilmálar og kvaðir</string>
@@ -365,12 +318,10 @@
     <string name="devices_delete_dialog_title">Auðkenning</string>
     <string name="devices_delete_pswd">Lykilorð:</string>
     <string name="devices_delete_submit_button_label">Senda inn</string>
-
     <string name="settings_logged_in">Skráð inn sem</string>
     <string name="settings_user_interface">Notandaviðmót</string>
     <string name="settings_interface_language">Tungumál notandaviðmóts</string>
     <string name="settings_select_language">Veldu tungumál</string>
-
     <string name="account_email_validation_title">Sannvottun í bið</string>
     <string name="settings_change_password">Breyta lykilorði</string>
     <string name="settings_old_password">eldra lykilorð</string>
@@ -378,50 +329,42 @@
     <string name="settings_confirm_password">staðfestu lykilorð</string>
     <string name="settings_fail_to_update_password">Mistókst að uppfæra lykilorð</string>
     <string name="settings_password_updated">Lykilorðið þitt hefur verið uppfært</string>
-    <string name="settings_unignore_user">Sýna öll skilaboð frá %s?</string>
-
+    <string name="settings_unignore_user">Sýna öll skilaboð frá %s\?
+\n
+\nAthugaðu að þessi aðgerð mun endurræsa forritið og það getur tekið nokkurn tíma.</string>
     <string name="settings_select_country">Veldu land</string>
-
     <string name="settings_phone_number_country_label">Land</string>
     <string name="settings_phone_number_country_error">Veldu land</string>
     <string name="settings_phone_number_label">Símanúmer</string>
     <string name="settings_phone_number_verification">Sannprófun símanúmers</string>
     <string name="settings_phone_number_code">Kóði</string>
-
-
     <string name="media_saving_period_3_days">3 dagar</string>
     <string name="media_saving_period_1_week">1 vika</string>
     <string name="media_saving_period_1_month">1 mánuður</string>
     <string name="media_saving_period_forever">Að eilífu</string>
-
     <string name="room_settings_room_photo">Mynd spjallrásar</string>
     <string name="room_settings_room_name">Nafn spjallrásar</string>
     <string name="room_settings_topic">Umfjöllunarefni</string>
     <string name="room_settings_room_tag">Merki spjallrásar</string>
     <string name="room_settings_tag_pref_dialog_title">Merkt sem:</string>
-
     <string name="room_settings_tag_pref_entry_favourite">Eftirlæti</string>
     <string name="room_settings_tag_pref_entry_low_priority">Lítill forgangur</string>
     <string name="room_settings_tag_pref_entry_none">Ekkert</string>
-
     <string name="room_settings_category_access_visibility_title">Aðgengi og sýnileiki</string>
     <string name="room_settings_room_notifications_title">Tilkynningar</string>
     <string name="room_settings_room_read_history_rules_pref_dialog_title">Hver getur lesið ferilskráningu?</string>
     <string name="room_settings_read_history_entry_anyone">Hver sem er</string>
     <string name="room_settings_banned_users_title">Bannaðir notendur</string>
-
     <string name="room_settings_category_advanced_title">Ítarlegt</string>
     <string name="room_settings_addresses_pref_title">Vistföng</string>
     <string name="room_settings_labs_end_to_end">Enda-í-enda dulritun</string>
     <string name="directory_title">Mappa</string>
     <string name="settings_theme">Þema</string>
-
     <string name="encryption_information_device_info">Upplýsingar um atburð</string>
     <string name="encryption_information_user_id">Notandaauðkenni</string>
     <string name="encryption_information_algorithm">Reiknirit</string>
     <string name="encryption_information_session_id">Auðkenni setu</string>
     <string name="encryption_information_decryption_error">Afkóðunarvilla</string>
-
     <string name="encryption_information_sender_device_information">Upplýsingar um tæki sendanda</string>
     <string name="encryption_information_device_name">Heiti tækis</string>
     <string name="encryption_information_name">Heiti</string>
@@ -429,30 +372,24 @@
     <string name="encryption_information_device_key">Dulritunarlykill tækis</string>
     <string name="encryption_information_verification">Sannvottun</string>
     <string name="encryption_information_ed25519_fingerprint">Ed25519 fingrafar</string>
-
     <string name="encryption_export_export">Flytja út</string>
     <string name="passphrase_enter_passphrase">Settu inn lykilsetningu (passphrase)</string>
     <string name="passphrase_confirm_passphrase">Staðfestu lykilsetningu</string>
     <string name="encryption_import_import">Flytja inn</string>
     <string name="encryption_information_unknown_device">óþekkt tæki</string>
     <string name="encryption_information_none">ekkert</string>
-
     <string name="encryption_information_verify">Sannreyna</string>
     <string name="encryption_information_unverify">Afturkalla sannvottun</string>
     <string name="encryption_information_block">Bannlisti</string>
     <string name="encryption_information_unblock">Taka af bannlista</string>
-
     <string name="directory_server_all_rooms_on_server">Allar spjallrásir á %s vefþjóninum</string>
     <string name="directory_server_native_rooms">Allar innbyggðar %s-spjallrásir</string>
-
     <plurals name="notification_unread_notified_messages_in_room_rooms">
         <item quantity="one">%d spjallrás</item>
         <item quantity="other">%d spjallrásir</item>
     </plurals>
     <string name="notification_unread_notified_messages_in_room">%1$s í %2$s</string>
-
     <string name="historical_placeholder">Leita í ferilskráningu</string>
-
     <string name="font_size">Stærð leturs</string>
     <string name="tiny">Örsmátt</string>
     <string name="small">Lítið</string>
@@ -461,12 +398,10 @@
     <string name="larger">Stærra</string>
     <string name="largest">Stærst</string>
     <string name="huge">Flennistórt</string>
-
     <plurals name="active_widgets">
         <item quantity="one">%d virkur viðmótshluti</item>
         <item quantity="other">%d virkir viðmótshlutar</item>
     </plurals>
-
     <!-- Widget Integration Manager -->
     <string name="widget_integration_must_be_in_room">Þú ert ekki á þessari spjallrás.</string>
     <string name="widget_integration_no_permission_in_room">Þú hefur ekki réttindi til þess að gera þetta á þessari spjallrás.</string>
@@ -474,53 +409,42 @@
     <string name="conference_call_warning_title">Aðvörun!</string>
     <string name="command_error">Skipanavilla</string>
     <string name="unrecognized_command">Óþekkt skipun: %s</string>
-
     <!-- notification statuses -->
     <string name="notification_off">Slökkt</string>
     <string name="notification_noisy">Hávært</string>
-
     <string name="encrypted_message">Dulrituð skilaboð</string>
-
     <!-- groups creation -->
     <string name="create">Búa til</string>
     <string name="community_name_hint">Dæmi</string>
     <string name="community_id_hint">dæmi</string>
-
     <!-- group details -->
     <string name="group_details_home">Heim</string>
     <string name="group_details_people">Fólk</string>
     <string name="group_details_rooms">Spjallrásir</string>
     <string name="no_users_placeholder">Engir notendur</string>
-
     <string name="rooms">Spjallrásir</string>
     <string name="filter_group_members">Sía meðlimi hóps</string>
     <string name="filter_group_rooms">Sía spjallrásahópa</string>
-
     <string name="reason_colon">Ástæða: %1$s</string>
     <string name="forget_room">Gleyma spjallrás</string>
-
     <string name="receipt_avatar">Auðkennismynd kvittunar</string>
     <string name="notice_avatar">Auðkennismynd tilkynningar</string>
     <string name="avatar">Auðkennismynd</string>
-
     <string name="view_decrypted_source">Skoða afkóðaða upprunaskrá</string>
     <string name="active_call">Virkt samtal</string>
     <string name="cannot_start_call">Mistókst að hefja samtal, reyndu aftur síðar</string>
     <string name="missing_permissions_title_to_start_conf_call">Mistókst að hefja samtal</string>
     <string name="action_quick_reply">Snöggt svar</string>
     <string name="bottom_action_groups">Samfélög</string>
-
     <string name="home_filter_placeholder_home">Leita að spjallrásum</string>
     <string name="home_filter_placeholder_favorites">Leita að eftirlætum</string>
     <string name="home_filter_placeholder_people">Leita að fólki</string>
     <string name="home_filter_placeholder_rooms">Leita að spjallrásum</string>
     <string name="home_filter_placeholder_groups">Leita að samfélagi</string>
-
     <string name="matrix_only_filter">Einungis tengiliðir í Matrix</string>
     <string name="no_public_room_placeholder">Engar opinberar spjallrásir tiltækar</string>
     <string name="groups_header">Samfélög</string>
     <string name="send_bug_report_progress">Framvinda (%s%%)</string>
-
     <string name="auth_send_reset_email">Senda endurstillingarpóst</string>
     <string name="auth_return_to_login">Fara aftur í innskráningargluggann</string>
     <string name="auth_invalid_email">Þetta lítur ekki út eins og gilt tölvupóstfang</string>
@@ -535,15 +459,12 @@
     <string name="login_error_limit_exceeded">Of margar beiðnir hafa verið sendar</string>
     <string name="login_error_user_in_use">Þetta notandanafn er þegar í notkun</string>
     <string name="groups_list">Listi yfir hópa</string>
-
     <string name="call_connected">Samtal tengt</string>
     <string name="call_connecting">Samtal tengist…</string>
     <string name="call_ended">Samtali lokið</string>
     <string name="call_error_answered_elsewhere">samtali svarað annars staðar</string>
-
     <string name="settings_call_invitations">Boð um samtal</string>
     <string name="settings_labs_native_camera">Nota innbyggða myndavél</string>
-
     <!-- share keys -->
     <string name="create_community">Búa til samfélag</string>
     <string name="community_name">Heiti samfélags</string>
@@ -551,25 +472,20 @@
     <string name="room_participants_action_mention">Minnst á</string>
     <string name="room_settings_mention_only">Aðeins minnst á</string>
     <string name="settings_vibrate_on_mention">Titra þegar minnst er á</string>
-
     <string name="settings_delete_threepid_confirmation">Ertu viss um að þú viljir fjarlægja %1$s %2$s?</string>
-
     <string name="settings_phone_number_error">Ógilt símanúmer fyrir valið land</string>
     <string name="settings_phone_number_verification_instruction">Við höfum sent SMS-skilaboð með virkjunarkóða. Settu þennan kóða inn hér fyrir neðan.</string>
     <string name="settings_phone_number_verification_error_empty_code">Settu inn virkjunarkóða</string>
     <string name="settings_phone_number_verification_error">Villa við að sannreyna símanúmerið þitt</string>
     <string name="settings_flair">Hlutverksmerki</string>
-
     <string name="room_settings_room_access_rules_pref_title">Aðgangur að spjallrás</string>
     <string name="room_settings_room_read_history_rules_pref_title">Lesanleiki ferilskrár spjallrásar</string>
     <string name="room_settings_room_access_rules_pref_dialog_title">Hver hefur aðgang að þessari spjallrás?</string>
-
     <string name="room_settings_labs_end_to_end_is_active">Enda-í-enda dulritun er virk</string>
-    <string name="room_settings_no_flair">" Þessi spjallrás sýnir ekki hlutverksmerki fyrir nein samfélög"</string>
+    <string name="room_settings_no_flair">Þessi spjallrás sýnir ekki hlutverksmerki fyrir nein samfélög</string>
     <string name="room_settings_addresses_e2e_enabled">Dulritun er virk í þessari spjallrás.</string>
     <string name="room_settings_addresses_e2e_disabled">Dulritun er óvirk í þessari spjallrás.</string>
     <string name="encryption_information_title">Enda-í-enda dulritunarupplýsingar</string>
-
     <string name="encryption_information_curve25519_identity_key">Curve25519 auðkennislykill</string>
     <string name="encryption_information_claimed_ed25519_fingerprint_key">Tilkynnti Ed25519 fingrafarslykil</string>
     <string name="encryption_export_e2e_room_keys">Flytja út E2E dulritunarlykla spjallrásar</string>
@@ -581,13 +497,11 @@
     <string name="encryption_information_not_verified">Ekki sannreynt</string>
     <string name="encryption_information_verified">Sannreynt</string>
     <string name="encryption_information_blocked">Á bannlista</string>
-
     <string name="encryption_information_verify_device">Sannreyna tæki</string>
     <string name="room_add_matrix_apps">Bæta við Matrix-forritum</string>
     <string name="start_verification">Hefja sannvottun</string>
     <string name="share_without_verifying">Deila án sannvottunar</string>
     <string name="ignore_request">Hunsa beiðni</string>
-
     <!-- conference call -->
     <string name="has_been_kicked">Þér hefur verið sparkað úr %1$s af %2$s</string>
     <string name="has_been_banned">Þú hefur verið settur í bann á %1$s af %2$s</string>
@@ -600,7 +514,6 @@
     <string name="start_new_chat_prompt_msg">Ertu viss að þú viljir byrja nýtt spjall við %s?</string>
     <string name="start_voice_call_prompt_msg">Ertu viss að þú viljir byrja raddsamtal?</string>
     <string name="start_video_call_prompt_msg">Ertu viss að þú viljir byrja myndsamtal?</string>
-
     <string name="auth_use_server_options">Nota sérsniðna valkosti vefþjóns (ítarlegt)</string>
     <string name="auth_home_server">Heimaþjónn:</string>
     <string name="auth_identity_server">Auðkennisþjónn:</string>
@@ -613,9 +526,7 @@
     <string name="call_error_camera_init_failed">Gat ekki frumstillt myndavélina</string>
     <string name="media_picker_both_capture_title">Taktu mynd eða myndskeið</string>
     <string name="media_picker_cannot_record_video">Get ekki tekið upp myndskeið</string>
-
     <string name="room_jump_to_first_unread">Fara í fyrstu ólesin skilaboð.</string>
-
     <string name="room_creation_title">Nýtt spjall</string>
     <string name="room_participants_action_ban">Banna</string>
     <string name="room_participants_action_unban">Afbanna</string>
@@ -627,9 +538,7 @@
     <string name="room_participants_action_devices_list">Birta lista yfir tæki</string>
     <string name="people_search_user_directory">SKRÁ YFIR NOTENDUR (%s)</string>
     <string name="people_search_filter_text">Einungis notendur Matrix</string>
-
     <string name="people_search_invite_by_id_dialog_hint">Tölvupóstfang eða Matrix-auðkenni</string>
-
     <string name="room_message_placeholder_not_encrypted">Senda skilaboð (ódulrituð)…</string>
     <string name="room_offline_notification">Tenging við vefþjón hefur rofnað.</string>
     <string name="room_prompt_resend">Endursenda allt</string>
@@ -637,20 +546,18 @@
     <string name="room_delete_unsent_messages">Eyða ósendum skilaboðum</string>
     <string name="room_do_not_have_permission_to_post">Þú hefur ekki heimild til að senda skilaboð á þessa spjallrás</string>
     <string name="ssl_could_not_verify">Gat ekki sannreynt auðkenni fjartengds þjóns.</string>
-
     <string name="room_details_people_invited_group_name">BOÐIÐ</string>
     <string name="room_details_people_present_group_name">SKRÁÐUR</string>
-
     <string name="room_event_action_report_prompt_reason">Ástæður fyrir tilkynningu um vankanta á þessu efni</string>
-    <string name="room_event_action_report_prompt_ignore_user">Viltu fela öll skilaboð frá þessum notanda?</string>
+    <string name="room_event_action_report_prompt_ignore_user">Viltu fela öll skilaboð frá þessum notanda\?
+\n
+\nAthugaðu að þessi aðgerð mun endurræsa forritið og það getur tekið nokkurn tíma.</string>
     <string name="room_event_action_cancel_upload">Hætta við innsendingu</string>
     <string name="directory_searching_title">Leita í yfirlitsskrá…</string>
-
     <string name="room_settings_all_messages_noisy">Öll skilaboð (hávært)</string>
     <string name="room_settings_de_prioritize">Minnka forgang</string>
     <string name="room_settings_leave_conversation">Hætta í samtali</string>
     <string name="room_settings_add_homescreen_shortcut">Bæta við flýtileið á aðalskjá</string>
-
     <string name="settings_notification_privacy">Friðhelgi tilkynninga</string>
     <string name="settings_notification_privacy_normal">Venjulegt</string>
     <string name="settings_notification_privacy_reduced">Minnkuð friðhelgi</string>
@@ -658,10 +565,8 @@
     <string name="settings_enable_all_notif">Virkja tilkynningar fyrir þennan notandaaðgang</string>
     <string name="settings_enable_this_device">Virkja tilkynningar á þessu tæki</string>
     <string name="settings_turn_screen_on">Kveikja á skjá í 3 sekúndur</string>
-
     <string name="settings_invited_to_room">Þegar mér er boðið á spjallrás</string>
     <string name="settings_messages_sent_by_bot">Skilaboð send af vélmennum</string>
-
     <string name="settings_start_on_boot">Virkja í ræsingu</string>
     <string name="settings_background_sync">Samstilling í bakgrunni</string>
     <string name="settings_enable_background_sync">Virkja samstillingu í bakgrunnsvinnslu</string>
@@ -672,46 +577,36 @@
     <string name="startup_notification_privacy_title">Friðhelgi tilkynninga</string>
     <string name="startup_notification_privacy_button_grant">Gefa heimild</string>
     <string name="startup_notification_privacy_button_other">Veldu annan valkost</string>
-
     <string name="settings_data_save_mode">Gagnavistunarhamur</string>
-
     <string name="devices_details_dialog_title">Nánar um tæki</string>
     <string name="devices_delete_dialog_text">Þessi aðgerð krefst viðbótar-auðkenningar.
-Til að halda áfram skaltu setja inn lykilorðið þitt.</string>
+\nTil að halda áfram skaltu setja inn lykilorðið þitt.</string>
     <string name="settings_home_server">Heimaþjónn</string>
     <string name="settings_identity_server">Auðkennisþjónn</string>
-
-    <string name="account_email_already_used_error">Þetta tölvupóstfang er nú þegar í notkun</string>
-    <string name="account_email_not_found_error">Gat ekki sent tölvupóst: Þetta tölvupóstfang fannst ekki</string>
-    <string name="account_phone_number_already_used_error">Þetta símanúmer er nú þegar í notkun</string>
-
+    <string name="account_email_already_used_error">Þetta tölvupóstfang er nú þegar í notkun.</string>
+    <string name="account_email_not_found_error">Gat ekki sent tölvupóst: Þetta tölvupóstfang fannst ekki.</string>
+    <string name="account_phone_number_already_used_error">Þetta símanúmer er nú þegar í notkun.</string>
     <string name="room_settings_directory_visibility">Setja þessa spjallrás á skrá yfir spjallrásir</string>
     <string name="room_settings_read_history_entry_members_only_option_time_shared">Einungis meðlimir (síðan þessi kostur var valinn)</string>
     <string name="room_settings_read_history_entry_members_only_invited">Einungis meðlimir (síðan þeim var boðið)</string>
     <string name="room_settings_read_history_entry_members_only_joined">Einungis meðlimir (síðan þeir skráðu sig)</string>
-
     <string name="room_settings_room_internal_id">Innra auðkenni þessarar spjallrásar</string>
     <string name="room_settings_addresses_add_new_address">Nýtt vistfang (t.d. #foo:matrix.org)</string>
-
     <string name="room_settings_add_new_group">Nýtt samfélag (t.d. #foo:matrix.org)</string>
     <string name="room_settings_invalid_group_format_dialog_title">Ógilt auðkenni samfélags</string>
     <string name="room_settings_invalid_group_format_dialog_body">\'%s\' er ekki gilt auðkenni samfélags</string>
-
-
     <string name="room_settings_copy_room_id">Afrita auðkenni spjallrásar</string>
     <string name="room_settings_copy_room_address">Afrita vistfang spjallrásar</string>
-
     <string name="encryption_information_verify_key_match">Ég staðfesti hvort dulritunarlyklarnir samsvari</string>
-
     <string name="unknown_devices_alert_title">Spjallrás inniheldur óþekkt tæki</string>
     <string name="select_room_directory">Veldu skrá yfir spjallrásir</string>
     <string name="directory_server_placeholder">URL-slóð heimaþjóns</string>
     <plurals name="notification_unread_notified_messages">
-        <item quantity="one">%d ólesin tilkynnt skilaboð</item>
+        <item quantity="one">%d ólesið tilkynnt skilaboð</item>
         <item quantity="other">%d ólesin tilkynnt skilaboð</item>
     </plurals>
     <plurals name="notification_unread_notified_messages_in_room_msgs">
-        <item quantity="one">%d ólesin tilkynnt skilaboð</item>
+        <item quantity="one">%d ólesið tilkynnt skilaboð</item>
         <item quantity="other">%d ólesin tilkynnt skilaboð</item>
     </plurals>
     <string name="widget_no_power_to_manage">Þú þarft aðgangsheimildir til að sýsla með viðmótshluta á þessari spjallrás</string>
@@ -724,17 +619,14 @@ Til að halda áfram skaltu setja inn lykilorðið þitt.</string>
     <string name="invited">Boðið</string>
     <string name="rejoin">Taka þátt aftur</string>
     <string name="read_receipts_list">Listi yfir leskvittanir</string>
-
     <string name="room_preview_invitation_format">Þér hefur verið boðið af %s að taka þátt í þessari spjallrás</string>
     <string name="room_participants_remove_prompt_msg">Ertu viss um að þú viljir fjarlægja %s úr þessu spjalli?</string>
     <string name="room_participants_invite_prompt_msg">Ertu viss um að þú viljir bjóða %s á þetta spjall?</string>
-    <string name="room_participants_ban_prompt_msg">Ertu viss um að þú viljir banna þennan notanda á þessu spjalli?</string>
-
+    <string name="room_participants_ban_prompt_msg">Bönun notanda mun henda þeim út úr þessu herbergi og halda þeim frá því að koma aftur.</string>
     <string name="people_search_invite_by_id"><u>Bjóða miðað við auðkenni</u></string>
     <string name="people_search_local_contacts">TENGILIÐIR Á TÆKI (%d)</string>
     <string name="people_search_invite_by_id_dialog_title">Bjóða notendum miðað við auðkenni</string>
     <string name="room_recents_join_room_prompt">Settu inn auðkenni eða samheiti spjallrásar</string>
-
     <plurals name="directory_search_rooms_for">
         <item quantity="one">%1$s spjallrás fannst fyrir %2$s</item>
         <item quantity="other">%1$s spjallrásir fundust fyrir %2$s</item>
@@ -745,7 +637,6 @@ Til að halda áfram skaltu setja inn lykilorðið þitt.</string>
     <string name="settings_notification_privacy_secure_message_content">• Efni skilaboða í tilkynningum er <b>staðsett beint og öruggt á Matrix heimavefþjóninum</b></string>
     <string name="settings_notification_privacy_nosecure_message_content">• Tilkynningar innihalda <b>efni skilaboða og lýsigögn</b></string>
     <string name="settings_notification_privacy_message_content_not_shown">• Tilkynningar munu <b>ekki birta efni skilaboða</b></string>
-
     <string name="settings_containing_my_display_name">Skilaboð innihalda birtingarnafn mitt</string>
     <string name="settings_containing_my_user_name">Skilaboð innihalda notandanafn mitt</string>
     <string name="settings_messages_in_one_to_one">Skilaboð í maður-á-mann spjalli</string>
@@ -758,7 +649,6 @@ Til að halda áfram skaltu setja inn lykilorðið þitt.</string>
     <string name="missing_permissions_warning">Þar sem ýmsar heimildir vantar, eru sumir eiginleikar ekki tiltækir…</string>
     <string name="template_no_contact_access_placeholder">Þú heimilaðir ${app_name} ekki aðgang að tengiliðum á tækinu</string>
     <string name="send_bug_report_rage_shake">Hristu ákveðið til að senda villutilkynningu</string>
-
     <string name="send_bug_report_sent">Það tókst að senda villuskýrsluna</string>
     <string name="send_bug_report_failed">Mistókst að senda villuskýrsluna (%s)</string>
     <string name="auth_recaptcha_message">Þessi heimavefþjónn vill ganga úr skugga um að þú sért ekki vélmenni</string>
@@ -768,82 +658,70 @@ Til að halda áfram skaltu setja inn lykilorðið þitt.</string>
     <string name="auth_reset_password_error_unauthorized">Gat ekki sannprófað tölvupóstfang: gakktu úr skugga um að þú hafir smellt á tengilinn í tölvupóstinum</string>
     <string name="call_error_ice_failed">Tenging gagnamiðils mistókst</string>
     <string name="permissions_action_not_performed_missing_permissions">Því miður, aðgerðin var ekki framkvæmd þar sem nauðsynlegar heimildir vantaði</string>
-
     <string name="room_participants_power_level_prompt">Þú getur ekki afturkallað þessa aðgerð, þar sem þú ert að gefa notandanum jafn mikil völd og þú hefur sjálf/ur.
-Ertu alveg viss?</string>
-
+\nErtu alveg viss\?</string>
     <string name="people_search_invite_by_id_dialog_description">Settu inn eitt eða fleir tölvupóstföng eða Matrix auðkenni</string>
     <string name="room_unsent_messages_notification">Skilaboð ekki send. %1$s eða %2$s núna?</string>
     <string name="room_unknown_devices_messages_notification">Skilaboð ekki send vegna þess að vart var við óþekkt tæki. %1$s eða %2$s núna?</string>
     <string name="settings_set_sync_delay">Hlé milli tveggja samstillingarbeiðna</string>
     <string name="settings_keep_media">Halda gögnum</string>
-
     <string name="template_startup_notification_privacy_message">${app_name} getur keyrt í bakgrunni og stýrt tilkynningum á öruggan hátt (getur haft áhrif á rafhlöðunotkun).</string>
-
     <string name="account_email_validation_message">Skoðaðu tölvupóstinn þinn og smelltu á tengilinn sem hann inniheldur. Þegar því er lokið skaltu smella á að halda áfram.</string>
-    <string name="account_email_validation_error">Tókst ekki að sannreyna tölvupóstfang. Skoðaðu tölvupóstinn þinn og smelltu á tengilinn sem hann inniheldur. Þegar því er lokið skaltu smella á að halda áfram</string>
+    <string name="account_email_validation_error">Tókst ekki að sannreyna tölvupóstfang. Skoðaðu tölvupóstinn þinn og smelltu á tengilinn sem hann inniheldur. Þegar því er lokið skaltu smella á að halda áfram.</string>
     <string name="room_settings_room_access_entry_only_invited">Aðeins fólk sem hefur verið boðið</string>
     <string name="room_settings_addresses_invalid_format_dialog_body">\'%s\' er ekki gilt snið fyrir samnefni</string>
-    <string name="room_settings_addresses_e2e_encryption_warning">Virkja dulritun 
-(aðvörun: er ekki hægt að gera aftur óvirkt!)</string>
-    <string name="encryption_export_saved_as">E2E-dulritunarlyklar spjallrásar hafa verið vistaðir í \'%s\'</string>
-
+    <string name="room_settings_addresses_e2e_encryption_warning">Virkja dulritun
+\n(aðvörun: er ekki hægt að gera aftur óvirkt!)</string>
+    <string name="encryption_export_saved_as">E2E-dulritunarlyklar spjallrásar hafa verið vistaðir í \'%s\'
+\n
+\nViðvörun: Þessi skrá gæti verið eytt ef forritið er fjarlægt.</string>
     <string name="encryption_never_send_to_unverified_devices_title">Aðeins dulrita til sannvottaðra tækja</string>
-    <string name="encryption_never_send_to_unverified_devices_summary">Aldrei senda dulrituð skilaboð af þessu tæki til ósannvottaðra tækja</string>
-
+    <string name="encryption_never_send_to_unverified_devices_summary">Aldrei senda dulrituð skilaboð af þessu tæki til ósannvottaðra tækja.</string>
     <string name="widget_integration_positive_power_level">Völd verða að vera jákvæð heiltala.</string>
     <string name="you_added_a_new_device">Þú bættir við nýju tæki \'%s\', sem er að krefjast dulritunarlykla.</string>
     <string name="your_unverified_device_requesting">ósannvottaða tækið þitt \'%s\' er að krefjast dulritunarlykla.</string>
     <string name="conference_call_warning_message">Símafundir eru í þróun og gætu verið óáreiðanlegir.</string>
-
     <!-- slash commands -->
     <string name="group_no_long_description">Kerfisstjóri samfélagsins hefur ekki gefið upp ítarlega lýsingu fyrir þetta samfélag.</string>
-
     <string name="directory_server_type_homeserver">Skrifaðu heimanetþjón til að telja upp opinberar spjallrásir á</string>
     <string name="widget_integration_missing_room_id">Vantar spjallrásarauðkenni í beiðni.</string>
     <string name="widget_integration_missing_user_id">Vantar notandaauðkenni í beiðni.</string>
     <string name="title_activity_choose_sticker">Senda límmerki</string>
-
     <string name="auth_reset_password_success_message">Lykilorðið þitt hefur verið endurstillt.
-
-Þú hefur verið skráður út af öllum tækjum og munt ekki lengur fá ýti-tilkynningar. Til að endurvirkja tilkynningar, þarf að skrá sig aftur inn á hverju tæki fyrir sig.</string>
-
+\n
+\nÞú hefur verið skráður út af öllum tækjum og munt ekki lengur fá ýti-tilkynningar. Til að endurvirkja tilkynningar, þarf að skrá sig aftur inn á hverju tæki fyrir sig.</string>
     <string name="login_error_unknown_token">Tiltekið aðgangsteikn þekktist ekki</string>
     <string name="call_error_user_not_responding">Ekki var svarað á fjartengda endanum.</string>
     <string name="template_permissions_rationale_msg_storage">${app_name} þarf heimild til að nota mynda- og myndskeiðasafn svo hægt sé að senda og vista viðhengi.
-
-Leyfðu aðgang í næsta sprettglugga til þess að geta sent skrár úr símanum.</string>
+\n
+\nLeyfðu aðgang í næsta sprettglugga til þess að geta sent skrár úr símanum.</string>
     <string name="template_permissions_rationale_msg_camera">${app_name} þarf heimild til að nota myndavélina svo hægt sé að taka myndir og hringja myndsímtöl.</string>
-    <string name="permissions_rationale_msg_camera_explanation">
-
-Leyfðu aðgang í næsta sprettglugga til þess að geta hringt.</string>
+    <string name="permissions_rationale_msg_camera_explanation">"
+\n
+\nLeyfðu aðgang í næsta sprettglugga til þess að geta hringt."</string>
     <string name="template_permissions_rationale_msg_record_audio">${app_name} þarf heimild til að nota hljóðnemann svo hægt sé að hringja hljóðsímtöl.</string>
-    <string name="permissions_rationale_msg_record_audio_explanation">
-
-Leyfðu aðgang í næsta sprettglugga til þess að geta hringt.</string>
+    <string name="permissions_rationale_msg_record_audio_explanation">"
+\n
+\nLeyfðu aðgang í næsta sprettglugga til þess að geta hringt."</string>
     <string name="template_permissions_rationale_msg_camera_and_audio">${app_name} þarf heimild til að nota myndavélina og hljóðnemann svo hægt sé að hringja myndsímtöl.
-
-Leyfðu aðgang í næstu sprettgluggum til þess að geta hringt.</string>
+\n
+\nLeyfðu aðgang í næstu sprettgluggum til þess að geta hringt.</string>
     <string name="template_permissions_rationale_msg_contacts">${app_name} þarf heimild til að nota tengiliði í nafnaskránni svo hægt sé að finna aðra Matrix-notendur eftir tölvupóstföngum og símanúmerum þeirra.
 
 Leyfðu aðgang í næsta sprettglugga til þess að finna þá notendur í nafnaskránni sem hægt er að hafa samband við úr ${app_name}.</string>
     <string name="template_permissions_msg_contacts_warning_other_androids">${app_name} þarf heimild til að nota tengiliði í nafnaskránni svo hægt sé að finna aðra Matrix-notendur eftir tölvupóstföngum og símanúmerum þeirra.
-
-Leyfa ${app_name} nota tengiliðina ?</string>
-
+\n
+\nLeyfa ${app_name} að nota tengiliðina\?</string>
     <string name="settings_deactivate_account_section">Gera notandaaðgang óvirkann</string>
     <string name="settings_deactivate_my_account">Gera notandaaðganginn minn óvirkann</string>
-
     <string name="settings_opt_in_of_analytics">Senda greiningargögn</string>
-    <string name="settings_opt_in_of_analytics_ok">Já, ég vil hjálpa til</string>
-
+    <string name="settings_opt_in_of_analytics_ok">Já, ég vil hjálpa til!</string>
     <string name="dialog_user_consent_submit">Yfirfara núna</string>
-
     <string name="deactivate_account_title">Gera notandaaðgang óvirkann</string>
     <string name="deactivate_account_prompt_password">Til að halda áfram, settu inn lykilorðið þitt:</string>
     <string name="deactivate_account_submit">Gera notandaaðgang óvirkann</string>
-
-    <string name="ongoing_conference_call">"Símafundur í gangi.\nTaka þátt með %1$s eða %2$s."</string>
+    <string name="ongoing_conference_call">Símafundur í gangi.
+\nTaka þátt með %1$s eða %2$s</string>
     <string name="ongoing_conference_call_voice">hljóð-</string>
     <string name="ongoing_conference_call_video">myndsímtali</string>
     <string name="missing_permissions_to_start_conf_call">Þú þarft aðgangsheimildir til að bjóða til símafundar á þessari spjallrás</string>
@@ -854,31 +732,25 @@ Leyfa ${app_name} nota tengiliðina ?</string>
     <string name="send_bug_report_app_crashed">Forritið hrundi síðast. Myndirðu vilja senda inn villuskýrslu?</string>
     <string name="option_send_sticker">Senda límmerki</string>
     <string name="login_error_login_email_not_yet">Tölvupósttengill sem ekki er enn búið að smella á</string>
-
     <string name="malformed_id">Rangt formað auðkenni. Ætti að vera tölvupóstfang eða Matrix-auðkenni á borð við\'@sérheiti:lén\'</string>
     <string name="template_settings_opt_in_of_analytics_summary">${app_name} safnar nafnlausum greiningargögnum til að gera okkur kleift að bæta forritið.</string>
     <string name="template_settings_opt_in_of_analytics_prompt">Endilega virkjaðu greiningargögn til að hjálpa okkur að bæta ${app_name}.</string>
     <string name="room_settings_room_access_warning">Til að tengja við spjallrás verður hún að vera með vistfang.</string>
     <string name="room_preview_try_join_an_unknown_room">Þú ert að reyna að tengjast %s. Myndirðu vilja gerast meðlimur til að geta tekið þátt í samræðunni?</string>
     <string name="room_preview_room_interactions_disabled">Þetta er forskoðun á spjallrásinni. Samskipti spjallrásarinnar hafa verið gerð óvirk.</string>
-
     <string name="settings_home_display">Heimaskjár</string>
     <string name="settings_pin_missed_notifications">Festa spjallrásir með óskoðuðum tilkynningum</string>
     <string name="settings_pin_unread_messages">Festa spjallrásir með ólesnum skilaboðum</string>
     <string name="settings_inline_url_preview">Sjálfgefið virkja forskoðun innfelldra vefslóða</string>
     <string name="room_settings_room_access_entry_anyone_with_link_apart_guest">Hver sá sem þekkir slóðina á spjallrásina, fyrir utan gesti</string>
     <string name="room_settings_room_access_entry_anyone_with_link_including_guest">Hver sá sem þekkir slóðina á spjallrásina, að gestum meðtöldum</string>
-
     <string name="room_settings_labs_warning_message">Þetta eru eiginleikar á tilraunastigi sem gætu bilað á óvæntan hátt. Notist með varúð.</string>
     <string name="room_settings_labs_end_to_end_warnings">Þú þarft að skrá þig út til að geta virkjað dulritunina.</string>
     <string name="room_settings_never_send_to_unverified_devices_title">Aðeins dulrita til sannvottaðra tækja</string>
     <string name="room_settings_never_send_to_unverified_devices_summary">Aldrei senda dulrituð skilaboð af þessu tæki til ósannvottaðra tækja.</string>
-
     <string name="room_settings_addresses_disable_main_address_prompt_title">Aðvaranir vegna aðalvistfangs</string>
-
     <string name="room_settings_set_main_address">Setja sem aðalvistfang</string>
     <string name="room_settings_unset_main_address">Ekki setja sem aðalvistfang</string>
     <string name="widget_integration_missing_parameter">Nauðsynlegt gildi vantar.</string>
     <string name="widget_integration_invalid_parameter">Gildið er ekki gilt.</string>
-
 </resources>

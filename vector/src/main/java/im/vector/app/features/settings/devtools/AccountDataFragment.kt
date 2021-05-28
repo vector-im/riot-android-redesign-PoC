@@ -35,7 +35,7 @@ import im.vector.app.core.utils.createJSonViewerStyleProvider
 import im.vector.app.databinding.FragmentGenericRecyclerBinding
 
 import org.billcarsonfr.jsonviewer.JSonViewerDialog
-import org.matrix.android.sdk.api.session.accountdata.UserAccountDataEvent
+import org.matrix.android.sdk.api.session.accountdata.AccountDataEvent
 import org.matrix.android.sdk.internal.di.MoshiProvider
 import javax.inject.Inject
 
@@ -73,9 +73,9 @@ class AccountDataFragment @Inject constructor(
         super.onDestroyView()
     }
 
-    override fun didTap(data: UserAccountDataEvent) {
+    override fun didTap(data: AccountDataEvent) {
         val jsonString = MoshiProvider.providesMoshi()
-                .adapter(UserAccountDataEvent::class.java)
+                .adapter(AccountDataEvent::class.java)
                 .toJson(data)
         JSonViewerDialog.newInstance(
                 jsonString,
@@ -84,7 +84,7 @@ class AccountDataFragment @Inject constructor(
         ).show(childFragmentManager, "JSON_VIEWER")
     }
 
-    override fun didLongTap(data: UserAccountDataEvent) {
+    override fun didLongTap(data: AccountDataEvent) {
         AlertDialog.Builder(requireActivity())
                 .setTitle(R.string.delete)
                 .setMessage(getString(R.string.delete_account_data_warning, data.type))

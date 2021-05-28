@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?riotx_background">
+
+    <androidx.core.widget.NestedScrollView style="@style/LoginFormScrollView">
+
+        <LinearLayout style="@style/LoginFormContainer">
+
+            <ImageView
+                style="@style/LoginLogo"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/loginServerTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                android:text="@string/login_please_choose_a_server"
+                android:textAppearance="@style/TextAppearance.Vector.Login.Title"
+                tools:ignore="UnknownId" />
+
+            <TextView
+                android:id="@+id/loginServerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                android:gravity="start"
+                android:text="@string/login_server_text"
+                android:textAppearance="@style/TextAppearance.Vector.Login.Text" />
+
+            <!-- Use a CheckableConstraintLayout to keep the pressed state when retrieving login flow -->
+            <im.vector.app.core.platform.CheckableConstraintLayout
+                android:id="@+id/loginServerChoiceMatrixOrg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/bg_login_server_selector"
+                android:contentDescription="@string/login_a11y_choose_matrix_org"
+                android:minHeight="80dp"
+                android:paddingStart="@dimen/layout_horizontal_margin"
+                android:paddingEnd="@dimen/layout_horizontal_margin">
+
+                <ImageView
+                    android:id="@+id/loginServerChoiceMatrixOrgIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_logo_matrix_org"
+                    app:layout_constraintBottom_toTopOf="@+id/loginServerChoiceMatrixOrgText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:tint="?riotx_text_primary"
+                    tools:ignore="MissingPrefix" />
+
+                <TextView
+                    android:id="@+id/loginServerChoiceMatrixOrgText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="start"
+                    android:text="@string/login_server_matrix_org_text"
+                    android:textAppearance="@style/TextAppearance.Vector.Login.Text.Small"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/loginServerChoiceMatrixOrgIcon" />
+
+            </im.vector.app.core.platform.CheckableConstraintLayout>
+
+            <TextView
+                android:id="@+id/loginServerText2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/login_if_you_re_not_sure_select_this_option"
+                android:textAppearance="@style/TextAppearance.Vector.Login.Text.Small"
+                android:textStyle="italic" />
+
+            <im.vector.app.core.platform.CheckableConstraintLayout
+                android:id="@+id/loginServerChoiceOther"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/bg_login_server_selector"
+                android:contentDescription="@string/login_a11y_choose_other"
+                android:minHeight="80dp"
+                android:paddingStart="@dimen/layout_horizontal_margin"
+                android:paddingEnd="@dimen/layout_horizontal_margin">
+
+                <TextView
+                    android:id="@+id/loginServerChoiceOtherTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/login_element_matrix_server_and_others"
+                    android:textAppearance="@style/TextAppearance.Vector.Login.Text"
+                    android:textColor="?riotx_text_primary"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/loginServerChoiceOtherText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <TextView
+                    android:id="@+id/loginServerChoiceOtherText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="start"
+                    android:text="@string/login_server_other_text"
+                    android:textAppearance="@style/TextAppearance.Vector.Login.Text.Small"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/loginServerChoiceOtherTitle" />
+
+            </im.vector.app.core.platform.CheckableConstraintLayout>
+
+            <TextView
+                android:id="@+id/loginServerChoiceEmsLearnMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="@string/login_server_modular_learn_more_about_ems"
+                android:textAppearance="@style/TextAppearance.Vector.Login.Text.Small"
+                app:layout_constraintBottom_toBottomOf="@+id/loginServerChoiceEmsText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/loginServerChoiceEmsText" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>
+

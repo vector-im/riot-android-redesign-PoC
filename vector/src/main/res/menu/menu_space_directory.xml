@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/spaceAddRoom"
+        android:title="@string/space_add_existing_rooms"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/spaceCreateRoom"
+        android:title="@string/create_new_room"
+        app:iconTint="?attr/colorAccent"
+        app:showAsAction="never" />
+
+</menu>

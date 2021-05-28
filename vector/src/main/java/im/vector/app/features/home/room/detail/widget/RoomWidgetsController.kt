@@ -37,25 +37,26 @@ class RoomWidgetsController @Inject constructor(
     var listener: Listener? = null
 
     override fun buildModels(widgets: List<Widget>) {
+        val host = this
         if (widgets.isEmpty()) {
             genericFooterItem {
                 id("empty")
-                text(stringProvider.getString(R.string.room_no_active_widgets))
+                text(host.stringProvider.getString(R.string.room_no_active_widgets))
             }
         } else {
             widgets.forEach {
                 roomWidgetItem {
                     id(it.widgetId)
                     widget(it)
-                    widgetClicked { listener?.didSelectWidget(it) }
+                    widgetClicked { host.listener?.didSelectWidget(it) }
                 }
             }
         }
         genericButtonItem {
             id("addIntegration")
-            text(stringProvider.getString(R.string.room_manage_integrations))
-            textColor(colorProvider.getColor(R.color.riotx_accent))
-            buttonClickAction(View.OnClickListener { listener?.didSelectManageWidgets() })
+            text(host.stringProvider.getString(R.string.room_manage_integrations))
+            textColor(host.colorProvider.getColor(R.color.riotx_accent))
+            buttonClickAction(View.OnClickListener { host.listener?.didSelectManageWidgets() })
         }
     }
 

@@ -1,1 +1,1 @@
-Element（曾为 Riot.im）
+Element - 安全消息应用

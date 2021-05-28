@@ -36,6 +36,7 @@ class TermsController @Inject constructor(
 
     override fun buildModels(data: ReviewTermsViewState?) {
         data ?: return
+        val host = this
 
         when (data.termsList) {
             is Incomplete -> {
@@ -46,8 +47,8 @@ class TermsController @Inject constructor(
             is Fail       -> {
                 errorWithRetryItem {
                     id("errorRetry")
-                    text(errorFormatter.toHumanReadable(data.termsList.error))
-                    listener { listener?.retry() }
+                    text(host.errorFormatter.toHumanReadable(data.termsList.error))
+                    listener { host.listener?.retry() }
                 }
             }
             is Success    -> buildTerms(data.termsList.invoke())
@@ -55,6 +56,7 @@ class TermsController @Inject constructor(
     }
 
     private fun buildTerms(termsList: List<Term>) {
+        val host = this
         settingsSectionTitleItem {
             id("header")
             titleResId(R.string.widget_integration_review_terms)
@@ -63,12 +65,12 @@ class TermsController @Inject constructor(
             termItem {
                 id(term.url)
                 name(term.name)
-                description(description)
+                description(host.description)
                 checked(term.accepted)
 
-                clickListener(View.OnClickListener { listener?.review(term) })
+                clickListener(View.OnClickListener { host.listener?.review(term) })
                 checkChangeListener { _, isChecked ->
-                    listener?.setChecked(term, isChecked)
+                    host.listener?.setChecked(term, isChecked)
                 }
             }
         }

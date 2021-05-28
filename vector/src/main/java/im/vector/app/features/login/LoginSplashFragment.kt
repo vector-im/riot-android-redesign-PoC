@@ -25,7 +25,6 @@ import androidx.core.view.isVisible
 import im.vector.app.BuildConfig
 import im.vector.app.databinding.FragmentLoginSplashBinding
 import im.vector.app.features.settings.VectorPreferences
-
 import javax.inject.Inject
 
 /**

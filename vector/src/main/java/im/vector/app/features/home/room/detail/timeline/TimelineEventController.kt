@@ -456,9 +456,10 @@ class TimelineEventController @Inject constructor(private val dateFormatter: Vec
     }
 
     private fun LoadingItem_.setVisibilityStateChangedListener(direction: Timeline.Direction): LoadingItem_ {
+        val host = this@TimelineEventController
         return onVisibilityStateChanged { _, _, visibilityState ->
             if (visibilityState == VisibilityState.VISIBLE) {
-                callback?.onLoadMore(direction)
+                host.callback?.onLoadMore(direction)
             }
         }
     }
@@ -498,8 +499,9 @@ class TimelineEventController @Inject constructor(private val dateFormatter: Vec
      * Return true if added
      */
     private fun LoadingItem_.addWhenLoading(direction: Timeline.Direction): Boolean {
-        val shouldAdd = timeline?.hasMoreToLoad(direction) ?: false
-        addIf(shouldAdd, this@TimelineEventController)
+        val host = this@TimelineEventController
+        val shouldAdd = host.timeline?.hasMoreToLoad(direction) ?: false
+        addIf(shouldAdd, host)
         return shouldAdd
     }
 

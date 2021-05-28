@@ -2,7 +2,6 @@
 <resources>
     <string name="summary_message">%1$s: %2$s</string>
     <string name="summary_user_sent_image">%1$s wysłał(a) zdjęcie.</string>
-
     <string name="notice_room_invite_no_invitee">Zaproszenie od %s</string>
     <string name="notice_room_invite">%1$s zaprosił(a) %2$s</string>
     <string name="notice_room_invite_you">%1$s zaprosił(a) Cię</string>
@@ -18,15 +17,11 @@
     <string name="notice_display_name_removed">%1$s usunął(-ęła) swoją wyświetlaną nazwę (%2$s)</string>
     <string name="notice_room_topic_changed">%1$s zmienił(a) temat na: %2$s</string>
     <string name="unable_to_send_message">Nie można wysłać wiadomości</string>
-
     <string name="message_failed_to_upload">Przesyłanie zdjęcia nie powiodło się</string>
-
     <string name="network_error">Błąd sieci</string>
     <string name="matrix_error">Błąd Matrixa</string>
-
     <string name="medium_email">Adres e-mail</string>
     <string name="medium_phone_number">Numer telefonu</string>
-
     <string name="notice_room_visibility_shared">wszyscy członkowie pokoju.</string>
     <string name="notice_room_visibility_world_readable">wszyscy.</string>
     <string name="notice_room_name_changed">%1$s zmienił(a) nazwę pokoju na: %2$s</string>
@@ -34,25 +29,20 @@
     <string name="notice_room_name_removed">%1$s usunął(-ęła) nazwę pokoju</string>
     <string name="notice_room_topic_removed">%1$s usunął(-ęła) temat pokoju</string>
     <string name="summary_user_sent_sticker">%1$s wysłał(a) naklejkę.</string>
-
     <string name="notice_end_to_end">%1$s włączył(a) szyfrowanie end-to-end (%2$s)</string>
-
     <string name="notice_room_withdraw">%1$s wycofał(a) zaproszenie %2$s</string>
     <string name="notice_answered_call">%s odebrał(a) połączenie.</string>
     <string name="notice_avatar_changed_too">(awatar też został zmieniony)</string>
-
     <string name="room_displayname_invite_from">Zaproszenie od %s</string>
     <string name="room_displayname_room_invite">Zaproszenie do pokoju</string>
     <string name="room_displayname_two_members">%1$s i %2$s</string>
     <string name="room_displayname_empty_room">Pusty pokój</string>
-
     <plurals name="room_displayname_three_and_more_members">
         <item quantity="one">%1$s i jeden inny</item>
         <item quantity="few">%1$s i kilku innych</item>
         <item quantity="many">%1$s i %2$d innych</item>
-        <item quantity="other" />
+        <item quantity="other"/>
     </plurals>
-
     <string name="notice_crypto_unable_to_decrypt">** Nie można odszyfrować: %s **</string>
     <string name="notice_placed_video_call">%s wykonał(a) rozmowę wideo.</string>
     <string name="notice_placed_voice_call">%s wykonał(a) połączenie głosowe.</string>
@@ -63,22 +53,17 @@
     <string name="notice_requested_voip_conference">%1$s zażądał(a) grupowego połączenia VoIP</string>
     <string name="notice_voip_started">Rozpoczęto grupowe połączenie głosowe VoIP</string>
     <string name="notice_voip_finished">Zakończono grupowe połączenie głosowe VoIP</string>
-
     <string name="notice_profile_change_redacted">%1$s zaktualizował swój profil %2$s</string>
     <string name="notice_room_third_party_invite">%1$s wysłał(a) zaproszenie do %2$s aby dołączył(a) do tego pokoju</string>
     <string name="notice_room_third_party_registered_invite">%1$s zaakceptował(a) zaproszenie dla %2$s</string>
-
     <string name="notice_crypto_error_unkwown_inbound_session_id">Urządzenie nadawcy nie wysłało nam kluczy do tej wiadomości.</string>
-
     <string name="could_not_redact">Nie można zredagować</string>
     <string name="room_error_join_failed_empty_room">Obecnie nie jest możliwe ponowne dołączenie do pustego pokoju.</string>
-
     <string name="notice_event_redacted">Wiadomość usunięta</string>
     <string name="notice_event_redacted_by">Wiadomość usunięta przez %1$s</string>
     <string name="notice_event_redacted_with_reason">Wiadomość usunięta [powód: %1$s]</string>
     <string name="notice_event_redacted_by_with_reason">Wiadomość usunięta przez %1$s [powód: %2$s]</string>
     <string name="notice_room_update">%s zakutalizował(a) ten pokój.</string>
-
     <string name="initial_sync_start_importing_account">Synchronizacja początkowa:
 \nImportowanie konta…</string>
     <string name="initial_sync_start_importing_account_crypto">Synchronizacja początkowa:
@@ -95,7 +80,6 @@
 \nImportowanie Społeczności</string>
     <string name="initial_sync_start_importing_account_data">Synchronizacja początkowa:
 \nImportowanie danych Konta</string>
-
     <string name="event_status_sending_message">Wysyłanie wiadomości…</string>
     <string name="clear_timeline_send_queue">Wyczyść kolejkę wysyłania</string>
     <string name="title_activity_home">Wiadomości</string>
@@ -890,8 +874,8 @@ Widoczność wiadomości w Matrix jest podobna do wiadomości e-mail. Nasze zapo
     <plurals name="format_time_h">
         <item quantity="one">%d godzina</item>
         <item quantity="few">%d godz.</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="format_time_d">
         <item quantity="one">%d dzień</item>
@@ -2403,4 +2387,48 @@ Spróbuj uruchomić ponownie aplikację.</string>
 \nCzy na pewno kontynuować\?</string>
     <string name="external_link_confirmation_title">Kliknij dwukrotnie w ten link</string>
     <string name="error_empty_field_choose_password">Wybierz hasło.</string>
+    <string name="notice_room_server_acl_set_banned">• Dopasowanie serwera %s jest zbanowane.</string>
+    <string name="notice_room_server_acl_set_allowed">• Dopasowanie serwera %s jest dozwolone.</string>
+    <string name="notice_room_server_acl_set_title_by_you">Ustawiłeś serwer ACL dla tego pokoju.</string>
+    <string name="notice_room_server_acl_set_title">%s ustawił(a) serwer ACL dla tego pokoju.</string>
+    <string name="notice_direct_room_update_by_you">Uaktualniłeś tutaj.</string>
+    <string name="notice_direct_room_update">%s uaktualnił(a) tutaj.</string>
+    <string name="notice_room_update_by_you">Uaktualniłeś ten pokój.</string>
+    <string name="notice_end_to_end_by_you">Włączyłeś szyfrowanie end-to-end (%1$s)</string>
+    <string name="notice_made_future_direct_room_visibility_by_you">Ustawiłeś przyszłe wiadomości widoczne dla %1$s</string>
+    <string name="notice_made_future_direct_room_visibility">%1$s ustawił przyszłe wiadomości widoczne dla %2$s</string>
+    <string name="notice_made_future_room_visibility_by_you">Udostępniłeś przyszłą historię pokoju dla %1$s</string>
+    <string name="notice_ended_call_by_you">Zakończyłeś rozmowę.</string>
+    <string name="notice_answered_call_by_you">Odebrałeś rozmowę.</string>
+    <string name="notice_call_candidates_by_you">Wysłałeś dane, aby nawiązać połączenie.</string>
+    <string name="notice_call_candidates">%s wysłał(a) dane, aby nawiązać połączenie.</string>
+    <string name="notice_placed_voice_call_by_you">Nawiązałeś połączenie głosowe.</string>
+    <string name="notice_placed_video_call_by_you">Nawiązałeś rozmowę wideo.</string>
+    <string name="notice_room_name_changed_by_you">Zmieniłeś nazwę pokoju na: %1$s</string>
+    <string name="notice_room_avatar_changed_by_you">Zmieniłeś awatar pokoju</string>
+    <string name="notice_room_avatar_changed">%1$s zmienił(a) awatar pokoju</string>
+    <string name="notice_room_topic_changed_by_you">Zmieniłeś temat na %1$s</string>
+    <string name="notice_display_name_removed_by_you">Usunąłeś wyświetlaną nazwę (Była %1$s)</string>
+    <string name="notice_display_name_changed_from_by_you">Zmieniłeś wyświetlaną nazwę z %1$s na %2$s</string>
+    <string name="notice_display_name_set_by_you">Ustawiłeś wyświetlaną nazwę na %1$s</string>
+    <string name="notice_avatar_url_changed_by_you">Zmieniłeś swój awatar</string>
+    <string name="notice_room_withdraw_by_you">Wycofałeś zaproszenie %1$s</string>
+    <string name="notice_room_ban_by_you">Zbanowałeś %1$s</string>
+    <string name="notice_room_unban_by_you">Odbanowałeś %1$s</string>
+    <string name="notice_room_kick_by_you">Wyrzuciłeś %1$s</string>
+    <string name="notice_room_reject_by_you">Odrzuciłeś zaproszenie</string>
+    <string name="notice_direct_room_leave_by_you">Opuściłeś pokój</string>
+    <string name="notice_direct_room_leave">%1$s opuścił(a) pokój</string>
+    <string name="notice_room_leave_by_you">Opuściłeś pokój</string>
+    <string name="notice_direct_room_join_by_you">Dołączyłeś</string>
+    <string name="notice_direct_room_join">%1$s dołączył</string>
+    <string name="notice_room_join_by_you">Dołączyłeś do pokoju</string>
+    <string name="notice_room_invite_by_you">Zaprosiłeś %1$s</string>
+    <string name="notice_direct_room_created_by_you">Utworzyłeś dyskusję</string>
+    <string name="notice_direct_room_created">%1$s utworzył(a) dyskusję</string>
+    <string name="notice_room_created_by_you">Utworzyłeś pokój</string>
+    <string name="notice_room_created">%1$s utworzył(a) pokój</string>
+    <string name="notice_room_invite_no_invitee_by_you">Twoje zaproszenie</string>
+    <string name="summary_you_sent_sticker">Wysłałeś naklejkę.</string>
+    <string name="summary_you_sent_image">Wysłałeś zdjęcie.</string>
 </resources>

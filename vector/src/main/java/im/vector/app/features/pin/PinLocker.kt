@@ -60,6 +60,7 @@ class PinLocker @Inject constructor(
         return liveState
     }
 
+    @Suppress("EXPERIMENTAL_API_USAGE")
     private fun computeState() {
         GlobalScope.launch {
             val state = if (shouldBeLocked && pinCodeStore.hasEncodedPin()) {

@@ -65,20 +65,21 @@ class SoftLogoutController @Inject constructor(
     }
 
     private fun buildHeader(state: SoftLogoutViewState) {
+        val host = this
         loginHeaderItem {
             id("header")
         }
         loginTitleItem {
             id("title")
-            text(stringProvider.getString(R.string.soft_logout_title))
+            text(host.stringProvider.getString(R.string.soft_logout_title))
         }
         loginTitleSmallItem {
             id("signTitle")
-            text(stringProvider.getString(R.string.soft_logout_signin_title))
+            text(host.stringProvider.getString(R.string.soft_logout_signin_title))
         }
         loginTextItem {
             id("signText1")
-            text(stringProvider.getString(R.string.soft_logout_signin_notice,
+            text(host.stringProvider.getString(R.string.soft_logout_signin_notice,
                     state.homeServerUrl.toReducedUrl(),
                     state.userDisplayName,
                     state.userId))
@@ -86,12 +87,13 @@ class SoftLogoutController @Inject constructor(
         if (state.hasUnsavedKeys) {
             loginTextItem {
                 id("signText2")
-                text(stringProvider.getString(R.string.soft_logout_signin_e2e_warning_notice))
+                text(host.stringProvider.getString(R.string.soft_logout_signin_e2e_warning_notice))
             }
         }
     }
 
     private fun buildForm(state: SoftLogoutViewState) {
+        val host = this
         when (state.asyncHomeServerLoginFlowRequest) {
             is Incomplete -> {
                 loadingItem {
@@ -101,8 +103,8 @@ class SoftLogoutController @Inject constructor(
             is Fail       -> {
                 loginErrorWithRetryItem {
                     id("errorRetry")
-                    text(errorFormatter.toHumanReadable(state.asyncHomeServerLoginFlowRequest.error))
-                    listener { listener?.retry() }
+                    text(host.errorFormatter.toHumanReadable(state.asyncHomeServerLoginFlowRequest.error))
+                    listener { host.listener?.retry() }
                 }
             }
             is Success    -> {
@@ -110,21 +112,21 @@ class SoftLogoutController @Inject constructor(
                     LoginMode.Password          -> {
                         loginPasswordFormItem {
                             id("passwordForm")
-                            stringProvider(stringProvider)
+                            stringProvider(host.stringProvider)
                             passwordShown(state.passwordShown)
                             submitEnabled(state.submitEnabled)
-                            onPasswordEdited { listener?.passwordEdited(it) }
-                            errorText((state.asyncLoginAction as? Fail)?.error?.let { errorFormatter.toHumanReadable(it) })
-                            passwordRevealClickListener { listener?.revealPasswordClicked() }
-                            forgetPasswordClickListener { listener?.forgetPasswordClicked() }
-                            submitClickListener { password -> listener?.signinSubmit(password) }
+                            onPasswordEdited { host.listener?.passwordEdited(it) }
+                            errorText((state.asyncLoginAction as? Fail)?.error?.let { host.errorFormatter.toHumanReadable(it) })
+                            passwordRevealClickListener { host.listener?.revealPasswordClicked() }
+                            forgetPasswordClickListener { host.listener?.forgetPasswordClicked() }
+                            submitClickListener { password -> host.listener?.signinSubmit(password) }
                         }
                     }
                     is LoginMode.Sso            -> {
                         loginCenterButtonItem {
                             id("sso")
-                            text(stringProvider.getString(R.string.login_signin_sso))
-                            listener { listener?.signinFallbackSubmit() }
+                            text(host.stringProvider.getString(R.string.login_signin_sso))
+                            listener { host.listener?.signinFallbackSubmit() }
                         }
                     }
                     is LoginMode.SsoAndPassword -> {
@@ -132,8 +134,8 @@ class SoftLogoutController @Inject constructor(
                     LoginMode.Unsupported       -> {
                         loginCenterButtonItem {
                             id("fallback")
-                            text(stringProvider.getString(R.string.login_signin))
-                            listener { listener?.signinFallbackSubmit() }
+                            text(host.stringProvider.getString(R.string.login_signin))
+                            listener { host.listener?.signinFallbackSubmit() }
                         }
                     }
                     LoginMode.Unknown           -> Unit // Should not happen
@@ -143,18 +145,19 @@ class SoftLogoutController @Inject constructor(
     }
 
     private fun buildClearDataSection() {
+        val host = this
         loginTitleSmallItem {
             id("clearDataTitle")
-            text(stringProvider.getString(R.string.soft_logout_clear_data_title))
+            text(host.stringProvider.getString(R.string.soft_logout_clear_data_title))
         }
         loginTextItem {
             id("clearDataText")
-            text(stringProvider.getString(R.string.soft_logout_clear_data_notice))
+            text(host.stringProvider.getString(R.string.soft_logout_clear_data_notice))
         }
         loginRedButtonItem {
             id("clearDataSubmit")
-            text(stringProvider.getString(R.string.soft_logout_clear_data_submit))
-            listener { listener?.clearData() }
+            text(host.stringProvider.getString(R.string.soft_logout_clear_data_submit))
+            listener { host.listener?.clearData() }
         }
     }
 

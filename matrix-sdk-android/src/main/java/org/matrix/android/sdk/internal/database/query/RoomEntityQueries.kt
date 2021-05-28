@@ -29,6 +29,10 @@ internal fun RoomEntity.Companion.where(realm: Realm, roomId: String): RealmQuer
             .equalTo(RoomEntityFields.ROOM_ID, roomId)
 }
 
+internal fun RoomEntity.Companion.getOrCreate(realm: Realm, roomId: String): RoomEntity {
+    return where(realm, roomId).findFirst() ?: realm.createObject(RoomEntity::class.java, roomId)
+}
+
 internal fun RoomEntity.Companion.where(realm: Realm, membership: Membership? = null): RealmQuery<RoomEntity> {
     val query = realm.where<RoomEntity>()
     if (membership != null) {

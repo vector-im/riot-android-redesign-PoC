@@ -37,6 +37,7 @@ internal class RoomCreateEventProcessor @Inject constructor() : EventInsertLiveP
         val predecessorRoomSummary = RoomSummaryEntity.where(realm, predecessorRoomId).findFirst()
                 ?: RoomSummaryEntity(predecessorRoomId)
         predecessorRoomSummary.versioningState = VersioningState.UPGRADED_ROOM_JOINED
+        predecessorRoomSummary.isHiddenFromUser = true
         realm.insertOrUpdate(predecessorRoomSummary)
     }
 

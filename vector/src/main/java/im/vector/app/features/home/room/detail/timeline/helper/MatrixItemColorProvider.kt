@@ -50,7 +50,7 @@ class MatrixItemColorProvider @Inject constructor(
         fun getColorFromUserId(userId: String?): Int {
             var hash = 0
 
-            userId?.toList()?.map { chr -> hash = (hash shl 5) - hash + chr.toInt() }
+            userId?.toList()?.map { chr -> hash = (hash shl 5) - hash + chr.code }
 
             return when (abs(hash) % 8) {
                 1    -> R.color.riotx_username_2
@@ -66,7 +66,7 @@ class MatrixItemColorProvider @Inject constructor(
 
         @ColorRes
         private fun getColorFromRoomId(roomId: String?): Int {
-            return when ((roomId?.toList()?.sumBy { it.toInt() } ?: 0) % 3) {
+            return when ((roomId?.toList()?.sumOf { it.code } ?: 0) % 3) {
                 1    -> R.color.riotx_avatar_fill_2
                 2    -> R.color.riotx_avatar_fill_3
                 else -> R.color.riotx_avatar_fill_1

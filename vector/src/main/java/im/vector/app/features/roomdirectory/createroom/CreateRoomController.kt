@@ -45,12 +45,13 @@ class CreateRoomController @Inject constructor(
     }
 
     private fun buildForm(viewState: CreateRoomViewState, enableFormElement: Boolean) {
+        val host = this
         formEditableAvatarItem {
             id("avatar")
             enabled(enableFormElement)
             imageUri(viewState.avatarUri)
-            clickListener { listener?.onAvatarChange() }
-            deleteListener { listener?.onAvatarDelete() }
+            clickListener { host.listener?.onAvatarChange() }
+            deleteListener { host.listener?.onAvatarDelete() }
         }
         settingsSectionTitleItem {
             id("nameSection")
@@ -60,10 +61,10 @@ class CreateRoomController @Inject constructor(
             id("name")
             enabled(enableFormElement)
             value(viewState.roomName)
-            hint(stringProvider.getString(R.string.create_room_name_hint))
+            hint(host.stringProvider.getString(R.string.create_room_name_hint))
 
             onTextChange { text ->
-                listener?.onNameChange(text)
+                host.listener?.onNameChange(text)
             }
         }
         settingsSectionTitleItem {
@@ -74,10 +75,11 @@ class CreateRoomController @Inject constructor(
             id("topic")
             enabled(enableFormElement)
             value(viewState.roomTopic)
-            hint(stringProvider.getString(R.string.create_room_topic_hint))
+            singleLine(false)
+            hint(host.stringProvider.getString(R.string.create_room_topic_hint))
 
             onTextChange { text ->
-                listener?.onTopicChange(text)
+                host.listener?.onTopicChange(text)
             }
         }
         settingsSectionTitleItem {
@@ -87,13 +89,13 @@ class CreateRoomController @Inject constructor(
         formSwitchItem {
             id("public")
             enabled(enableFormElement)
-            title(stringProvider.getString(R.string.create_room_public_title))
-            summary(stringProvider.getString(R.string.create_room_public_description))
+            title(host.stringProvider.getString(R.string.create_room_public_title))
+            summary(host.stringProvider.getString(R.string.create_room_public_description))
             switchChecked(viewState.roomVisibilityType is CreateRoomViewState.RoomVisibilityType.Public)
             showDivider(viewState.roomVisibilityType !is CreateRoomViewState.RoomVisibilityType.Public)
 
             listener { value ->
-                listener?.setIsPublic(value)
+                host.listener?.setIsPublic(value)
             }
         }
         if (viewState.roomVisibilityType is CreateRoomViewState.RoomVisibilityType.Public) {
@@ -104,11 +106,11 @@ class CreateRoomController @Inject constructor(
                 value(viewState.roomVisibilityType.aliasLocalPart)
                 homeServer(":" + viewState.homeServerName)
                 errorMessage(
-                        roomAliasErrorFormatter.format(
+                        host.roomAliasErrorFormatter.format(
                                 (((viewState.asyncCreateRoomRequest as? Fail)?.error) as? CreateRoomFailure.AliasError)?.aliasError)
                 )
                 onTextChange { value ->
-                    listener?.setAliasLocalPart(value)
+                    host.listener?.setAliasLocalPart(value)
                 }
             }
         } else {
@@ -116,43 +118,43 @@ class CreateRoomController @Inject constructor(
             formSwitchItem {
                 id("encryption")
                 enabled(enableFormElement)
-                title(stringProvider.getString(R.string.create_room_encryption_title))
+                title(host.stringProvider.getString(R.string.create_room_encryption_title))
                 summary(
                         if (viewState.hsAdminHasDisabledE2E) {
-                            stringProvider.getString(R.string.settings_hs_admin_e2e_disabled)
+                            host.stringProvider.getString(R.string.settings_hs_admin_e2e_disabled)
                         } else {
-                            stringProvider.getString(R.string.create_room_encryption_description)
+                            host.stringProvider.getString(R.string.create_room_encryption_description)
                         }
                 )
                 switchChecked(viewState.isEncrypted)
 
                 listener { value ->
-                    listener?.setIsEncrypted(value)
+                    host.listener?.setIsEncrypted(value)
                 }
             }
         }
         formAdvancedToggleItem {
             id("showAdvanced")
-            title(stringProvider.getString(if (viewState.showAdvanced) R.string.hide_advanced else R.string.show_advanced))
+            title(host.stringProvider.getString(if (viewState.showAdvanced) R.string.hide_advanced else R.string.show_advanced))
             expanded(!viewState.showAdvanced)
-            listener { listener?.toggleShowAdvanced() }
+            listener { host.listener?.toggleShowAdvanced() }
         }
         if (viewState.showAdvanced) {
             formSwitchItem {
                 id("federation")
                 enabled(enableFormElement)
-                title(stringProvider.getString(R.string.create_room_disable_federation_title, viewState.homeServerName))
-                summary(stringProvider.getString(R.string.create_room_disable_federation_description))
+                title(host.stringProvider.getString(R.string.create_room_disable_federation_title, viewState.homeServerName))
+                summary(host.stringProvider.getString(R.string.create_room_disable_federation_description))
                 switchChecked(viewState.disableFederation)
                 showDivider(false)
-                listener { value -> listener?.setDisableFederation(value) }
+                listener { value -> host.listener?.setDisableFederation(value) }
             }
         }
         formSubmitButtonItem {
             id("submit")
             enabled(enableFormElement)
             buttonTitleId(R.string.create_room_action_create)
-            buttonClickListener { listener?.submit() }
+            buttonClickListener { host.listener?.submit() }
         }
     }
 

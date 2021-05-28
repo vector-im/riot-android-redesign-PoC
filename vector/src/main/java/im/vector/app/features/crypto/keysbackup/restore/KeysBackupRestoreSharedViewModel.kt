@@ -252,7 +252,7 @@ class KeysBackupRestoreSharedViewModel @Inject constructor(
     }
 
     private fun isBackupKeyInQuadS(): Boolean {
-        val sssBackupSecret = session.getAccountDataEvent(KEYBACKUP_SECRET_SSSS_NAME)
+        val sssBackupSecret = session.userAccountDataService().getAccountDataEvent(KEYBACKUP_SECRET_SSSS_NAME)
                 ?: return false
 
         // Some sanity ?

@@ -18,54 +18,109 @@ package im.vector.app.features.roomdirectory.picker
 
 import im.vector.app.R
 import im.vector.app.core.resources.StringArrayProvider
+import im.vector.app.features.roomdirectory.RoomDirectoryData
+import im.vector.app.features.roomdirectory.RoomDirectoryServer
 import org.matrix.android.sdk.api.session.Session
-import org.matrix.android.sdk.api.session.room.model.thirdparty.RoomDirectoryData
 import org.matrix.android.sdk.api.session.room.model.thirdparty.ThirdPartyProtocol
 import javax.inject.Inject
 
-class RoomDirectoryListCreator @Inject constructor(private val stringArrayProvider: StringArrayProvider,
-                                                   private val session: Session) {
+class RoomDirectoryListCreator @Inject constructor(
+        private val stringArrayProvider: StringArrayProvider,
+        private val session: Session
+) {
 
-    fun computeDirectories(thirdPartyProtocolData: Map<String, ThirdPartyProtocol>): List<RoomDirectoryData> {
-        val result = ArrayList<RoomDirectoryData>()
+    fun computeDirectories(thirdPartyProtocolData: Map<String, ThirdPartyProtocol>,
+                           customHomeservers: Set<String>): List<RoomDirectoryServer> {
+        val result = ArrayList<RoomDirectoryServer>()
+
+        val protocols = ArrayList<RoomDirectoryData>()
 
         // Add user homeserver name
         val userHsName = session.myUserId.substringAfter(":")
 
-        result.add(RoomDirectoryData(
-                displayName = userHsName,
-                includeAllNetworks = true
-        ))
-
-        // Add user's HS but for Matrix public rooms only
-        result.add(RoomDirectoryData())
-
-        // Add custom directory servers
-        val hsNamesList = stringArrayProvider.getStringArray(R.array.room_directory_servers)
-        hsNamesList.forEach {
-            if (it != userHsName) {
-                // Use the server name as a default display name
-                result.add(RoomDirectoryData(
-                        homeServer = it,
-                        displayName = it,
-                        includeAllNetworks = true
-                ))
-            }
-        }
+        // Add default protocol
+        protocols.add(
+                RoomDirectoryData(
+                        homeServer = null,
+                        displayName = RoomDirectoryData.MATRIX_PROTOCOL_NAME,
+                        includeAllNetworks = false
+                )
+        )
 
         // Add result of the request
         thirdPartyProtocolData.forEach {
             it.value.instances?.forEach { thirdPartyProtocolInstance ->
-                result.add(RoomDirectoryData(
-                        homeServer = null,
-                        displayName = thirdPartyProtocolInstance.desc ?: "",
-                        thirdPartyInstanceId = thirdPartyProtocolInstance.instanceId,
-                        includeAllNetworks = false,
-                        // Default to protocol icon
-                        avatarUrl = thirdPartyProtocolInstance.icon ?: it.value.icon
-                ))
+                protocols.add(
+                        RoomDirectoryData(
+                                homeServer = null,
+                                displayName = thirdPartyProtocolInstance.desc ?: "",
+                                thirdPartyInstanceId = thirdPartyProtocolInstance.instanceId,
+                                includeAllNetworks = false,
+                                // Default to protocol icon
+                                avatarUrl = thirdPartyProtocolInstance.icon ?: it.value.icon
+                        )
+                )
             }
         }
+
+        // Add all rooms
+        protocols.add(
+                RoomDirectoryData(
+                        homeServer = null,
+                        displayName = RoomDirectoryData.MATRIX_PROTOCOL_NAME,
+                        includeAllNetworks = true
+                )
+        )
+
+        result.add(
+                RoomDirectoryServer(
+                        serverName = userHsName,
+                        isUserServer = true,
+                        isManuallyAdded = false,
+                        protocols = protocols
+                )
+        )
+
+        // Add custom directory servers, form the config file, excluding the current user homeserver
+        stringArrayProvider.getStringArray(R.array.room_directory_servers)
+                .filter { it != userHsName }
+                .forEach {
+                    // Use the server name as a default display name
+                    result.add(
+                            RoomDirectoryServer(
+                                    serverName = it,
+                                    isUserServer = false,
+                                    isManuallyAdded = false,
+                                    protocols = listOf(
+                                            RoomDirectoryData(
+                                                    homeServer = it,
+                                                    displayName = RoomDirectoryData.MATRIX_PROTOCOL_NAME,
+                                                    includeAllNetworks = false
+                                            )
+                                    )
+                            )
+                    )
+                }
+
+        // Add manually added server by the user
+        customHomeservers
+                .forEach {
+                    // Use the server name as a default display name
+                    result.add(
+                            RoomDirectoryServer(
+                                    serverName = it,
+                                    isUserServer = false,
+                                    isManuallyAdded = true,
+                                    protocols = listOf(
+                                            RoomDirectoryData(
+                                                    homeServer = it,
+                                                    displayName = RoomDirectoryData.MATRIX_PROTOCOL_NAME,
+                                                    includeAllNetworks = false
+                                            )
+                                    )
+                            )
+                    )
+                }
 
         return result
     }

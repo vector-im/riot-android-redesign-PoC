@@ -83,7 +83,7 @@ internal class DefaultJoinSpaceTask @Inject constructor(
         Timber.v("## Space: > Sync done ...")
         // after that i should have the children (? do I need to paginate to get state)
         val summary = roomSummaryDataSource.getSpaceSummary(params.roomIdOrAlias)
-        Timber.v("## Space: Found space summary Name:[${summary?.name}] children: ${summary?.spaceChildren?.size}")
+        Timber.v("## Space: Found space summary Name:[${summary?.name}] children: ${summary?.spaceChildren?.size}")
         summary?.spaceChildren?.forEach {
 //            val childRoomSummary = it.roomSummary ?: return@forEach
             Timber.v("## Space: Processing child :[${it.childRoomId}] autoJoin:${it.autoJoin}")

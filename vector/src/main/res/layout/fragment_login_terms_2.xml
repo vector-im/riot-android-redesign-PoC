@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?riotx_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/LoginFormScrollView"
+        android:layout_height="match_parent"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            style="@style/LoginLogo"
+            android:layout_marginTop="36dp"
+            android:importantForAccessibility="no"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/loginTermsTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="52dp"
+            android:layout_marginEnd="36dp"
+            android:text="@string/login_terms_title"
+            android:textAppearance="@style/TextAppearance.Vector.Login.Title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loginLogo"
+            tools:ignore="UnknownId" />
+
+        <TextView
+            android:id="@+id/loginTermsNotice"
+            style="@style/TextAppearance.Vector.Login.Text.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:paddingStart="36dp"
+            android:paddingEnd="36dp"
+            android:text="@string/auth_accept_policies"
+            app:layout_constraintTop_toBottomOf="@+id/loginTermsTitle" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/loginTermsPolicyList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/loginTermsSubmit"
+            app:layout_constraintTop_toBottomOf="@+id/loginTermsNotice"
+            tools:listitem="@layout/item_policy" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/loginTermsSubmit"
+            style="@style/Style.Vector.Login.Button"
+            android:layout_marginEnd="36dp"
+            android:text="@string/accept"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
+

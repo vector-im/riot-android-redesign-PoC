@@ -74,7 +74,7 @@ internal class MXMegolmDecryption(private val userId: String,
 
     @Throws(MXCryptoError::class)
     private fun decryptEvent(event: Event, timeline: String, requestKeysOnFail: Boolean): MXEventDecryptionResult {
-        Timber.v("## CRYPTO | decryptEvent ${event.eventId} , requestKeysOnFail:$requestKeysOnFail")
+        Timber.v("## CRYPTO | decryptEvent ${event.eventId}, requestKeysOnFail:$requestKeysOnFail")
         if (event.roomId.isNullOrBlank()) {
             throw MXCryptoError.Base(MXCryptoError.ErrorType.MISSING_FIELDS, MXCryptoError.MISSING_FIELDS_REASON)
         }
@@ -360,7 +360,7 @@ internal class MXMegolmDecryption(private val userId: String,
                                             },
                                             {
                                                 // TODO
-                                                Timber.e(it, "## CRYPTO | shareKeysWithDevice: failed to get session for request $body")
+                                                Timber.e(it, "## CRYPTO | shareKeysWithDevice: failed to get session for request $body")
                                             }
 
                                     )

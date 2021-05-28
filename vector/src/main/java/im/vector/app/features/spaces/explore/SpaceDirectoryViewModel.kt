@@ -28,12 +28,15 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import im.vector.app.core.platform.VectorViewModel
+import im.vector.app.features.powerlevel.PowerLevelsObservableFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.matrix.android.sdk.api.session.Session
+import org.matrix.android.sdk.api.session.events.model.EventType
 import org.matrix.android.sdk.api.session.room.model.Membership
 import org.matrix.android.sdk.api.session.room.model.RoomType
 import org.matrix.android.sdk.api.session.room.model.SpaceChildInfo
+import org.matrix.android.sdk.api.session.room.powerlevels.PowerLevelsHelper
 import org.matrix.android.sdk.api.session.room.roomSummaryQueryParams
 import org.matrix.android.sdk.rx.rx
 import timber.log.Timber
@@ -70,6 +73,23 @@ class SpaceDirectoryViewModel @AssistedInject constructor(
         refreshFromApi()
         observeJoinedRooms()
         observeMembershipChanges()
+        observePermissions()
+    }
+
+    private fun observePermissions() {
+        val room = session.getRoom(initialState.spaceId) ?: return
+
+        val powerLevelsContentLive = PowerLevelsObservableFactory(room).createObservable()
+
+        powerLevelsContentLive
+                .subscribe {
+                    val powerLevelsHelper = PowerLevelsHelper(it)
+                    setState {
+                        copy(canAddRooms = powerLevelsHelper.isUserAllowedToSend(session.myUserId, true,
+                                EventType.STATE_SPACE_CHILD))
+                    }
+                }
+                .disposeOnClear()
     }
 
     private fun refreshFromApi() {

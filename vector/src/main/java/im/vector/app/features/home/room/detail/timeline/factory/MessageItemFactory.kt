@@ -60,6 +60,7 @@ import im.vector.app.features.home.room.detail.timeline.tools.linkify
 import im.vector.app.features.html.CodeVisitor
 import im.vector.app.features.html.EventHtmlRenderer
 import im.vector.app.features.html.PillsPostProcessor
+import im.vector.app.features.html.SpanUtils
 import im.vector.app.features.html.VectorHtmlCompressor
 import im.vector.app.features.media.ImageContentRenderer
 import im.vector.app.features.media.VideoContentRenderer
@@ -109,6 +110,7 @@ class MessageItemFactory @Inject constructor(
         private val noticeItemFactory: NoticeItemFactory,
         private val avatarSizeProvider: AvatarSizeProvider,
         private val pillsPostProcessorFactory: PillsPostProcessor.Factory,
+        private val spanUtils: SpanUtils,
         private val session: Session) {
 
     // TODO inject this properly?
@@ -420,6 +422,7 @@ class MessageItemFactory @Inject constructor(
                                      highlight: Boolean,
                                      callback: TimelineEventController.Callback?,
                                      attributes: AbsMessageItem.Attributes): MessageTextItem? {
+        val canUseTextFuture = spanUtils.canUseTextFuture(body)
         val linkifiedBody = body.linkify(callback)
 
         return MessageTextItem_().apply {
@@ -431,6 +434,7 @@ class MessageItemFactory @Inject constructor(
             }
         }
                 .useBigFont(linkifiedBody.length <= MAX_NUMBER_OF_EMOJI_FOR_BIG_FONT * 2 && containsOnlyEmojis(linkifiedBody.toString()))
+                .canUseTextFuture(canUseTextFuture)
                 .searchForPills(isFormatted)
                 .previewUrlRetriever(callback?.getPreviewUrlRetriever())
                 .imageContentRenderer(imageContentRenderer)
@@ -503,12 +507,14 @@ class MessageItemFactory @Inject constructor(
                                        highlight: Boolean,
                                        callback: TimelineEventController.Callback?,
                                        attributes: AbsMessageItem.Attributes): MessageTextItem? {
+        val htmlBody = messageContent.getHtmlBody()
         val formattedBody = span {
-            text = messageContent.getHtmlBody()
+            text = htmlBody
             textColor = colorProvider.getColorFromAttribute(R.attr.riotx_text_secondary)
             textStyle = "italic"
         }
 
+        val canUseTextFuture = spanUtils.canUseTextFuture(htmlBody)
         val message = formattedBody.linkify(callback)
 
         return MessageTextItem_()
@@ -518,6 +524,7 @@ class MessageItemFactory @Inject constructor(
                 .previewUrlCallback(callback)
                 .attributes(attributes)
                 .message(message)
+                .canUseTextFuture(canUseTextFuture)
                 .highlighted(highlight)
                 .movementMethod(createLinkMovementMethod(callback))
     }

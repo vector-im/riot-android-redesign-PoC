@@ -46,6 +46,7 @@ class HomeserverSettingsController @Inject constructor(
 
     override fun buildModels(data: HomeServerSettingsViewState?) {
         data ?: return
+        val host = this
 
         buildHeader(data)
         buildCapabilities(data)
@@ -58,8 +59,8 @@ class HomeserverSettingsController @Inject constructor(
             is Fail          ->
                 errorWithRetryItem {
                     id("error")
-                    text(errorFormatter.toHumanReadable(federationVersion.error))
-                    listener { callback?.retry() }
+                    text(host.errorFormatter.toHumanReadable(federationVersion.error))
+                    listener { host.callback?.retry() }
                 }
             is Success       ->
                 buildFederationVersion(federationVersion())
@@ -101,6 +102,7 @@ class HomeserverSettingsController @Inject constructor(
     }
 
     private fun buildCapabilities(data: HomeServerSettingsViewState) {
+        val host = this
         settingsSectionTitleItem {
             id("uploadTitle")
             titleResId(R.string.settings_server_upload_size_title)
@@ -113,7 +115,7 @@ class HomeserverSettingsController @Inject constructor(
             if (limit == HomeServerCapabilities.MAX_UPLOAD_FILE_SIZE_UNKNOWN) {
                 helperTextResId(R.string.settings_server_upload_size_unknown)
             } else {
-                helperText(stringProvider.getString(R.string.settings_server_upload_size_content, "${limit / 1048576L} MB"))
+                helperText(host.stringProvider.getString(R.string.settings_server_upload_size_content, "${limit / 1048576L} MB"))
             }
         }
     }

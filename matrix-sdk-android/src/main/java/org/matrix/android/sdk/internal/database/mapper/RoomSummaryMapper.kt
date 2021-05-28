@@ -90,7 +90,9 @@ internal class RoomSummaryMapper @Inject constructor(private val timelineEventMa
                             autoJoin = it.autoJoin ?: false,
                             viaServers = it.viaServers.toList(),
                             parentRoomId = roomSummaryEntity.roomId,
-                            suggested = it.suggested
+                            suggested = it.suggested,
+                            canonicalAlias = it.childSummaryEntity?.canonicalAlias,
+                            aliases = it.childSummaryEntity?.aliases?.toList()
                     )
                 },
                 flattenParentIds = roomSummaryEntity.flattenParentIds?.split("|") ?: emptyList()

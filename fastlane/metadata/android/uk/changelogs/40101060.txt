@@ -1,0 +1,2 @@
+Основні зміни в цій версії: виправлення для 1.1.5
+Повний журнал змін: https://github.com/vector-im/element-android/releases/tag/v1.1.6

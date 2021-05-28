@@ -35,7 +35,7 @@ import io.reactivex.functions.Function4
 import io.reactivex.subjects.PublishSubject
 import org.matrix.android.sdk.api.extensions.orFalse
 import org.matrix.android.sdk.api.session.Session
-import org.matrix.android.sdk.api.session.accountdata.UserAccountDataEvent
+import org.matrix.android.sdk.api.session.accountdata.AccountDataEvent
 import org.matrix.android.sdk.api.session.crypto.crosssigning.MASTER_KEY_SSSS_NAME
 import org.matrix.android.sdk.api.session.crypto.crosssigning.MXCrossSigningInfo
 import org.matrix.android.sdk.api.session.crypto.crosssigning.SELF_SIGNING_KEY_SSSS_NAME
@@ -98,8 +98,8 @@ class ServerBackupStatusViewModel @AssistedInject constructor(@Assisted initialS
 
         keysBackupState.value = session.cryptoService().keysBackupService().state
 
-        Observable.combineLatest<List<UserAccountDataEvent>, Optional<MXCrossSigningInfo>, KeysBackupState, Optional<PrivateKeysInfo>, BannerState>(
-                session.rx().liveAccountData(setOf(MASTER_KEY_SSSS_NAME, USER_SIGNING_KEY_SSSS_NAME, SELF_SIGNING_KEY_SSSS_NAME)),
+        Observable.combineLatest<List<AccountDataEvent>, Optional<MXCrossSigningInfo>, KeysBackupState, Optional<PrivateKeysInfo>, BannerState>(
+                session.rx().liveUserAccountData(setOf(MASTER_KEY_SSSS_NAME, USER_SIGNING_KEY_SSSS_NAME, SELF_SIGNING_KEY_SSSS_NAME)),
                 session.rx().liveCrossSigningInfo(session.myUserId),
                 keyBackupPublishSubject,
                 session.rx().liveCrossSigningPrivateKeys(),

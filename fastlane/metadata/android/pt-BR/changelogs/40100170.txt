@@ -1,2 +1,2 @@
-Principais mudanças nessa versão: correções de erros!
-Registro de todas as alterações: https://github.com/vector-im/element-android/releases/tag/v1.0.17
+Principais alterações nesta versão: Correções de bugs!
+Changelog completo: https://github.com/vector-im/element-android/releases/tag/v1.0.17

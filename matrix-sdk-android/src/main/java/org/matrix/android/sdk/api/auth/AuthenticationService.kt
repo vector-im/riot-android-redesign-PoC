@@ -51,11 +51,15 @@ interface AuthenticationService {
 
     /**
      * Return a LoginWizard, to login to the homeserver. The login flow has to be retrieved first.
+     *
+     * See [LoginWizard] for more details
      */
     fun getLoginWizard(): LoginWizard
 
     /**
      * Return a RegistrationWizard, to create an matrix account on the homeserver. The login flow has to be retrieved first.
+     *
+     * See [RegistrationWizard] for more details.
      */
     fun getRegistrationWizard(): RegistrationWizard
 

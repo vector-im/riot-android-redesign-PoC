@@ -58,6 +58,7 @@ class SpacePeopleListController @Inject constructor(
     }
 
     override fun buildModels(data: RoomMemberListViewState?) {
+        val host = this
         val memberSummaries = data?.roomMemberSummaries?.invoke()
         if (memberSummaries == null) {
             loadingItem { id("loading") }
@@ -72,7 +73,7 @@ class SpacePeopleListController @Inject constructor(
             if (filtered.isNotEmpty()) {
                 dividerItem {
                     id("divider_type_${memberEntry.first.titleRes}")
-                    color(dividerColor)
+                    color(host.dividerColor)
                 }
             }
             foundCount += filtered.size
@@ -82,15 +83,15 @@ class SpacePeopleListController @Inject constructor(
                                 profileMatrixItemWithPowerLevel {
                                     id(roomMember.userId)
                                     matrixItem(roomMember.toMatrixItem())
-                                    avatarRenderer(avatarRenderer)
+                                    avatarRenderer(host.avatarRenderer)
                                     userEncryptionTrustLevel(data.trustLevelMap.invoke()?.get(roomMember.userId))
                                             .apply {
-                                                val pl = memberEntry.first.toPowerLevelLabel()
+                                                val pl = host.toPowerLevelLabel(memberEntry.first)
                                                 if (memberEntry.first == RoomMemberListCategories.INVITE) {
                                                     powerLevelLabel(
                                                             span {
-                                                                span(stringProvider.getString(R.string.invited)) {
-                                                                    textColor = colorProvider.getColorFromAttribute(R.attr.riotx_text_secondary)
+                                                                span(host.stringProvider.getString(R.string.invited)) {
+                                                                    textColor = host.colorProvider.getColorFromAttribute(R.attr.riotx_text_secondary)
                                                                     textStyle = "bold"
                                                                     // fontFamily = "monospace"
                                                                 }
@@ -100,10 +101,10 @@ class SpacePeopleListController @Inject constructor(
                                                     powerLevelLabel(
                                                             span {
                                                                 span(" $pl ") {
-                                                                    backgroundColor = colorProvider.getColor(R.color.notification_accent_color)
-                                                                    paddingTop = dimensionConverter.dpToPx(2)
-                                                                    paddingBottom = dimensionConverter.dpToPx(2)
-                                                                    textColor = colorProvider.getColor(R.color.white)
+                                                                    backgroundColor = host.colorProvider.getColor(R.color.notification_accent_color)
+                                                                    paddingTop = host.dimensionConverter.dpToPx(2)
+                                                                    paddingBottom = host.dimensionConverter.dpToPx(2)
+                                                                    textColor = host.colorProvider.getColor(R.color.white)
                                                                     textStyle = "bold"
                                                                     // fontFamily = "monospace"
                                                                 }
@@ -115,14 +116,14 @@ class SpacePeopleListController @Inject constructor(
                                             }
 
                                     clickListener { _ ->
-                                        listener?.onSpaceMemberClicked(roomMember)
+                                        host.listener?.onSpaceMemberClicked(roomMember)
                                     }
                                 }
                             },
                             between = { _, roomMemberBefore ->
                                 dividerItem {
                                     id("divider_${roomMemberBefore.userId}")
-                                    color(dividerColor)
+                                    color(host.dividerColor)
                                 }
                             }
                     )
@@ -135,30 +136,30 @@ class SpacePeopleListController @Inject constructor(
                 title(
                         span {
                             +"\n"
-                            +stringProvider.getString(R.string.no_result_placeholder)
+                            +host.stringProvider.getString(R.string.no_result_placeholder)
                         }
                 )
                 description(
                         span {
-                            +stringProvider.getString(R.string.looking_for_someone_not_in_space, data.roomSummary.invoke()?.displayName ?: "")
+                            +host.stringProvider.getString(R.string.looking_for_someone_not_in_space, data.roomSummary.invoke()?.displayName ?: "")
                             +"\n"
                             span("Invite them") {
-                                textColor = colorProvider.getColorFromAttribute(R.attr.colorAccent)
+                                textColor = host.colorProvider.getColorFromAttribute(R.attr.colorAccent)
                                 textStyle = "bold"
                             }
                         }
                 )
                 itemClickAction(GenericItem.Action("invite").apply {
                     perform = Runnable {
-                        listener?.onInviteToSpaceSelected()
+                        host.listener?.onInviteToSpaceSelected()
                     }
                 })
             }
         }
     }
 
-    private fun RoomMemberListCategories.toPowerLevelLabel(): String? {
-        return when (this) {
+    private fun toPowerLevelLabel(categories: RoomMemberListCategories): String? {
+        return when (categories) {
             RoomMemberListCategories.ADMIN     -> stringProvider.getString(R.string.power_level_admin)
             RoomMemberListCategories.MODERATOR -> stringProvider.getString(R.string.power_level_moderator)
             else                               -> null

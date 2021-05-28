@@ -40,6 +40,7 @@ class IncomingKeyRequestPagedController @Inject constructor(
     var interactionListener: InteractionListener? = null
 
     override fun buildItemModel(currentPosition: Int, item: IncomingRoomKeyRequest?): EpoxyModel<*> {
+        val host = this
         val roomKeyRequest = item ?: return GenericItem_().apply { id(currentPosition) }
 
         return GenericItem_().apply {
@@ -51,7 +52,7 @@ class IncomingKeyRequestPagedController @Inject constructor(
                             textStyle = "bold"
                         }
                         span("${roomKeyRequest.userId}")
-                        +vectorDateFormatter.format(roomKeyRequest.localCreationTimestamp, DateFormatKind.DEFAULT_DATE_AND_TIME)
+                        +host.vectorDateFormatter.format(roomKeyRequest.localCreationTimestamp, DateFormatKind.DEFAULT_DATE_AND_TIME)
                         span("\nsessionId:") {
                             textStyle = "bold"
                         }

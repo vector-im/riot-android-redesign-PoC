@@ -43,17 +43,18 @@ class AutocompleteEmojiController @Inject constructor(
         if (data.isNullOrEmpty()) {
             return
         }
+        val host = this
         data
                 .take(MAX)
                 .forEach { emojiItem ->
                     autocompleteEmojiItem {
                         id(emojiItem.name)
                         emojiItem(emojiItem)
-                        emojiTypeFace(emojiTypeface)
+                        emojiTypeFace(host.emojiTypeface)
                         onClickListener(
                                 object : ReactionClickListener {
                                     override fun onReactionSelected(reaction: String) {
-                                        listener?.onItemClick(reaction)
+                                        host.listener?.onItemClick(reaction)
                                     }
                                 }
                         )

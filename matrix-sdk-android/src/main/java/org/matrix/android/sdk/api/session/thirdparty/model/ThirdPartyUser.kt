@@ -22,16 +22,16 @@ import org.matrix.android.sdk.api.util.JsonDict
 
 @JsonClass(generateAdapter = true)
 data class ThirdPartyUser(
-        /*
-            Required. A Matrix User ID represting a third party user.
+        /**
+         * Required. A Matrix User ID representing a third party user.
          */
         @Json(name = "userid") val userId: String,
-        /*
-            Required. The protocol ID that the third party location is a part of.
+        /**
+         * Required. The protocol ID that the third party location is a part of.
          */
         @Json(name = "protocol") val protocol: String,
-        /*
-            Required. Information used to identify this third party location.
+        /**
+         *  Required. Information used to identify this third party location.
          */
         @Json(name = "fields") val fields: JsonDict
 )

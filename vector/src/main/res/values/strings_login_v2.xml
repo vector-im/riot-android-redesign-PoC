@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Those strings are not final, so do not put them into Weblate for the moment -->
+
+    <string name="login_welcome_back">Welcome back %s!</string>
+    <string name="login_please_enter_your_password">Please enter your password</string>
+    <string name="login_please_enter_your_matrix_identifier">Please enter your Matrix identifier</string>
+    <string name="login_please_enter_your_matrix_identifier_help">Matrix identifiers start with @, for instance @alice:server.org</string>
+    <string name="login_enter_identifier_help">If you do not know your Matrix identifier, or if your account has been created using Single Sign On (for instance using a Google account), or if you want to connect using your simple name, or an email associated to your account, you have to select your server first.</string>
+    <string name="login_choose_a_server">Choose a server</string>
+    <string name="login_please_choose_a_server">Please choose a server</string>
+    <string name="login_please_select_your_server">Please select your server</string>
+    <string name="login_please_choose_a_password">Please choose a password</string>
+    <string name="login_please_choose_a_new_password">Please choose a new password</string>
+    <string name="login_your_matrix_identifier">Your Matrix identifier</string>
+    <string name="login_press_back_to_change">Press back to change</string>
+    <string name="login_choose_a_password">Choose a password</string>
+    <string name="login_enter_your_email">Enter an email associated to your Matrix account</string>
+    <string name="login_choose_a_new_password">Choose a new password</string>
+    <string name="login_please_choose_a_user_name">Please choose an identifier</string>
+    <string name="login_please_choose_a_user_name_help">Your identifier will be used to connect to your Matrix account</string>
+    <string name="login_please_choose_a_user_name_help_2">Once your account is created, your identifier cannot be modified. However you will be able to change your display name.</string>
+    <string name="login_if_you_re_not_sure_select_this_option">If you\'re not sure, select this option</string>
+    <string name="login_element_matrix_server_and_others">Element Matrix Server and others</string>
+    <string name="login_create_a_new_account">Create a new account</string>
+    <string name="login_i_already_have_an_account">I already have an account</string>
+
+    <string name="login_unknown_user_warning">Warning: no profile information can be retrieved with this Matrix identifier. Please check that there is no mistake.</string>
+
+    <string name="login_wait_for_email_notice_2">We just sent an email to %1$s.</string>
+    <string name="login_wait_for_email_help">Click on the link it contains to continue the account creation.</string>
+    <string name="login_account_created_title">Congratulations!</string>
+    <string name="login_account_created_subtitle">You account %s has been successfully created.</string>
+    <string name="login_account_created_notice">To complete your profile, you can set a profile image and/or a display name. This can also be done later from the settings.</string>
+    <string name="login_account_created_notice_2">This is how your messages will appear:</string>
+    <string name="login_account_created_message">Hello Matrix world!</string>
+    <string name="login_account_created_instruction">Click on the image and on your name to configure them.</string>
+
+    <string name="login_set_email_title_2">Associate an email</string>
+    <string name="login_set_email_notice_2">Associate an email to be able to later recover your account, in case you forget your password.</string>
+    <string name="login_set_email_mandatory_notice_2">The server %s requires you to associate an email to create an account.</string>
+
+    <string name="login_set_msisdn_title_2">Associate a phone number</string>
+    <string name="login_set_msisdn_notice_2">Associate a phone number to optionally allow people you know to discover you.</string>
+    <string name="login_set_msisdn_mandatory_notice_2">The server %s requires you to associate a phone number to create an account.</string>
+    <!-- %S will be replaced by the value of login_server_modular_learn_more ("Learn more" in English)-->
+    <string name="login_server_modular_learn_more_about_ems">%s about Element Matrix Service.</string>
+
+</resources>

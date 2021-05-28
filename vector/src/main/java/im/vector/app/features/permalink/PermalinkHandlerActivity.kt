@@ -26,7 +26,6 @@ import im.vector.app.core.platform.VectorBaseActivity
 import im.vector.app.databinding.FragmentProgressBinding
 import im.vector.app.features.home.HomeActivity
 import im.vector.app.features.home.LoadingFragment
-import im.vector.app.features.login.LoginActivity
 import javax.inject.Inject
 
 class PermalinkHandlerActivity : VectorBaseActivity<FragmentProgressBinding>() {
@@ -71,9 +70,10 @@ class PermalinkHandlerActivity : VectorBaseActivity<FragmentProgressBinding>() {
     }
 
     private fun startLoginActivity() {
-        val intent = LoginActivity.newIntent(this, null)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
+        navigator.openLogin(
+                context = this,
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        )
         finish()
     }
 }

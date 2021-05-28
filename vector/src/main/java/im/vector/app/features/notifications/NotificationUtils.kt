@@ -50,12 +50,12 @@ import im.vector.app.core.resources.StringProvider
 import im.vector.app.core.utils.startNotificationChannelSettingsIntent
 import im.vector.app.features.call.VectorCallActivity
 import im.vector.app.features.call.service.CallHeadsUpActionReceiver
+import im.vector.app.features.call.webrtc.WebRtcCall
 import im.vector.app.features.home.HomeActivity
 import im.vector.app.features.home.room.detail.RoomDetailActivity
 import im.vector.app.features.home.room.detail.RoomDetailArgs
 import im.vector.app.features.settings.VectorPreferences
 import im.vector.app.features.settings.troubleshoot.TestNotificationReceiver
-import org.matrix.android.sdk.api.session.call.MxCall
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -286,7 +286,7 @@ class NotificationUtils @Inject constructor(private val context: Context,
      * @return the call notification.
      */
     @SuppressLint("NewApi")
-    fun buildIncomingCallNotification(mxCall: MxCall,
+    fun buildIncomingCallNotification(call: WebRtcCall,
                                       title: String,
                                       fromBg: Boolean): Notification {
         val accentColor = ContextCompat.getColor(context, R.color.notification_accent_color)
@@ -294,7 +294,7 @@ class NotificationUtils @Inject constructor(private val context: Context,
         val builder = NotificationCompat.Builder(context, notificationChannel)
                 .setContentTitle(ensureTitleNotEmpty(title))
                 .apply {
-                    if (mxCall.isVideoCall) {
+                    if (call.mxCall.isVideoCall) {
                         setContentText(stringProvider.getString(R.string.incoming_video_call))
                     } else {
                         setContentText(stringProvider.getString(R.string.incoming_voice_call))
@@ -307,11 +307,11 @@ class NotificationUtils @Inject constructor(private val context: Context,
 
         val contentIntent = VectorCallActivity.newIntent(
                 context = context,
-                mxCall = mxCall,
+                call = call,
                 mode = VectorCallActivity.INCOMING_RINGING
         ).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            data = Uri.parse("foobar://${mxCall.callId}")
+            data = Uri.parse("foobar://${call.callId}")
         }
         val contentPendingIntent = PendingIntent.getActivity(context, System.currentTimeMillis().toInt(), contentIntent, 0)
 
@@ -319,12 +319,12 @@ class NotificationUtils @Inject constructor(private val context: Context,
                 .addNextIntentWithParentStack(HomeActivity.newIntent(context))
                 .addNextIntent(VectorCallActivity.newIntent(
                         context = context,
-                        mxCall = mxCall,
+                        call = call,
                         mode = VectorCallActivity.INCOMING_ACCEPT)
                 )
                 .getPendingIntent(System.currentTimeMillis().toInt(), PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val rejectCallPendingIntent = buildRejectCallPendingIntent(mxCall.callId)
+        val rejectCallPendingIntent = buildRejectCallPendingIntent(call.callId)
 
         builder.addAction(
                 NotificationCompat.Action(
@@ -350,7 +350,7 @@ class NotificationUtils @Inject constructor(private val context: Context,
         return builder.build()
     }
 
-    fun buildOutgoingRingingCallNotification(mxCall: MxCall,
+    fun buildOutgoingRingingCallNotification(call: WebRtcCall,
                                              title: String): Notification {
         val accentColor = ContextCompat.getColor(context, R.color.notification_accent_color)
         val builder = NotificationCompat.Builder(context, SILENT_NOTIFICATION_CHANNEL_ID)
@@ -365,14 +365,14 @@ class NotificationUtils @Inject constructor(private val context: Context,
 
         val contentIntent = VectorCallActivity.newIntent(
                 context = context,
-                mxCall = mxCall,
+                call = call,
                 mode = null).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            data = Uri.parse("foobar://$mxCall.callId")
+            data = Uri.parse("foobar://$call.callId")
         }
         val contentPendingIntent = PendingIntent.getActivity(context, System.currentTimeMillis().toInt(), contentIntent, 0)
 
-        val rejectCallPendingIntent = buildRejectCallPendingIntent(mxCall.callId)
+        val rejectCallPendingIntent = buildRejectCallPendingIntent(call.callId)
 
         builder.addAction(
                 NotificationCompat.Action(
@@ -396,12 +396,12 @@ class NotificationUtils @Inject constructor(private val context: Context,
      * @return the call notification.
      */
     @SuppressLint("NewApi")
-    fun buildPendingCallNotification(mxCall: MxCall,
+    fun buildPendingCallNotification(call: WebRtcCall,
                                      title: String): Notification {
         val builder = NotificationCompat.Builder(context, SILENT_NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(ensureTitleNotEmpty(title))
                 .apply {
-                    if (mxCall.isVideoCall) {
+                    if (call.mxCall.isVideoCall) {
                         setContentText(stringProvider.getString(R.string.video_call_in_progress))
                     } else {
                         setContentText(stringProvider.getString(R.string.call_in_progress))
@@ -410,7 +410,7 @@ class NotificationUtils @Inject constructor(private val context: Context,
                 .setSmallIcon(R.drawable.incoming_call_notification_transparent)
                 .setCategory(NotificationCompat.CATEGORY_CALL)
 
-        val rejectCallPendingIntent = buildRejectCallPendingIntent(mxCall.callId)
+        val rejectCallPendingIntent = buildRejectCallPendingIntent(call.callId)
 
         builder.addAction(
                 NotificationCompat.Action(
@@ -421,7 +421,7 @@ class NotificationUtils @Inject constructor(private val context: Context,
 
         val contentPendingIntent = TaskStackBuilder.create(context)
                 .addNextIntentWithParentStack(HomeActivity.newIntent(context))
-                .addNextIntent(VectorCallActivity.newIntent(context, mxCall, null))
+                .addNextIntent(VectorCallActivity.newIntent(context, call, null))
                 .getPendingIntent(System.currentTimeMillis().toInt(), PendingIntent.FLAG_UPDATE_CURRENT)
 
         builder.setContentIntent(contentPendingIntent)
@@ -560,9 +560,8 @@ class NotificationUtils @Inject constructor(private val context: Context,
                             NotificationCompat.Action.Builder(R.drawable.vector_notification_quick_reply,
                                     stringProvider.getString(R.string.action_quick_reply), replyPendingIntent)
                                     .addRemoteInput(remoteInput)
-                                    .build().let {
-                                        addAction(it)
-                                    }
+                                    .build()
+                                    .let { addAction(it) }
                         }
                     }
 

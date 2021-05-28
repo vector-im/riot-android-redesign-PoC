@@ -20,8 +20,8 @@ import android.content.Context
 import android.net.Uri
 import im.vector.app.core.intent.getMimeTypeFromUri
 import im.vector.app.core.resources.openResource
+import im.vector.app.features.session.coroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.matrix.android.sdk.api.MatrixCallback
@@ -41,7 +41,7 @@ class KeysImporter(private val session: Session) {
                mimetype: String?,
                password: String,
                callback: MatrixCallback<ImportRoomKeysResult>) {
-        GlobalScope.launch(Dispatchers.Main) {
+        session.coroutineScope.launch(Dispatchers.Main) {
             runCatching {
                 withContext(Dispatchers.IO) {
                     val resource = openResource(context, uri, mimetype ?: getMimeTypeFromUri(context, uri))

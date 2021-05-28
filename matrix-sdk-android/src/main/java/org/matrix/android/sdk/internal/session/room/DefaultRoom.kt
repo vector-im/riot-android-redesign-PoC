@@ -17,6 +17,7 @@
 package org.matrix.android.sdk.internal.session.room
 
 import androidx.lifecycle.LiveData
+import org.matrix.android.sdk.api.session.accountdata.AccountDataService
 import org.matrix.android.sdk.api.session.crypto.CryptoService
 import org.matrix.android.sdk.api.session.events.model.EventType
 import org.matrix.android.sdk.api.session.room.Room
@@ -41,34 +42,35 @@ import org.matrix.android.sdk.api.session.space.Space
 import org.matrix.android.sdk.api.util.Optional
 import org.matrix.android.sdk.internal.crypto.MXCRYPTO_ALGORITHM_MEGOLM
 import org.matrix.android.sdk.internal.session.permalinks.ViaParameterFinder
+import org.matrix.android.sdk.internal.session.room.accountdata.RoomAccountDataService
 import org.matrix.android.sdk.internal.session.room.state.SendStateTask
 import org.matrix.android.sdk.internal.session.room.summary.RoomSummaryDataSource
 import org.matrix.android.sdk.internal.session.search.SearchTask
 import org.matrix.android.sdk.internal.session.space.DefaultSpace
 import org.matrix.android.sdk.internal.util.awaitCallback
 import java.security.InvalidParameterException
-import javax.inject.Inject
 
-internal class DefaultRoom @Inject constructor(override val roomId: String,
-                                               private val roomSummaryDataSource: RoomSummaryDataSource,
-                                               private val timelineService: TimelineService,
-                                               private val sendService: SendService,
-                                               private val draftService: DraftService,
-                                               private val stateService: StateService,
-                                               private val uploadsService: UploadsService,
-                                               private val reportingService: ReportingService,
-                                               private val roomCallService: RoomCallService,
-                                               private val readService: ReadService,
-                                               private val typingService: TypingService,
-                                               private val aliasService: AliasService,
-                                               private val tagsService: TagsService,
-                                               private val cryptoService: CryptoService,
-                                               private val relationService: RelationService,
-                                               private val roomMembersService: MembershipService,
-                                               private val roomPushRuleService: RoomPushRuleService,
-                                               private val sendStateTask: SendStateTask,
-                                               private val viaParameterFinder: ViaParameterFinder,
-                                               private val searchTask: SearchTask) :
+internal class DefaultRoom(override val roomId: String,
+                           private val roomSummaryDataSource: RoomSummaryDataSource,
+                           private val timelineService: TimelineService,
+                           private val sendService: SendService,
+                           private val draftService: DraftService,
+                           private val stateService: StateService,
+                           private val uploadsService: UploadsService,
+                           private val reportingService: ReportingService,
+                           private val roomCallService: RoomCallService,
+                           private val readService: ReadService,
+                           private val typingService: TypingService,
+                           private val aliasService: AliasService,
+                           private val tagsService: TagsService,
+                           private val cryptoService: CryptoService,
+                           private val relationService: RelationService,
+                           private val roomMembersService: MembershipService,
+                           private val roomPushRuleService: RoomPushRuleService,
+                           private val roomAccountDataService: RoomAccountDataService,
+                           private val sendStateTask: SendStateTask,
+                           private val viaParameterFinder: ViaParameterFinder,
+                           private val searchTask: SearchTask) :
         Room,
         TimelineService by timelineService,
         SendService by sendService,
@@ -83,7 +85,8 @@ internal class DefaultRoom @Inject constructor(override val roomId: String,
         TagsService by tagsService,
         RelationService by relationService,
         MembershipService by roomMembersService,
-        RoomPushRuleService by roomPushRuleService {
+        RoomPushRuleService by roomPushRuleService,
+        AccountDataService by roomAccountDataService {
 
     override fun getRoomSummaryLive(): LiveData<Optional<RoomSummary>> {
         return roomSummaryDataSource.getRoomSummaryLive(roomId)

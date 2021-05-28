@@ -14,7 +14,7 @@ kapt {
 // Note: 2 digits max for each value
 ext.versionMajor = 1
 ext.versionMinor = 1
-ext.versionPatch = 8
+ext.versionPatch = 9
 
 static def getGitTimestamp() {
     def cmd = 'git show -s --format=%ct'
@@ -136,6 +136,11 @@ android {
 
         buildConfigField "String", "BUILD_NUMBER", "\"${buildNumber}\""
         resValue "string", "build_number", "\"${buildNumber}\""
+
+        // The two booleans must not have the same value. We need two values for the manifest
+        // LoginFlowV2 is disabled to be merged on develop (changelog: Improve login/register flow (#1410, #2585, #3172))
+        resValue "bool", "useLoginV1", "true"
+        resValue "bool", "useLoginV2", "false"
 
         buildConfigField "im.vector.app.features.crypto.keysrequest.OutboundSessionKeySharingStrategy", "outboundSessionKeySharingStrategy", "im.vector.app.features.crypto.keysrequest.OutboundSessionKeySharingStrategy.WhenTyping"
 
@@ -290,19 +295,20 @@ android {
 
 dependencies {
 
-    def epoxy_version = '4.5.0'
-    def fragment_version = '1.3.3'
+    def epoxy_version = '4.6.1'
+    def fragment_version = '1.3.4'
     def arrow_version = "0.8.2"
     def markwon_version = '4.1.2'
     def big_image_viewer_version = '1.8.0'
     def glide_version = '4.12.0'
     def moshi_version = '1.12.0'
-    def daggerVersion = '2.35.1'
+    def daggerVersion = '2.36'
     def autofill_version = "1.1.0"
     def work_version = '2.5.0'
     def arch_version = '2.1.0'
     def lifecycle_version = '2.2.0'
     def rxbinding_version = '3.1.0'
+    def jjwt_version = '0.11.2'
 
     // Tests
     def kluent_version = '1.65'
@@ -321,11 +327,11 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
 
     implementation "androidx.recyclerview:recyclerview:1.2.0"
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "androidx.sharetarget:sharetarget:1.1.0"
-    implementation 'androidx.core:core-ktx:1.5.0-rc01'
+    implementation 'androidx.core:core-ktx:1.5.0'
     implementation "androidx.media:media:1.3.1"
 
     implementation "org.threeten:threetenbp:1.4.0:no-tzdb"
@@ -343,7 +349,7 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.6.0'
 
     // Phone number https://github.com/google/libphonenumber
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.23'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.24'
 
     // rx
     implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
@@ -444,9 +450,9 @@ dependencies {
 
     // Jitsi
     implementation('org.jitsi.react:jitsi-meet-sdk:3.1.0') {
-       exclude group: 'com.google.firebase'
-       exclude group: 'com.google.android.gms'
-       exclude group: 'com.android.installreferrer'
+        exclude group: 'com.google.firebase'
+        exclude group: 'com.google.android.gms'
+        exclude group: 'com.android.installreferrer'
     }
 
     // QR-code
@@ -459,6 +465,15 @@ dependencies {
     implementation 'com.vanniktech:emoji-google:0.7.0'
 
     implementation 'im.dlg:android-dialer:1.2.5'
+
+    // JWT
+    api "io.jsonwebtoken:jjwt-api:$jjwt_version"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwt_version"
+    runtimeOnly("io.jsonwebtoken:jjwt-orgjson:$jjwt_version") {
+        exclude group: 'org.json', module: 'json' //provided by Android natively
+    }
+    implementation 'commons-codec:commons-codec:1.15'
+
 
     // TESTS
     testImplementation 'junit:junit:4.13.2'

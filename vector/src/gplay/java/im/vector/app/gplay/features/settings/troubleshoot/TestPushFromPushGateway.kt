@@ -19,13 +19,14 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import im.vector.app.R
+import im.vector.app.core.di.ActiveSessionHolder
 import im.vector.app.core.error.ErrorFormatter
 import im.vector.app.core.pushers.PushersManager
 import im.vector.app.core.resources.StringProvider
+import im.vector.app.features.session.coroutineScope
 import im.vector.app.features.settings.troubleshoot.TroubleshootTest
 import im.vector.app.push.fcm.FcmHelper
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,7 +39,8 @@ import javax.inject.Inject
 class TestPushFromPushGateway @Inject constructor(private val context: AppCompatActivity,
                                                   private val stringProvider: StringProvider,
                                                   private val errorFormatter: ErrorFormatter,
-                                                  private val pushersManager: PushersManager)
+                                                  private val pushersManager: PushersManager,
+                                                  private val activeSessionHolder: ActiveSessionHolder)
     : TroubleshootTest(R.string.settings_troubleshoot_test_push_loop_title) {
 
     private var action: Job? = null
@@ -50,7 +52,7 @@ class TestPushFromPushGateway @Inject constructor(private val context: AppCompat
             status = TestStatus.FAILED
             return
         }
-        action = GlobalScope.launch {
+        action = activeSessionHolder.getActiveSession().coroutineScope.launch {
             val result = runCatching { pushersManager.testPush(fcmToken) }
 
             withContext(Dispatchers.Main) {

@@ -61,16 +61,18 @@ class ContactsBookController @Inject constructor(
     }
 
     private fun renderLoading() {
+        val host = this
         loadingItem {
             id("loading")
-            loadingText(stringProvider.getString(R.string.loading_contact_book))
+            loadingText(host.stringProvider.getString(R.string.loading_contact_book))
         }
     }
 
     private fun renderFailure(failure: Throwable) {
+        val host = this
         errorWithRetryItem {
             id("error")
-            text(errorFormatter.toHumanReadable(failure))
+            text(host.errorFormatter.toHumanReadable(failure))
         }
     }
 
@@ -85,11 +87,12 @@ class ContactsBookController @Inject constructor(
     }
 
     private fun renderContacts(mappedContacts: List<MappedContact>, onlyBoundContacts: Boolean) {
+        val host = this
         for (mappedContact in mappedContacts) {
             contactItem {
                 id(mappedContact.id)
                 mappedContact(mappedContact)
-                avatarRenderer(avatarRenderer)
+                avatarRenderer(host.avatarRenderer)
             }
             mappedContact.emails
                     .forEachIndexed { index, it ->
@@ -101,9 +104,9 @@ class ContactsBookController @Inject constructor(
                             matrixId(it.matrixId)
                             clickListener {
                                 if (it.matrixId != null) {
-                                    callback?.onMatrixIdClick(it.matrixId)
+                                    host.callback?.onMatrixIdClick(it.matrixId)
                                 } else {
-                                    callback?.onThreePidClick(ThreePid.Email(it.email))
+                                    host.callback?.onThreePidClick(ThreePid.Email(it.email))
                                 }
                             }
                         }
@@ -118,9 +121,9 @@ class ContactsBookController @Inject constructor(
                             matrixId(it.matrixId)
                             clickListener {
                                 if (it.matrixId != null) {
-                                    callback?.onMatrixIdClick(it.matrixId)
+                                    host.callback?.onMatrixIdClick(it.matrixId)
                                 } else {
-                                    callback?.onThreePidClick(ThreePid.Msisdn(it.phoneNumber))
+                                    host.callback?.onThreePidClick(ThreePid.Msisdn(it.phoneNumber))
                                 }
                             }
                         }
@@ -129,6 +132,7 @@ class ContactsBookController @Inject constructor(
     }
 
     private fun renderEmptyState(hasSearch: Boolean) {
+        val host = this
         val noResultRes = if (hasSearch) {
             R.string.no_result_placeholder
         } else {
@@ -136,7 +140,7 @@ class ContactsBookController @Inject constructor(
         }
         noResultItem {
             id("noResult")
-            text(stringProvider.getString(noResultRes))
+            text(host.stringProvider.getString(noResultRes))
         }
     }
 

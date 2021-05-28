@@ -48,7 +48,7 @@ fun QrCodeData.toEncodedString(): String {
 
     // TransactionId
     transactionId.forEach {
-        result += it.toByte()
+        result += it.code.toByte()
     }
 
     // Keys

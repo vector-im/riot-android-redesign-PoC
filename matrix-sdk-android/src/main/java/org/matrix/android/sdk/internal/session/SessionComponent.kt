@@ -64,6 +64,7 @@ import org.matrix.android.sdk.internal.session.user.accountdata.AccountDataModul
 import org.matrix.android.sdk.internal.session.widgets.WidgetModule
 import org.matrix.android.sdk.internal.task.TaskExecutor
 import org.matrix.android.sdk.internal.util.MatrixCoroutineDispatchers
+import org.matrix.android.sdk.internal.util.system.SystemModule
 
 @Component(dependencies = [MatrixComponent::class],
         modules = [
@@ -80,6 +81,7 @@ import org.matrix.android.sdk.internal.util.MatrixCoroutineDispatchers
             CacheModule::class,
             MediaModule::class,
             CryptoModule::class,
+            SystemModule::class,
             PushersModule::class,
             OpenIdModule::class,
             WidgetModule::class,

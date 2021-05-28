@@ -51,9 +51,21 @@ If an issue does not exist yet, it may be relevant to open a new issue and let u
 
 This project is full Kotlin. Please do not write Java classes.
 
-### CHANGES.md
+### Changelog
 
-Please add a line to the top of the file `CHANGES.md` describing your change.
+Please create at least one file under ./newsfragment containing details about your change. Towncrier will be used when preparing the release.
+
+Towncrier says to use the PR number for the filename, but the issue number is also fine.
+
+Supported filename extensions are:
+
+- ``.feature``: Signifying a new feature in Element Android or in the Matrix SDK.
+- ``.bugfix``: Signifying a bug fix.
+- ``.doc``: Signifying a documentation improvement.
+- ``.removal``: Signifying a deprecation or removal of public API. Can be used to notifying about API change in the Matrix SDK
+- ``.misc``: A ticket has been closed, but it is not of interest to users. Note that in this case, the content of the file will not be output, but just the issue/PR number.
+
+See https://github.com/twisted/towncrier#news-fragments if you need more details.
 
 ### Code quality
 

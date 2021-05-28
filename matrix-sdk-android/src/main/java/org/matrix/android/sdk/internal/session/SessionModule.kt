@@ -38,6 +38,7 @@ import org.matrix.android.sdk.api.session.accountdata.AccountDataService
 import org.matrix.android.sdk.api.session.events.EventService
 import org.matrix.android.sdk.api.session.homeserver.HomeServerCapabilitiesService
 import org.matrix.android.sdk.api.session.initsync.InitialSyncProgressService
+import org.matrix.android.sdk.api.session.openid.OpenIdService
 import org.matrix.android.sdk.api.session.permalinks.PermalinkService
 import org.matrix.android.sdk.api.session.securestorage.SecureStorageService
 import org.matrix.android.sdk.api.session.securestorage.SharedSecretStorageService
@@ -82,6 +83,7 @@ import org.matrix.android.sdk.internal.session.homeserver.DefaultHomeServerCapab
 import org.matrix.android.sdk.internal.session.identity.DefaultIdentityService
 import org.matrix.android.sdk.internal.session.initsync.DefaultInitialSyncProgressService
 import org.matrix.android.sdk.internal.session.integrationmanager.IntegrationManager
+import org.matrix.android.sdk.internal.session.openid.DefaultOpenIdService
 import org.matrix.android.sdk.internal.session.permalinks.DefaultPermalinkService
 import org.matrix.android.sdk.internal.session.room.EventRelationsAggregationProcessor
 import org.matrix.android.sdk.internal.session.room.create.RoomCreateEventProcessor
@@ -91,7 +93,7 @@ import org.matrix.android.sdk.internal.session.room.send.queue.EventSenderProces
 import org.matrix.android.sdk.internal.session.room.tombstone.RoomTombstoneEventProcessor
 import org.matrix.android.sdk.internal.session.securestorage.DefaultSecureStorageService
 import org.matrix.android.sdk.internal.session.typing.DefaultTypingUsersTracker
-import org.matrix.android.sdk.internal.session.user.accountdata.DefaultAccountDataService
+import org.matrix.android.sdk.internal.session.user.accountdata.UserAccountDataService
 import org.matrix.android.sdk.internal.session.widgets.DefaultWidgetURLFormatter
 import org.matrix.android.sdk.internal.util.md5
 import retrofit2.Retrofit
@@ -362,7 +364,7 @@ internal abstract class SessionModule {
     abstract fun bindHomeServerCapabilitiesService(service: DefaultHomeServerCapabilitiesService): HomeServerCapabilitiesService
 
     @Binds
-    abstract fun bindAccountDataService(service: DefaultAccountDataService): AccountDataService
+    abstract fun bindAccountDataService(service: UserAccountDataService): AccountDataService
 
     @Binds
     abstract fun bindEventService(service: DefaultEventService): EventService
@@ -372,6 +374,9 @@ internal abstract class SessionModule {
 
     @Binds
     abstract fun bindPermalinkService(service: DefaultPermalinkService): PermalinkService
+
+    @Binds
+    abstract fun bindOpenIdTokenService(service: DefaultOpenIdService): OpenIdService
 
     @Binds
     abstract fun bindTypingUsersTracker(tracker: DefaultTypingUsersTracker): TypingUsersTracker

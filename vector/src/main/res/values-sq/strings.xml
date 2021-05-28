@@ -2740,4 +2740,25 @@
     <string name="spaces_header">Hapësira</string>
     <string name="spaces_invited_header">Ftesa</string>
     <string name="suggested_header">Dhoma të Këshilluara</string>
+    <string name="space_manage_rooms_and_spaces">Administroni dhoma dhe hapësira</string>
+    <string name="space_mark_as_not_suggested">Hiqi shenjë si e sugjeruar</string>
+    <string name="space_mark_as_suggested">Vëri shenjë si e sugjeruar</string>
+    <string name="space_suggested">E sugjeruar</string>
+    <string name="make_this_space_public">Bëje publike këtë hapësirë</string>
+    <string name="space_settings_manage_rooms">Administroni dhoma</string>
+    <string name="looking_for_someone_not_in_space">Po kërkoni për dikë jo në %s\?</string>
+    <string name="user_invites_you">%1$s ju fton</string>
+    <string name="a11y_public_room">Kjo dhomë është publike</string>
+    <string name="a11y_unchecked">E pakontrolluar</string>
+    <string name="a11y_checked">U kontrollua</string>
+    <string name="send_images_and_video_with_original_size">Dërgoje median në madhësinë origjinale</string>
+    <plurals name="send_videos_with_original_size">
+        <item quantity="one">Dërgoje videon në madhësinë origjinale</item>
+        <item quantity="other">Dërgoji videot në madhësinë origjinale</item>
+    </plurals>
+    <string name="error_file_too_big_simple">Kartela është shumë e madhe për t’u ngarkuar.</string>
+    <string name="send_file_step_compressing_video">Po ngjeshet video %d%%</string>
+    <string name="send_file_step_compressing_image">Po ngjeshet figurë…</string>
+    <string name="use_as_default_and_do_not_ask_again">Përdore si parazgjedhje dhe mos pyet sërish</string>
+    <string name="option_always_ask">Pyet përherë</string>
 </resources>

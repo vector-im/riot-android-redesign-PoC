@@ -28,7 +28,7 @@ import im.vector.app.core.extensions.hideKeyboard
 import im.vector.app.core.platform.GenericIdArgs
 import im.vector.app.core.platform.VectorBaseActivity
 import im.vector.app.databinding.ActivitySimpleLoadingBinding
-import im.vector.app.features.spaces.ShareSpaceBottomSheet
+import im.vector.app.features.spaces.share.ShareSpaceBottomSheet
 
 class SpacePeopleActivity : VectorBaseActivity<ActivitySimpleLoadingBinding>() {
 

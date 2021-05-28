@@ -94,6 +94,16 @@ fun <T : Fragment> AppCompatActivity.addFragmentToBackstack(
     }
 }
 
+fun AppCompatActivity.popBackstack() {
+    supportFragmentManager.popBackStack()
+}
+
+fun AppCompatActivity.resetBackstack() {
+    repeat(supportFragmentManager.backStackEntryCount) {
+        supportFragmentManager.popBackStack()
+    }
+}
+
 fun AppCompatActivity.hideKeyboard() {
     currentFocus?.hideKeyboard()
 }

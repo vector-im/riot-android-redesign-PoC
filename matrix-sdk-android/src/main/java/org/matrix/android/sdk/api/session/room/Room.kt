@@ -17,6 +17,7 @@
 package org.matrix.android.sdk.api.session.room
 
 import androidx.lifecycle.LiveData
+import org.matrix.android.sdk.api.session.accountdata.AccountDataService
 import org.matrix.android.sdk.api.session.room.alias.AliasService
 import org.matrix.android.sdk.api.session.room.call.RoomCallService
 import org.matrix.android.sdk.api.session.room.crypto.RoomCryptoService
@@ -55,7 +56,8 @@ interface Room :
         RoomCallService,
         RelationService,
         RoomCryptoService,
-        RoomPushRuleService {
+        RoomPushRuleService,
+        AccountDataService {
 
     /**
      * The roomId of this room
@@ -83,15 +85,15 @@ interface Room :
      * @param beforeLimit how many events before the result are returned.
      * @param afterLimit how many events after the result are returned.
      * @param includeProfile requests that the server returns the historic profile information for the users that sent the events that were returned.
-     * @param callback Callback to get the search result
+     * @return The search result
      */
     suspend fun search(searchTerm: String,
-               nextBatch: String?,
-               orderByRecent: Boolean,
-               limit: Int,
-               beforeLimit: Int,
-               afterLimit: Int,
-               includeProfile: Boolean): SearchResult
+                       nextBatch: String?,
+                       orderByRecent: Boolean,
+                       limit: Int,
+                       beforeLimit: Int,
+                       afterLimit: Int,
+                       includeProfile: Boolean): SearchResult
 
     /**
      * Use this room as a Space, if the type is correct.

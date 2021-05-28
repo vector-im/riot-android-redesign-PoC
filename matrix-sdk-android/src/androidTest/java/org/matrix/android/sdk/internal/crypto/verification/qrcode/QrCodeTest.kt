@@ -226,12 +226,12 @@ class QrCodeTest : InstrumentedTest {
 
     private fun checkHeader(byteArray: ByteArray) {
         // MATRIX
-        byteArray[0] shouldBeEqualTo 'M'.toByte()
-        byteArray[1] shouldBeEqualTo 'A'.toByte()
-        byteArray[2] shouldBeEqualTo 'T'.toByte()
-        byteArray[3] shouldBeEqualTo 'R'.toByte()
-        byteArray[4] shouldBeEqualTo 'I'.toByte()
-        byteArray[5] shouldBeEqualTo 'X'.toByte()
+        byteArray[0] shouldBeEqualTo 'M'.code.toByte()
+        byteArray[1] shouldBeEqualTo 'A'.code.toByte()
+        byteArray[2] shouldBeEqualTo 'T'.code.toByte()
+        byteArray[3] shouldBeEqualTo 'R'.code.toByte()
+        byteArray[4] shouldBeEqualTo 'I'.code.toByte()
+        byteArray[5] shouldBeEqualTo 'X'.code.toByte()
 
         // Version
         byteArray[6] shouldBeEqualTo 2

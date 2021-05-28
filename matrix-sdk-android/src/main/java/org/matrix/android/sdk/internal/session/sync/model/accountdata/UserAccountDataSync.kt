@@ -18,9 +18,9 @@ package org.matrix.android.sdk.internal.session.sync.model.accountdata
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.matrix.android.sdk.api.session.accountdata.UserAccountDataEvent
+import org.matrix.android.sdk.api.session.accountdata.AccountDataEvent
 
 @JsonClass(generateAdapter = true)
 internal data class UserAccountDataSync(
-        @Json(name = "events") val list: List<UserAccountDataEvent> = emptyList()
+        @Json(name = "events") val list: List<AccountDataEvent> = emptyList()
 )

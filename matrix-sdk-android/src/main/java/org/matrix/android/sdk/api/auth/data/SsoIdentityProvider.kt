@@ -48,7 +48,7 @@ data class SsoIdentityProvider(
          */
         @Json(name = "brand") val brand: String?
 
-) : Parcelable {
+) : Parcelable, Comparable<SsoIdentityProvider> {
 
     companion object {
         const val BRAND_GOOGLE = "org.matrix.google"
@@ -57,5 +57,26 @@ data class SsoIdentityProvider(
         const val BRAND_FACEBOOK = "org.matrix.facebook"
         const val BRAND_TWITTER = "org.matrix.twitter"
         const val BRAND_GITLAB = "org.matrix.gitlab"
+    }
+
+    override fun compareTo(other: SsoIdentityProvider): Int {
+        return other.toPriority().compareTo(toPriority())
+    }
+
+    private fun toPriority(): Int {
+        return when (brand) {
+            // We are on Android, so user is more likely to have a Google account
+            BRAND_GOOGLE   -> 5
+            // Facebook is also an important SSO provider
+            BRAND_FACEBOOK -> 4
+            // Twitter is more for professionals
+            BRAND_TWITTER  -> 3
+            // Here it's very for techie people
+            BRAND_GITHUB,
+            BRAND_GITLAB   -> 2
+            // And finally, if the account has been created with an iPhone...
+            BRAND_APPLE    -> 1
+            else           -> 0
+        }
     }
 }

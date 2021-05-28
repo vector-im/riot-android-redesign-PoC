@@ -18,8 +18,8 @@ package im.vector.app.features.crypto.keys
 
 import android.content.Context
 import android.net.Uri
+import im.vector.app.features.session.coroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.matrix.android.sdk.api.MatrixCallback
@@ -33,7 +33,7 @@ class KeysExporter(private val session: Session) {
      * Export keys and return the file path with the callback
      */
     fun export(context: Context, password: String, uri: Uri, callback: MatrixCallback<Boolean>) {
-        GlobalScope.launch(Dispatchers.Main) {
+        session.coroutineScope.launch(Dispatchers.Main) {
             runCatching {
                 withContext(Dispatchers.IO) {
                     val data = awaitCallback<ByteArray> { session.cryptoService().exportRoomKeys(password, it) }

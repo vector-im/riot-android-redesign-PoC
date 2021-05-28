@@ -2230,4 +2230,35 @@
     <string name="uploads_media_title">MEDIA</string>
     <string name="notice_room_server_acl_set_title_by_you">Asetit palvelimen käyttäjäoikeuslistan tähän huoneeseen.</string>
     <string name="notice_room_server_acl_set_title">%s asetti palvelimen käyttäjäoikeuslistan tähän huoneeseen.</string>
+    <string name="notice_room_canonical_alias_set_by_you">Asetit huoneen pääosoitteeksi %1$s.</string>
+    <string name="notice_room_aliases_added_and_removed_by_you">Lisäsit %1$s ja poistit %2$s huoneen osoitteista.</string>
+    <plurals name="notice_room_aliases_removed_by_you">
+        <item quantity="one">Poistit %1$s huoneen osoitteista.</item>
+        <item quantity="other">Poistitt %1$s huoneen osoitteista.</item>
+    </plurals>
+    <plurals name="notice_room_aliases_added_by_you">
+        <item quantity="one">Lisäsit %1$s osoitteeksi tähän huoneeseen.</item>
+        <item quantity="other">Lisäsit %1$s osoitteiksi tähän huoneeseen.</item>
+    </plurals>
+    <string name="notice_room_withdraw_with_reason_by_you">Peruit %1$s:n kutsun. Syynä: %2$s</string>
+    <string name="event_status_sent_message">Viesti lähetetty</string>
+    <string name="initial_sync_start_downloading">Ensimmäinen synkronointi:
+\nLadataan tietoja…</string>
+    <string name="initial_sync_start_server_computing">Ensimmäinen synkronointi:
+\nOdotetaan palvelimen vastausta. . .</string>
+    <plurals name="room_displayname_four_and_more_members">
+        <item quantity="one">%1$s, %2$s, %3$s ja %4$d muu</item>
+        <item quantity="other">%1$s, %2$s, %3$s ja %4$d muuta</item>
+    </plurals>
+    <string name="notice_power_level_diff">%1$s %2$s:sta %3$s:n</string>
+    <string name="notice_power_level_changed">%1$s muutti käyttäjän %2$s oikeustasoa.</string>
+    <string name="notice_power_level_changed_by_you">Muutit käyttäjän %1$s oikeustasoa.</string>
+    <string name="notice_widget_jitsi_modified_by_you">Muokkasit videopuhelua</string>
+    <string name="notice_widget_jitsi_modified">%1$s muokkasi videopuhelua</string>
+    <string name="notice_widget_jitsi_removed_by_you">Lopetit videopuhelun</string>
+    <string name="notice_widget_jitsi_removed">%1$s lopetti videopuhelun</string>
+    <string name="notice_widget_jitsi_added_by_you">Aloitit videopuhelun</string>
+    <string name="notice_widget_jitsi_added">%1$s aloitti videopuhelun</string>
+    <string name="notice_room_server_acl_updated_title_by_you">Muutit huoneen palvelimien käyttäjäoikeuslistaa.</string>
+    <string name="notice_room_server_acl_updated_title">%s muutti huoneen palvelimien käyttäjäoikeuslistaa.</string>
 </resources>

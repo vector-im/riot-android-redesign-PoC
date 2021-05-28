@@ -73,6 +73,7 @@ internal class LocalEchoEventFactory @Inject constructor(
         @UserId private val userId: String,
         private val markdownParser: MarkdownParser,
         private val textPillsUtils: TextPillsUtils,
+        private val thumbnailExtractor: ThumbnailExtractor,
         private val localEchoRepository: LocalEchoRepository,
         private val permalinkFactory: PermalinkFactory
 ) {
@@ -261,7 +262,7 @@ internal class LocalEchoEventFactory @Inject constructor(
         val width = firstFrame?.width ?: 0
         mediaDataRetriever.release()
 
-        val thumbnailInfo = ThumbnailExtractor.extractThumbnail(context, attachment)?.let {
+        val thumbnailInfo = thumbnailExtractor.extractThumbnail(attachment)?.let {
             ThumbnailInfo(
                     width = it.width,
                     height = it.height,

@@ -2814,4 +2814,23 @@
     <string name="spaces_header">Spazi</string>
     <string name="spaces_invited_header">Inviti</string>
     <string name="suggested_header">Stanze suggerite</string>
+    <string name="space_manage_rooms_and_spaces">Gestisci stanze e spazi</string>
+    <string name="space_mark_as_not_suggested">Segna come non consigliato</string>
+    <string name="space_mark_as_suggested">Segna come consigliato</string>
+    <string name="space_suggested">Consigliato</string>
+    <string name="make_this_space_public">Rendi questo spazio pubblico</string>
+    <string name="space_settings_manage_rooms">Gestisci stanze</string>
+    <string name="looking_for_someone_not_in_space">Cerchi qualcuno non in %s\?</string>
+    <string name="user_invites_you">%s ti ha invitato</string>
+    <string name="a11y_public_room">Questa stanza è pubblica</string>
+    <string name="send_images_and_video_with_original_size">Invia i file multimediali nella dimensione originale</string>
+    <plurals name="send_videos_with_original_size">
+        <item quantity="one">Invia il video nella dimensione originale</item>
+        <item quantity="other">Invia i video nella dimensione originale</item>
+    </plurals>
+    <string name="error_file_too_big_simple">Il file è troppo grande per essere inviato.</string>
+    <string name="send_file_step_compressing_video">Compressione video %d%%</string>
+    <string name="send_file_step_compressing_image">Compressione immagine…</string>
+    <string name="use_as_default_and_do_not_ask_again">Usa come predefinito e non chiedere più</string>
+    <string name="option_always_ask">Chiedi sempre</string>
 </resources>

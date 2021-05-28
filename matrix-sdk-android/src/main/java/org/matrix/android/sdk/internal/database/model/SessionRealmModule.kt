@@ -62,6 +62,7 @@ import io.realm.annotations.RealmModule
             UserAccountDataEntity::class,
             ScalarTokenEntity::class,
             WellknownIntegrationManagerConfigEntity::class,
+            RoomAccountDataEntity::class,
             SpaceChildSummaryEntity::class,
             SpaceParentSummaryEntity::class
         ])

@@ -32,6 +32,7 @@ fun Session.configureAndStart(context: Context) {
     setFilter(FilterService.FilterPreset.ElementFilter)
     startSyncing(context)
     refreshPushers()
+    context.vectorComponent().webRtcCallManager().checkForProtocolsSupportIfNeeded()
 }
 
 fun Session.startSyncing(context: Context) {

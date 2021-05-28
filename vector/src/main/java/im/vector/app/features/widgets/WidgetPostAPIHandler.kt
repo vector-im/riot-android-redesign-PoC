@@ -22,7 +22,7 @@ import dagger.assisted.AssistedInject
 import dagger.assisted.AssistedFactory
 import im.vector.app.R
 import im.vector.app.core.resources.StringProvider
-import kotlinx.coroutines.GlobalScope
+import im.vector.app.features.session.coroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.matrix.android.sdk.api.query.QueryStringValue
@@ -284,7 +284,7 @@ class WidgetPostAPIHandler @AssistedInject constructor(@Assisted private val roo
                     )
             )
             launchWidgetAPIAction(widgetPostAPIMediator, eventData) {
-                session.updateAccountData(
+                session.userAccountDataService().updateAccountData(
                         type = UserAccountDataTypes.TYPE_WIDGETS,
                         content = addUserWidgetBody
                 )
@@ -465,7 +465,8 @@ class WidgetPostAPIHandler @AssistedInject constructor(@Assisted private val roo
     }
 
     private fun launchWidgetAPIAction(widgetPostAPIMediator: WidgetPostAPIMediator, eventData: JsonDict, block: suspend () -> Unit): Job {
-        return GlobalScope.launch {
+        // We should probably use a scope tight to the lifecycle here...
+        return session.coroutineScope.launch {
             kotlin.runCatching {
                 block()
             }.fold(

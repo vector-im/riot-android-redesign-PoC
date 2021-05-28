@@ -25,6 +25,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -86,8 +87,9 @@ class VectorJitsiActivity : VectorBaseActivity<ActivityJitsiBinding>(), JitsiMee
 
         jitsiViewModel.observeViewEvents {
             when (it) {
-                is JitsiCallViewEvents.StartConference            -> configureJitsiView(it)
+                is JitsiCallViewEvents.JoinConference             -> configureJitsiView(it)
                 is JitsiCallViewEvents.ConfirmSwitchingConference -> handleConfirmSwitching(it)
+                JitsiCallViewEvents.FailJoiningConference         -> handleFailJoining()
                 JitsiCallViewEvents.Finish                        -> finish()
                 JitsiCallViewEvents.LeaveConference               -> handleLeaveConference()
             }.exhaustive
@@ -138,12 +140,18 @@ class VectorJitsiActivity : VectorBaseActivity<ActivityJitsiBinding>(), JitsiMee
         }
     }
 
-    private fun configureJitsiView(startConference: JitsiCallViewEvents.StartConference) {
+    private fun handleFailJoining() {
+        Toast.makeText(this, getString(R.string.error_jitsi_join_conf), Toast.LENGTH_LONG).show()
+        finish()
+    }
+
+    private fun configureJitsiView(joinConference: JitsiCallViewEvents.JoinConference) {
         val jitsiMeetConferenceOptions = JitsiMeetConferenceOptions.Builder()
-                .setVideoMuted(!startConference.enableVideo)
-                .setUserInfo(startConference.userInfo)
+                .setVideoMuted(!joinConference.enableVideo)
+                .setUserInfo(joinConference.userInfo)
+                .setToken(joinConference.token)
                 .apply {
-                    tryOrNull { URL(startConference.jitsiUrl) }?.let {
+                    tryOrNull { URL(joinConference.jitsiUrl) }?.let {
                         setServerURL(it)
                     }
                 }
@@ -153,8 +161,8 @@ class VectorJitsiActivity : VectorBaseActivity<ActivityJitsiBinding>(), JitsiMee
                 .setFeatureFlag("add-people.enabled", false)
                 .setFeatureFlag("video-share.enabled", false)
                 .setFeatureFlag("call-integration.enabled", false)
-                .setRoom(startConference.confId)
-                .setSubject(startConference.subject)
+                .setRoom(joinConference.confId)
+                .setSubject(joinConference.subject)
                 .build()
         jitsiMeetView?.join(jitsiMeetConferenceOptions)
     }

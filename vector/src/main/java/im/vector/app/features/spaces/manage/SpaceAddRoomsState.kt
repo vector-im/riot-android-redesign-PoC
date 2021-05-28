@@ -26,7 +26,8 @@ data class SpaceAddRoomsState(
         val currentFilter: String = "",
         val spaceName: String = "",
         val ignoreRooms: List<String> = emptyList(),
-        val isSaving: Async<List<String>> = Uninitialized
+        val isSaving: Async<List<String>> = Uninitialized,
+        val shouldShowDMs : Boolean = false
 //        val selectionList: Map<String, Boolean> = emptyMap()
 ) : MvRxState {
     constructor(args: SpaceManageArgs) : this(

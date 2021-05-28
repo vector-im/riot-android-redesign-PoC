@@ -88,6 +88,7 @@ class VectorFileLogger @Inject constructor(
         }
     }
 
+    @Suppress("EXPERIMENTAL_API_USAGE")
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
         fileHandler ?: return
         GlobalScope.launch(Dispatchers.IO) {

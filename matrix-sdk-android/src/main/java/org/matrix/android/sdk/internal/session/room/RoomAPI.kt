@@ -360,4 +360,13 @@ internal interface RoomAPI {
     suspend fun deleteTag(@Path("userId") userId: String,
                           @Path("roomId") roomId: String,
                           @Path("tag") tag: String)
+
+    /**
+     * Set an AccountData event to the room.
+     */
+    @PUT(NetworkConstants.URI_API_PREFIX_PATH_R0 + "user/{userId}/rooms/{roomId}/account_data/{type}")
+    suspend fun setRoomAccountData(@Path("userId") userId: String,
+                                   @Path("roomId") roomId: String,
+                                   @Path("type") type: String,
+                                   @Body content: JsonDict)
 }

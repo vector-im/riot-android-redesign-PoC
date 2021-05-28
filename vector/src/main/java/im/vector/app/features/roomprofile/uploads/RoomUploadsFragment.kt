@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -36,6 +37,7 @@ import im.vector.app.databinding.FragmentRoomUploadsBinding
 import im.vector.app.features.home.AvatarRenderer
 import im.vector.app.features.notifications.NotificationUtils
 import im.vector.app.features.roomprofile.RoomProfileArgs
+import kotlinx.coroutines.launch
 
 import org.matrix.android.sdk.api.util.toMatrixItem
 import javax.inject.Inject
@@ -76,13 +78,21 @@ class RoomUploadsFragment @Inject constructor(
                     shareMedia(requireContext(), it.file, getMimeTypeFromUri(requireContext(), it.file.toUri()))
                 }
                 is RoomUploadsViewEvents.FileReadyForSaving  -> {
-                    saveMedia(
-                            context = requireContext(),
-                            file = it.file,
-                            title = it.title,
-                            mediaMimeType = getMimeTypeFromUri(requireContext(), it.file.toUri()),
-                            notificationUtils = notificationUtils
-                    )
+                    lifecycleScope.launch {
+                        runCatching {
+                            saveMedia(
+                                    context = requireContext(),
+                                    file = it.file,
+                                    title = it.title,
+                                    mediaMimeType = getMimeTypeFromUri(requireContext(), it.file.toUri()),
+                                    notificationUtils = notificationUtils
+                            )
+                        }.onFailure { failure ->
+                            if (!isAdded) return@onFailure
+                            showErrorInSnackbar(failure)
+                        }
+                    }
+                    Unit
                 }
                 is RoomUploadsViewEvents.Failure             -> showFailure(it.throwable)
             }.exhaustive

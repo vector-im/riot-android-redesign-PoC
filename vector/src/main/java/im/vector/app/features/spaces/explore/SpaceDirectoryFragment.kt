@@ -19,6 +19,8 @@ package im.vector.app.features.spaces.explore
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.airbnb.mvrx.activityViewModel
@@ -26,9 +28,12 @@ import com.airbnb.mvrx.withState
 import im.vector.app.R
 import im.vector.app.core.extensions.cleanup
 import im.vector.app.core.extensions.configureWith
+import im.vector.app.core.extensions.registerStartForActivityResult
 import im.vector.app.core.platform.OnBackPressed
 import im.vector.app.core.platform.VectorBaseFragment
 import im.vector.app.databinding.FragmentRoomDirectoryPickerBinding
+import im.vector.app.features.spaces.manage.ManageType
+import im.vector.app.features.spaces.manage.SpaceManageActivity
 import kotlinx.parcelize.Parcelize
 import org.matrix.android.sdk.api.session.room.model.SpaceChildInfo
 import javax.inject.Inject
@@ -43,6 +48,8 @@ class SpaceDirectoryFragment @Inject constructor(
 ) : VectorBaseFragment<FragmentRoomDirectoryPickerBinding>(),
         SpaceDirectoryController.InteractionListener,
         OnBackPressed {
+
+    override fun getMenuRes() = R.menu.menu_space_directory
 
     override fun getBinding(inflater: LayoutInflater, container: ViewGroup?) =
             FragmentRoomDirectoryPickerBinding.inflate(layoutInflater, container, false)
@@ -60,6 +67,10 @@ class SpaceDirectoryFragment @Inject constructor(
         }
         epoxyController.listener = this
         views.roomDirectoryPickerList.configureWith(epoxyController)
+
+        viewModel.selectSubscribe(this, SpaceDirectoryState::canAddRooms) {
+            invalidateOptionsMenu()
+        }
     }
 
     override fun onDestroyView() {
@@ -75,6 +86,28 @@ class SpaceDirectoryFragment @Inject constructor(
             state.spaceSummaryApiResult.invoke()?.firstOrNull { it.childRoomId == currentParent }
         }?.name ?: getString(R.string.space_explore_activity_title)
         views.toolbar.title = title
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) = withState(viewModel) { state ->
+        menu.findItem(R.id.spaceAddRoom)?.isVisible = state.canAddRooms
+        menu.findItem(R.id.spaceCreateRoom)?.isVisible = false // Not yet implemented
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.spaceAddRoom -> {
+                withState(viewModel) { state ->
+                    addExistingRooms(state.spaceId)
+                }
+                return true
+            }
+            R.id.spaceCreateRoom -> {
+                // not implemented yet
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onButtonClick(spaceChildInfo: SpaceChildInfo) {
@@ -96,6 +129,14 @@ class SpaceDirectoryFragment @Inject constructor(
 
     override fun retry() {
         viewModel.handle(SpaceDirectoryViewAction.Retry)
+    }
+
+    private val addExistingRoomActivityResult = registerStartForActivityResult { _ ->
+        viewModel.handle(SpaceDirectoryViewAction.Retry)
+    }
+
+    override fun addExistingRooms(spaceId: String) {
+        addExistingRoomActivityResult.launch(SpaceManageActivity.newIntent(requireContext(), spaceId, ManageType.AddRooms))
     }
 //    override fun navigateToRoom(roomId: String) {
 //        viewModel.handle(SpaceDirectoryViewAction.NavigateToRoom(roomId))

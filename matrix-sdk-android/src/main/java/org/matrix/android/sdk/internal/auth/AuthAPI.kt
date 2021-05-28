@@ -17,6 +17,7 @@
 package org.matrix.android.sdk.internal.auth
 
 import org.matrix.android.sdk.api.auth.data.Credentials
+import org.matrix.android.sdk.api.util.JsonDict
 import org.matrix.android.sdk.internal.auth.data.Availability
 import org.matrix.android.sdk.internal.auth.data.LoginFlowResponse
 import org.matrix.android.sdk.internal.auth.data.PasswordLoginParams
@@ -72,6 +73,15 @@ internal interface AuthAPI {
      */
     @GET(NetworkConstants.URI_API_PREFIX_PATH_R0 + "register/available")
     suspend fun registerAvailable(@Query("username") username: String): Availability
+
+    /**
+     * Get the combined profile information for this user.
+     * This API may be used to fetch the user's own profile information or other users; either locally or on remote homeservers.
+     * This API may return keys which are not limited to displayname or avatar_url.
+     * @param userId the user id to fetch profile info
+     */
+    @GET(NetworkConstants.URI_API_PREFIX_PATH_R0 + "profile/{userId}")
+    suspend fun getProfile(@Path("userId") userId: String): JsonDict
 
     /**
      * Add 3Pid during registration

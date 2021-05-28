@@ -51,7 +51,7 @@ data class VectorCallViewState(
 
     constructor(callArgs: CallArgs): this(
             callId = callArgs.callId,
-            roomId = callArgs.roomId,
+            roomId = callArgs.signalingRoomId,
             isVideoCall = callArgs.isVideoCall
     )
 }

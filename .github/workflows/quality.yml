@@ -1,0 +1,74 @@
+name: Code Quality Checks
+
+on:
+  pull_request: { }
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  check:
+    name: Project Check Suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run code quality check suite
+        run: ./tools/check/check_code_quality.sh
+
+  klint:
+    name: Kotlin Linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run klint
+        run: |
+          curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.36.0/ktlint && chmod a+x ktlint
+          ./ktlint --android --experimental -v
+
+  android-lint:
+    name: Android Linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Lint analysis of the SDK
+        run: ./gradlew clean :matrix-sdk-android:lintRelease --stacktrace
+      - name: Upload reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: linting-report-android-sdk
+          path: matrix-sdk-android/build/reports/*.*
+
+  apk-lint:
+    name: Lint APK (${{ matrix.target }})
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [ Gplay, Fdroid ]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Lint ${{ matrix.target }} release
+        run: ./gradlew clean lint${{ matrix.target }}Release --stacktrace
+      - name: Upload ${{ matrix.target }} linting report
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: release-debug-linting-report-${{ matrix.target }}
+          path: |
+            vector/build/reports/*.*

@@ -2675,7 +2675,7 @@
     <string name="event_status_sent_message">Meddelande skickat</string>
     <string name="create_spaces_details_public_header">Lägg till några detaljer för att hjälpa det satt sticka ut. Du kan ändra dessa när som helst.</string>
     <string name="activity_create_space_title">Skapa ett utrymme</string>
-    <string name="space_type_private_desc">Endast inbjudan, bäst för dig själv eller team</string>
+    <string name="space_type_private_desc">Endast inbjudan, bäst för dig själv eller grupper</string>
     <string name="space_type_private">Privat</string>
     <string name="space_type_public_desc">Öppet för alla, bäst för gemenskaper</string>
     <string name="space_type_public">Offentligt</string>
@@ -2752,4 +2752,23 @@
     <string name="join_anyway">Gå med iallafall</string>
     <string name="join_space">Gå med i utrymme</string>
     <string name="create_space">Skapa utrymme</string>
+    <string name="space_manage_rooms_and_spaces">Hantera rum och utrymmen</string>
+    <string name="space_mark_as_not_suggested">Markera som inte föreslaget</string>
+    <string name="space_mark_as_suggested">Markera som föreslaget</string>
+    <string name="space_suggested">Föreslagna</string>
+    <string name="make_this_space_public">Gör det här rummet offentligt</string>
+    <string name="space_settings_manage_rooms">Hantera rum</string>
+    <string name="looking_for_someone_not_in_space">Letar du efter någon inte i %s\?</string>
+    <string name="user_invites_you">%s bjuder in dig</string>
+    <string name="a11y_public_room">Det här rummet är offentligt</string>
+    <string name="send_images_and_video_with_original_size">Skicka media med originalstorlek</string>
+    <plurals name="send_videos_with_original_size">
+        <item quantity="one">Skicka video med originalstorlek</item>
+        <item quantity="other">Skicka videor med originalstorlek</item>
+    </plurals>
+    <string name="error_file_too_big_simple">Filen är för stor för att ladda upp.</string>
+    <string name="send_file_step_compressing_video">Komprimerar video %d%%</string>
+    <string name="send_file_step_compressing_image">Komprimerar bild…</string>
+    <string name="use_as_default_and_do_not_ask_again">Använd som förval och fråga inte igen</string>
+    <string name="option_always_ask">Fråga alltid</string>
 </resources>

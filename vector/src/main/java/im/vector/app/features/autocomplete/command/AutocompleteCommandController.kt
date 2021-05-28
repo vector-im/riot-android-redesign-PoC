@@ -30,14 +30,15 @@ class AutocompleteCommandController @Inject constructor(private val stringProvid
         if (data.isNullOrEmpty()) {
             return
         }
+        val host = this
         data.forEach { command ->
             autocompleteCommandItem {
                 id(command.command)
                 name(command.command)
                 parameters(command.parameters)
-                description(stringProvider.getString(command.description))
+                description(host.stringProvider.getString(command.description))
                 clickListener { _ ->
-                    listener?.onItemClick(command)
+                    host.listener?.onItemClick(command)
                 }
             }
         }

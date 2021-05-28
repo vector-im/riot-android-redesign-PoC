@@ -93,9 +93,9 @@ import im.vector.app.core.platform.showOptimizedSnackbar
 import im.vector.app.core.resources.ColorProvider
 import im.vector.app.core.ui.views.ActiveConferenceView
 import im.vector.app.core.ui.views.CurrentCallsView
+import im.vector.app.core.ui.views.FailedMessagesWarningView
 import im.vector.app.core.ui.views.JumpToReadMarkerView
 import im.vector.app.core.ui.views.KnownCallsViewHolder
-import im.vector.app.core.ui.views.FailedMessagesWarningView
 import im.vector.app.core.ui.views.NotificationAreaView
 import im.vector.app.core.utils.Debouncer
 import im.vector.app.core.utils.DimensionConverter
@@ -164,7 +164,7 @@ import im.vector.app.features.session.coroutineScope
 import im.vector.app.features.settings.VectorPreferences
 import im.vector.app.features.settings.VectorSettingsActivity
 import im.vector.app.features.share.SharedData
-import im.vector.app.features.spaces.ShareSpaceBottomSheet
+import im.vector.app.features.spaces.share.ShareSpaceBottomSheet
 import im.vector.app.features.themes.ThemeUtils
 import im.vector.app.features.widgets.WidgetActivity
 import im.vector.app.features.widgets.WidgetArgs
@@ -417,7 +417,7 @@ class RoomDetailFragment @Inject constructor(
     private fun acceptIncomingCall(event: RoomDetailViewEvents.DisplayAndAcceptCall) {
         val intent = VectorCallActivity.newIntent(
                 context = vectorBaseActivity,
-                mxCall = event.call.mxCall,
+                call = event.call,
                 mode = VectorCallActivity.INCOMING_ACCEPT
         )
         startActivity(intent)
@@ -677,7 +677,7 @@ class RoomDetailFragment @Inject constructor(
 
     private fun handleSpaceShare() {
         roomDetailArgs.openShareSpaceForId?.let { spaceId ->
-            ShareSpaceBottomSheet.show(childFragmentManager, spaceId)
+            ShareSpaceBottomSheet.show(childFragmentManager, spaceId, true)
             view?.post {
                 handleChatEffect(ChatEffect.CONFETTI)
             }
@@ -1745,20 +1745,19 @@ class RoomDetailFragment @Inject constructor(
         session.coroutineScope.launch {
             val result = runCatching { session.fileService().downloadFile(messageContent = action.messageContent) }
             if (!isAdded) return@launch
-            result.fold(
-                    {
-                        saveMedia(
-                                context = requireContext(),
-                                file = it,
-                                title = action.messageContent.body,
-                                mediaMimeType = action.messageContent.mimeType ?: getMimeTypeFromUri(requireContext(), it.toUri()),
-                                notificationUtils = notificationUtils
-                        )
-                    },
-                    {
+            result.mapCatching {
+                saveMedia(
+                        context = requireContext(),
+                        file = it,
+                        title = action.messageContent.body,
+                        mediaMimeType = action.messageContent.mimeType ?: getMimeTypeFromUri(requireContext(), it.toUri()),
+                        notificationUtils = notificationUtils
+                )
+            }
+                    .onFailure {
+                        if (!isAdded) return@onFailure
                         showErrorInSnackbar(it)
                     }
-            )
         }
     }
 
@@ -2043,7 +2042,7 @@ class RoomDetailFragment @Inject constructor(
             VectorCallActivity.newIntent(
                     context = requireContext(),
                     callId = call.callId,
-                    roomId = call.roomId,
+                    signalingRoomId = call.signalingRoomId,
                     otherUserId = call.mxCall.opponentUserId,
                     isIncomingCall = !call.mxCall.isOutgoing,
                     isVideoCall = call.mxCall.isVideoCall,

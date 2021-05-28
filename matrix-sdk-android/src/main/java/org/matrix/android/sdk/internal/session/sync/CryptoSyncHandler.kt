@@ -64,7 +64,7 @@ internal class CryptoSyncHandler @Inject constructor(private val cryptoService: 
      * @return true if the event has been decrypted
      */
     private fun decryptToDeviceEvent(event: Event, timelineId: String?): Boolean {
-        Timber.v("## CRYPTO | decryptToDeviceEvent")
+        Timber.v("## CRYPTO | decryptToDeviceEvent")
         if (event.getClearType() == EventType.ENCRYPTED) {
             var result: MXEventDecryptionResult? = null
             try {
@@ -76,7 +76,7 @@ internal class CryptoSyncHandler @Inject constructor(private val cryptoService: 
                 val deviceId = cryptoService.getCryptoDeviceInfo(event.senderId!!).firstOrNull {
                     it.identityKey() == senderKey
                 }?.deviceId ?: senderKey
-                Timber.e("## CRYPTO | Failed to decrypt to device event from ${event.senderId}|$deviceId reason:<${event.mCryptoError ?: exception}>")
+                Timber.e("## CRYPTO | Failed to decrypt to device event from ${event.senderId}|$deviceId reason:<${event.mCryptoError ?: exception}>")
             }
 
             if (null != result) {
@@ -89,7 +89,7 @@ internal class CryptoSyncHandler @Inject constructor(private val cryptoService: 
                 return true
             } else {
                 // should not happen
-                Timber.e("## CRYPTO | ERROR NULL DECRYPTION RESULT from ${event.senderId}")
+                Timber.e("## CRYPTO | ERROR NULL DECRYPTION RESULT from ${event.senderId}")
             }
         }
 

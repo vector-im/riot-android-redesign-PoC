@@ -537,7 +537,7 @@
     <string name="create_account">Create Account</string>
     <string name="login">Log in</string>
     <string name="logout">Sign out</string>
-    <string name="hs_url">Home Server URL</string>
+    <string name="hs_url">Homeserver URL</string>
     <string name="identity_url">Identity Server URL</string>
     <string name="search">Search</string>
 
@@ -625,9 +625,9 @@
     <string name="auth_use_server_options">Use custom server options (advanced)</string>
     <string name="auth_email_validation_message">Please check your email to continue registration</string>
     <string name="auth_threepid_warning_message">Registration with email and phone number at once is not supported yet until the api exists. Only the phone number will be taken into account.\n\nYou may add your email to your profile in settings.</string>
-    <string name="auth_recaptcha_message">This Home Server would like to make sure you are not a robot</string>
+    <string name="auth_recaptcha_message">This homeserver would like to make sure you are not a robot</string>
     <string name="auth_username_in_use">Username in use</string>
-    <string name="auth_home_server">Home Server:</string>
+    <string name="auth_home_server">Homeserver:</string>
     <string name="auth_identity_server">Identity Server:</string>
     <string name="auth_reset_password_next_step_button">I have verified my email address</string>
     <string name="auth_reset_password_message">To reset your password, enter the email address linked to your account:</string>
@@ -713,7 +713,7 @@
     <!-- Note to translators: the translation MUST contain the string "${app_name}", which will be replaced by the application name -->
     <string name="template_settings_call_ringtone_use_app_ringtone">Use default ${app_name} ringtone for incoming calls</string>
     <string name="settings_call_ringtone_use_default_stun">Allow fallback call assist server</string>
-    <string name="settings_call_ringtone_use_default_stun_sum">Will use "%s" as assist when your home server does not offer one (your IP address will be shared during a call)</string>
+    <string name="settings_call_ringtone_use_default_stun_sum">Will use "%s" as assist when your homeserver does not offer one (your IP address will be shared during a call)</string>
     <string name="settings_call_ringtone_title">Incoming call ringtone</string>
     <string name="settings_call_ringtone_dialog_title">Select ringtone for calls:</string>
 
@@ -1314,7 +1314,7 @@
     <string name="devices_delete_submit_button_label">Submit</string>
 
     <string name="settings_logged_in">Logged in as</string>
-    <string name="settings_home_server">Home Server</string>
+    <string name="settings_home_server">Homeserver</string>
     <string name="settings_identity_server">Identity Server</string>
     <string name="settings_integration_allow">Allow integrations</string>
     <string name="settings_integration_manager">Integration Manager</string>
@@ -1584,9 +1584,14 @@
     <string name="select_room_directory">Select a room directory</string>
     <string name="directory_server_fail_to_retrieve_server">The server may be unavailable or overloaded</string>
     <string name="directory_server_type_homeserver">Type a homeserver to list public rooms from</string>
-    <string name="directory_server_placeholder">Homeserver URL</string>
+    <string name="directory_server_placeholder">Server name</string>
     <string name="directory_server_all_rooms_on_server">All rooms on %s server</string>
     <string name="directory_server_native_rooms">All native %s rooms</string>
+    <string name="directory_your_server">Your server</string>
+    <string name="directory_add_a_new_server">Add a new server</string>
+    <string name="directory_add_a_new_server_prompt">Enter the name of a new server you want to explore.</string>
+    <string name="directory_add_a_new_server_error">"Can't find this server or its room list"</string>
+    <string name="directory_add_a_new_server_error_already_added">This server is already present in the list</string>
 
     <!-- Lock screen-->
     <string name="lock_screen_hint">Type here…</string>
@@ -1675,6 +1680,7 @@
 
 
     <string name="error_jitsi_not_supported_on_old_device">Sorry, conference calls with Jitsi are not supported on old devices (devices with Android OS below 6.0)</string>
+    <string name="error_jitsi_join_conf">Sorry, an error occurred while trying to join the conference</string>
     <string name="jitsi_leave_conf_to_join_another_one_content">Leave the current conference and switch to the other one?</string>
 
     <string name="room_widget_resource_permission_title">This widget wants to use the following resources:</string>
@@ -3323,6 +3329,7 @@
     <string name="create_space_topic_hint">Description</string>
     <string name="invite_people_to_your_space">Invite people to your space</string>
     <string name="invite_people_menu">Invite people</string>
+    <string name="invite_to_space">Invite to %s</string>
     <string name="invite_people_to_your_space_desc">It’s just you at the moment.  %s will be even better with others.</string>
     <string name="invite_by_email">Invite by email</string>
     <string name="invite_by_mxid">Invite by username</string>
@@ -3352,9 +3359,13 @@
     <string name="space_add_child_title">Add rooms</string>
     <string name="leave_space">Leave Space</string>
     <string name="space_leave_prompt_msg">Are you sure you want to leave the space?</string>
+    <string name="space_leave_prompt_msg_only_you">You are the only person here. If you leave, no one will be able to join in the future, including you.</string>
+    <string name="space_leave_prompt_msg_private">This space is not public. You will not be able to rejoin without an invite.</string>
+    <string name="space_leave_prompt_msg_as_admin">You are admin of this space, ensure that you have transferred admin right to another member before leaving.</string>
 
 
     <string name="space_add_existing_rooms">Add existing rooms and space</string>
+    <string name="space_add_rooms">Add rooms</string>
     <string name="spaces_beta_welcome_to_spaces">Welcome to Spaces!</string>
     <string name="spaces_beta_welcome_to_spaces_desc">Spaces are a new way to group rooms and people.</string>
     <string name="you_are_invited">You are invited</string>
@@ -3376,5 +3387,10 @@
     <string name="labs_space_show_orphan_in_home">Experimental Space - Only show orphans in Home</string>
     <string name="spaces_feeling_experimental_subspace">Feeling experimental?\nYou can add existing spaces to a space.</string>
     <string name="spaces_no_server_support_title">It looks like your homeserver does not support Spaces yet</string>
-    <string name="spaces_no_server_support_description">Please contact your homserver admin for further information</string>
+    <string name="spaces_no_server_support_description">Please contact your homeserver admin for further information</string>
+
+    <string name="this_space_has_no_rooms">This space has no rooms</string>
+    <string name="this_space_has_no_rooms_not_admin">Some rooms may be hidden because they’re private and you need an invite.\nYou don’t have permission to add rooms.</string>
+    <string name="this_space_has_no_rooms_admin">Some rooms may be hidden because they’re private and you need an invite.</string>
+
 </resources>

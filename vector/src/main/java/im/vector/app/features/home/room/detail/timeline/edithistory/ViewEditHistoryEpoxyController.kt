@@ -15,9 +15,7 @@
  */
 package im.vector.app.features.home.room.detail.timeline.edithistory
 
-import android.content.Context
 import android.text.Spannable
-import androidx.core.content.ContextCompat
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Incomplete
@@ -25,6 +23,8 @@ import com.airbnb.mvrx.Success
 import im.vector.app.R
 import im.vector.app.core.date.DateFormatKind
 import im.vector.app.core.date.VectorDateFormatter
+import im.vector.app.core.resources.ColorProvider
+import im.vector.app.core.resources.StringProvider
 import im.vector.app.core.ui.list.genericFooterItem
 import im.vector.app.core.ui.list.genericItem
 import im.vector.app.core.ui.list.genericItemHeader
@@ -38,15 +38,20 @@ import org.matrix.android.sdk.api.session.room.model.message.MessageTextContent
 import org.matrix.android.sdk.api.util.ContentUtils.extractUsefulTextFromReply
 import org.matrix.android.sdk.internal.session.room.send.TextContent
 import java.util.Calendar
+import javax.inject.Inject
 
 /**
  * Epoxy controller for edit history list
  */
-class ViewEditHistoryEpoxyController(private val context: Context,
-                                     val dateFormatter: VectorDateFormatter,
-                                     val eventHtmlRenderer: EventHtmlRenderer) : TypedEpoxyController<ViewEditHistoryViewState>() {
+class ViewEditHistoryEpoxyController @Inject constructor(
+        private val stringProvider: StringProvider,
+        private val colorProvider: ColorProvider,
+        private val eventHtmlRenderer: EventHtmlRenderer,
+        private val dateFormatter: VectorDateFormatter
+) : TypedEpoxyController<ViewEditHistoryViewState>() {
 
     override fun buildModels(state: ViewEditHistoryViewState) {
+        val host = this
         when (state.editList) {
             is Incomplete -> {
                 genericLoaderItem {
@@ -56,7 +61,7 @@ class ViewEditHistoryEpoxyController(private val context: Context,
             is Fail       -> {
                 genericFooterItem {
                     id("failure")
-                    text(context.getString(R.string.unknown_error))
+                    text(host.stringProvider.getString(R.string.unknown_error))
                 }
             }
             is Success    -> {
@@ -66,10 +71,11 @@ class ViewEditHistoryEpoxyController(private val context: Context,
     }
 
     private fun renderEvents(sourceEvents: List<Event>, isOriginalReply: Boolean) {
+        val host = this
         if (sourceEvents.isEmpty()) {
             genericItem {
                 id("footer")
-                title(context.getString(R.string.no_message_edits_found))
+                title(host.stringProvider.getString(R.string.no_message_edits_found))
             }
         } else {
             var lastDate: Calendar? = null
@@ -83,7 +89,7 @@ class ViewEditHistoryEpoxyController(private val context: Context,
                     // need to display header with day
                     genericItemHeader {
                         id(evDate.hashCode())
-                        text(dateFormatter.format(evDate.timeInMillis, DateFormatKind.EDIT_HISTORY_HEADER))
+                        text(host.dateFormatter.format(evDate.timeInMillis, DateFormatKind.EDIT_HISTORY_HEADER))
                     }
                 }
                 lastDate = evDate
@@ -106,14 +112,14 @@ class ViewEditHistoryEpoxyController(private val context: Context,
                                 diff_match_patch.Operation.DELETE -> {
                                     span {
                                         text = it.text.replace("\n", " ")
-                                        textColor = ContextCompat.getColor(context, R.color.vector_error_color)
+                                        textColor = colorProvider.getColor(R.color.vector_error_color)
                                         textDecorationLine = "line-through"
                                     }
                                 }
                                 diff_match_patch.Operation.INSERT -> {
                                     span {
                                         text = it.text
-                                        textColor = ContextCompat.getColor(context, R.color.vector_success_color)
+                                        textColor = colorProvider.getColor(R.color.vector_success_color)
                                     }
                                 }
                                 else                              -> {
@@ -127,7 +133,7 @@ class ViewEditHistoryEpoxyController(private val context: Context,
                 }
                 genericItem {
                     id(timelineEvent.eventId)
-                    title(dateFormatter.format(timelineEvent.originServerTs, DateFormatKind.EDIT_HISTORY_ROW))
+                    title(host.dateFormatter.format(timelineEvent.originServerTs, DateFormatKind.EDIT_HISTORY_ROW))
                     description(spannedDiff ?: body)
                 }
             }

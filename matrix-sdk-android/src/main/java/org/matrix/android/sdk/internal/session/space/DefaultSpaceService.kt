@@ -81,7 +81,6 @@ internal class DefaultSpaceService @Inject constructor(
             } else {
                 this.preset = CreateRoomPreset.PRESET_PRIVATE_CHAT
                 visibility = RoomDirectoryVisibility.PRIVATE
-                enableEncryption()
             }
         })
     }
@@ -146,7 +145,9 @@ internal class DefaultSpaceService @Inject constructor(
                                                         viaServers = childStateEvContent.via.orEmpty(),
                                                         activeMemberCount = childSummary.numJoinedMembers,
                                                         parentRoomId = childStateEv.roomId,
-                                                        suggested = childStateEvContent.suggested
+                                                        suggested = childStateEvContent.suggested,
+                                                        canonicalAlias = childSummary.canonicalAlias,
+                                                        aliases = childSummary.aliases
                                                 )
                                             }
                                         }.orEmpty()

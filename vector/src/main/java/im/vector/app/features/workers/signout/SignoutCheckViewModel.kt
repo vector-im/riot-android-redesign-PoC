@@ -97,7 +97,7 @@ class SignoutCheckViewModel @AssistedInject constructor(@Assisted initialState: 
             )
         }
 
-        session.rx().liveAccountData(setOf(MASTER_KEY_SSSS_NAME, USER_SIGNING_KEY_SSSS_NAME, SELF_SIGNING_KEY_SSSS_NAME))
+        session.rx().liveUserAccountData(setOf(MASTER_KEY_SSSS_NAME, USER_SIGNING_KEY_SSSS_NAME, SELF_SIGNING_KEY_SSSS_NAME))
                 .map {
                     session.sharedSecretStorageService.isRecoverySetup()
                 }

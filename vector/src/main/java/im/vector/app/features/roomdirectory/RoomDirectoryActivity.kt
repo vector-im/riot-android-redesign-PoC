@@ -25,6 +25,7 @@ import im.vector.app.R
 import im.vector.app.core.di.ScreenComponent
 import im.vector.app.core.extensions.addFragment
 import im.vector.app.core.extensions.addFragmentToBackstack
+import im.vector.app.core.extensions.popBackstack
 import im.vector.app.core.platform.VectorBaseActivity
 import im.vector.app.databinding.ActivitySimpleBinding
 import im.vector.app.features.roomdirectory.createroom.CreateRoomFragment
@@ -58,7 +59,7 @@ class RoomDirectoryActivity : VectorBaseActivity<ActivitySimpleBinding>() {
                 .observe()
                 .subscribe { sharedAction ->
                     when (sharedAction) {
-                        is RoomDirectorySharedAction.Back           -> onBackPressed()
+                        is RoomDirectorySharedAction.Back           -> popBackstack()
                         is RoomDirectorySharedAction.CreateRoom     -> {
                             // Transmit the filter to the CreateRoomFragment
                             withState(roomDirectoryViewModel) {

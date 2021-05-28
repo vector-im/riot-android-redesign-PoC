@@ -34,12 +34,13 @@ abstract class BottomSheetGenericController<State : BottomSheetGenericState, Act
 
     override fun buildModels(state: State?) {
         state ?: return
+        val host = this
         // Title
         getTitle()?.let { title ->
             bottomSheetTitleItem {
                 id("title")
                 title(title)
-                subTitle(getSubTitle())
+                subTitle(host.getSubTitle())
             }
 
 //            dividerItem {

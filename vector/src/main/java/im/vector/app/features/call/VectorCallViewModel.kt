@@ -30,6 +30,7 @@ import im.vector.app.core.platform.VectorViewModel
 import im.vector.app.features.call.audio.CallAudioManager
 import im.vector.app.features.call.webrtc.WebRtcCall
 import im.vector.app.features.call.webrtc.WebRtcCallManager
+import im.vector.app.features.call.webrtc.getOpponentAsMatrixItem
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -38,8 +39,6 @@ import org.matrix.android.sdk.api.session.call.CallState
 import org.matrix.android.sdk.api.session.call.MxCall
 import org.matrix.android.sdk.api.session.call.MxPeerConnectionState
 import org.matrix.android.sdk.api.session.room.model.call.supportCallTransfer
-import org.matrix.android.sdk.api.util.MatrixItem
-import org.matrix.android.sdk.api.util.toMatrixItem
 
 class VectorCallViewModel @AssistedInject constructor(
         @Assisted initialState: VectorCallViewState,
@@ -152,7 +151,7 @@ class VectorCallViewModel @AssistedInject constructor(
             if (otherCall == null) {
                 copy(otherKnownCallInfo = null)
             } else {
-                val otherUserItem: MatrixItem? = session.getUser(otherCall.mxCall.opponentUserId)?.toMatrixItem()
+                val otherUserItem = otherCall.getOpponentAsMatrixItem(session)
                 copy(otherKnownCallInfo = VectorCallViewState.CallInfo(otherCall.callId, otherUserItem))
             }
         }
@@ -167,7 +166,7 @@ class VectorCallViewModel @AssistedInject constructor(
         } else {
             call = webRtcCall
             callManager.addCurrentCallListener(currentCallListener)
-            val item: MatrixItem? = session.getUser(webRtcCall.mxCall.opponentUserId)?.toMatrixItem()
+            val item  = webRtcCall.getOpponentAsMatrixItem(session)
             webRtcCall.addListener(callListener)
             val currentSoundDevice = callManager.audioManager.selectedDevice
             if (currentSoundDevice == CallAudioManager.Device.PHONE) {

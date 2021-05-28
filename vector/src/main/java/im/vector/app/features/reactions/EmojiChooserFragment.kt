@@ -19,6 +19,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import im.vector.app.core.extensions.cleanup
 import im.vector.app.core.platform.VectorBaseFragment
 import im.vector.app.databinding.EmojiChooserFragmentBinding
@@ -50,6 +51,8 @@ class EmojiChooserFragment @Inject constructor(
             emojiRecyclerAdapter.scrollToSection(section)
         }
     }
+
+    override fun getCoroutineScope() = lifecycleScope
 
     override fun firstVisibleSectionChange(section: Int) {
         viewModel.setCurrentSection(section)

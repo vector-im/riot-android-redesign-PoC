@@ -291,7 +291,7 @@ internal class DefaultFileService @Inject constructor(
                     Timber.v("Get size of ${it.absolutePath}")
                     true
                 }
-                .sumBy { it.length().toInt() }
+                .sumOf { it.length().toInt() }
     }
 
     override fun clearCache() {

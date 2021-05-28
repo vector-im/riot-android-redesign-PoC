@@ -16,10 +16,12 @@
 
 package im.vector.app.features.roomdirectory.picker
 
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import im.vector.app.R
@@ -44,6 +46,9 @@ abstract class RoomDirectoryItem : VectorEpoxyModel<RoomDirectoryItem.Holder>() 
     var includeAllNetworks: Boolean = false
 
     @EpoxyAttribute
+    var checked: Boolean = false
+
+    @EpoxyAttribute
     var globalListener: (() -> Unit)? = null
 
     override fun bind(holder: Holder) {
@@ -63,6 +68,7 @@ abstract class RoomDirectoryItem : VectorEpoxyModel<RoomDirectoryItem.Holder>() 
 
         holder.nameView.text = directoryName
         holder.descriptionView.setTextOrHide(directoryDescription)
+        holder.checkedView.isVisible = checked
     }
 
     class Holder : VectorEpoxyHolder() {
@@ -71,5 +77,6 @@ abstract class RoomDirectoryItem : VectorEpoxyModel<RoomDirectoryItem.Holder>() 
         val avatarView by bind<ImageView>(R.id.itemRoomDirectoryAvatar)
         val nameView by bind<TextView>(R.id.itemRoomDirectoryName)
         val descriptionView by bind<TextView>(R.id.itemRoomDirectoryDescription)
+        val checkedView by bind<View>(R.id.itemRoomDirectoryChecked)
     }
 }

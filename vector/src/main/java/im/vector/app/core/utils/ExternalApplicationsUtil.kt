@@ -43,8 +43,7 @@ import im.vector.app.R
 import im.vector.app.features.notifications.NotificationUtils
 import im.vector.app.features.themes.ThemeUtils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okio.buffer
 import okio.sink
 import okio.source
@@ -57,6 +56,7 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.lang.IllegalStateException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -344,90 +344,93 @@ private fun appendTimeToFilename(name: String): String {
     return """${filename}_$dateExtension.$fileExtension"""
 }
 
-fun saveMedia(context: Context, file: File, title: String, mediaMimeType: String?, notificationUtils: NotificationUtils) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        val filename = appendTimeToFilename(title)
+suspend fun saveMedia(context: Context, file: File, title: String, mediaMimeType: String?, notificationUtils: NotificationUtils) {
+    withContext(Dispatchers.IO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val filename = appendTimeToFilename(title)
 
-        val values = ContentValues().apply {
-            put(MediaStore.Images.Media.TITLE, filename)
-            put(MediaStore.Images.Media.DISPLAY_NAME, filename)
-            put(MediaStore.Images.Media.MIME_TYPE, mediaMimeType)
-            put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis())
-            put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
-        }
-        val externalContentUri = when {
-            mediaMimeType?.isMimeTypeImage() == true -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            mediaMimeType?.isMimeTypeVideo() == true -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-            mediaMimeType?.isMimeTypeAudio() == true -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-            else                                     -> MediaStore.Downloads.EXTERNAL_CONTENT_URI
-        }
+            val values = ContentValues().apply {
+                put(MediaStore.Images.Media.TITLE, filename)
+                put(MediaStore.Images.Media.DISPLAY_NAME, filename)
+                put(MediaStore.Images.Media.MIME_TYPE, mediaMimeType)
+                put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis())
+                put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
+            }
+            val externalContentUri = when {
+                mediaMimeType?.isMimeTypeImage() == true -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                mediaMimeType?.isMimeTypeVideo() == true -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                mediaMimeType?.isMimeTypeAudio() == true -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                else                                     -> MediaStore.Downloads.EXTERNAL_CONTENT_URI
+            }
 
-        val uri = context.contentResolver.insert(externalContentUri, values)
-        if (uri == null) {
-            Toast.makeText(context, R.string.error_saving_media_file, Toast.LENGTH_LONG).show()
-        } else {
-            val source = file.inputStream().source().buffer()
-            context.contentResolver.openOutputStream(uri)?.sink()?.buffer()?.let { sink ->
-                source.use { input ->
-                    sink.use { output ->
-                        output.writeAll(input)
+            val uri = context.contentResolver.insert(externalContentUri, values)
+            if (uri == null) {
+                Toast.makeText(context, R.string.error_saving_media_file, Toast.LENGTH_LONG).show()
+                throw IllegalStateException(context.getString(R.string.error_saving_media_file))
+            } else {
+                val source = file.inputStream().source().buffer()
+                context.contentResolver.openOutputStream(uri)?.sink()?.buffer()?.let { sink ->
+                    source.use { input ->
+                        sink.use { output ->
+                            output.writeAll(input)
+                        }
                     }
                 }
+                notificationUtils.buildDownloadFileNotification(
+                        uri,
+                        filename,
+                        mediaMimeType ?: MimeTypes.OctetStream
+                ).let { notification ->
+                    notificationUtils.showNotificationMessage("DL", uri.hashCode(), notification)
+                }
             }
-            notificationUtils.buildDownloadFileNotification(
-                    uri,
-                    filename,
-                    mediaMimeType ?: MimeTypes.OctetStream
-            ).let { notification ->
-                notificationUtils.showNotificationMessage("DL", uri.hashCode(), notification)
-            }
+        } else {
+            saveMediaLegacy(context, mediaMimeType, title, file)
         }
-    } else {
-        saveMediaLegacy(context, mediaMimeType, title, file)
     }
 }
 
 @Suppress("DEPRECATION")
-private fun saveMediaLegacy(context: Context, mediaMimeType: String?, title: String, file: File) {
+private fun saveMediaLegacy(context: Context,
+                            mediaMimeType: String?,
+                            title: String,
+                            file: File) {
     val state = Environment.getExternalStorageState()
     if (Environment.MEDIA_MOUNTED != state) {
         context.toast(context.getString(R.string.error_saving_media_file))
-        return
+        throw IllegalStateException(context.getString(R.string.error_saving_media_file))
     }
 
-    GlobalScope.launch(Dispatchers.IO) {
-        val dest = when {
-            mediaMimeType?.isMimeTypeImage() == true -> Environment.DIRECTORY_PICTURES
-            mediaMimeType?.isMimeTypeVideo() == true -> Environment.DIRECTORY_MOVIES
-            mediaMimeType?.isMimeTypeAudio() == true -> Environment.DIRECTORY_MUSIC
-            else                                     -> Environment.DIRECTORY_DOWNLOADS
+    val dest = when {
+        mediaMimeType?.isMimeTypeImage() == true -> Environment.DIRECTORY_PICTURES
+        mediaMimeType?.isMimeTypeVideo() == true -> Environment.DIRECTORY_MOVIES
+        mediaMimeType?.isMimeTypeAudio() == true -> Environment.DIRECTORY_MUSIC
+        else                                     -> Environment.DIRECTORY_DOWNLOADS
+    }
+    val downloadDir = Environment.getExternalStoragePublicDirectory(dest)
+    try {
+        val outputFilename = if (title.substringAfterLast('.', "").isEmpty()) {
+            val extension = mediaMimeType?.let { MimeTypeMap.getSingleton().getExtensionFromMimeType(it) }
+            "$title.$extension"
+        } else {
+            title
         }
-        val downloadDir = Environment.getExternalStoragePublicDirectory(dest)
-        try {
-            val outputFilename = if (title.substringAfterLast('.', "").isEmpty()) {
-                val extension = mediaMimeType?.let { MimeTypeMap.getSingleton().getExtensionFromMimeType(it) }
-                "$title.$extension"
-            } else {
-                title
-            }
-            val savedFile = saveFileIntoLegacy(file, downloadDir, outputFilename)
-            if (savedFile != null) {
-                val downloadManager = context.getSystemService<DownloadManager>()
-                downloadManager?.addCompletedDownload(
-                        savedFile.name,
-                        title,
-                        true,
-                        mediaMimeType ?: MimeTypes.OctetStream,
-                        savedFile.absolutePath,
-                        savedFile.length(),
-                        true)
-                addToGallery(savedFile, mediaMimeType, context)
-            }
-        } catch (error: Throwable) {
-            GlobalScope.launch(Dispatchers.Main) {
-                context.toast(context.getString(R.string.error_saving_media_file))
-            }
+        val savedFile = saveFileIntoLegacy(file, downloadDir, outputFilename)
+        if (savedFile != null) {
+            val downloadManager = context.getSystemService<DownloadManager>()
+            downloadManager?.addCompletedDownload(
+                    savedFile.name,
+                    title,
+                    true,
+                    mediaMimeType ?: MimeTypes.OctetStream,
+                    savedFile.absolutePath,
+                    savedFile.length(),
+                    true)
+            addToGallery(savedFile, mediaMimeType, context)
         }
+    } catch (error: Throwable) {
+        context.toast(context.getString(R.string.error_saving_media_file))
+        throw error
     }
 }
 
@@ -509,7 +512,7 @@ fun selectTxtFileToWrite(
  * @param sourceFile     the file source path
  * @param dstDirPath     the dst path
  * @param outputFilename optional the output filename
- * @param callback       the asynchronous callback
+ * @return               the created file
  */
 @Suppress("DEPRECATION")
 fun saveFileIntoLegacy(sourceFile: File, dstDirPath: File, outputFilename: String?): File? {

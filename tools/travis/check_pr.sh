@@ -23,7 +23,7 @@ branch=${TRAVIS_BRANCH}
 # If not on develop, exit, else we cannot get the list of modified files
 # It is ok to check only when on develop branch
 if [[ "${branch}" -eq 'develop' ]]; then
-    echo "Check that the file 'CHANGES.md' has been modified"
+    echo "Check that a file has been added to /newsfragment"
 else
     echo "Not on develop branch"
     exit 0
@@ -37,9 +37,9 @@ listOfModifiedFiles=`git diff --name-only HEAD ${branch}`
 # echo ${listOfModifiedFiles}
 
 
-if [[ ${listOfModifiedFiles} = *"CHANGES.md"* ]]; then
-  echo "CHANGES.md has been modified!"
+if [[ ${listOfModifiedFiles} = *"newsfragment"* ]]; then
+  echo "A file has been added to /newsfragment!"
 else
-  echo "❌ Please add a line describing your change in CHANGES.md"
+  echo "❌ Please add a file describing your changes in /newsfragment. See https://github.com/vector-im/element-android/blob/develop/CONTRIBUTING.md#changelog"
   exit 1
 fi

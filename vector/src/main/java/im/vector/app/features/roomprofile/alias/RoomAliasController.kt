@@ -77,34 +77,36 @@ class RoomAliasController @Inject constructor(
     }
 
     private fun buildRoomDirectoryVisibility(data: RoomAliasViewState) {
+        val host = this
         when (data.roomDirectoryVisibility) {
             Uninitialized -> Unit
             is Loading    -> Unit
             is Success    -> {
                 formSwitchItem {
                     id("roomVisibility")
-                    title(stringProvider.getString(R.string.room_alias_publish_to_directory, data.homeServerName))
+                    title(host.stringProvider.getString(R.string.room_alias_publish_to_directory, data.homeServerName))
                     showDivider(false)
                     switchChecked(data.roomDirectoryVisibility() == RoomDirectoryVisibility.PUBLIC)
                     listener {
                         if (it) {
-                            callback?.setRoomDirectoryVisibility(RoomDirectoryVisibility.PUBLIC)
+                            host.callback?.setRoomDirectoryVisibility(RoomDirectoryVisibility.PUBLIC)
                         } else {
-                            callback?.setRoomDirectoryVisibility(RoomDirectoryVisibility.PRIVATE)
+                            host.callback?.setRoomDirectoryVisibility(RoomDirectoryVisibility.PRIVATE)
                         }
                     }
                 }
             }
             is Fail       -> {
                 errorWithRetryItem {
-                    text(stringProvider.getString(R.string.room_alias_publish_to_directory_error,
-                            errorFormatter.toHumanReadable(data.roomDirectoryVisibility.error)))
+                    text(host.stringProvider.getString(R.string.room_alias_publish_to_directory_error,
+                            host.errorFormatter.toHumanReadable(data.roomDirectoryVisibility.error)))
                 }
             }
         }
     }
 
     private fun buildPublishInfo(data: RoomAliasViewState) {
+        val host = this
         buildProfileSection(
                 stringProvider.getString(R.string.room_alias_published_alias_title)
         )
@@ -120,8 +122,8 @@ class RoomAliasController @Inject constructor(
                     profileActionItem {
                         id("canonical")
                         title(data.canonicalAlias)
-                        subtitle(stringProvider.getString(R.string.room_alias_published_alias_main))
-                        listener { callback?.openAliasDetail(canonicalAlias) }
+                        subtitle(host.stringProvider.getString(R.string.room_alias_published_alias_main))
+                        listener { host.callback?.openAliasDetail(canonicalAlias) }
                     }
                 }
 
@@ -143,7 +145,7 @@ class RoomAliasController @Inject constructor(
                 profileActionItem {
                     id("alt_$idx")
                     title(altAlias)
-                    listener { callback?.openAliasDetail(altAlias) }
+                    listener { host.callback?.openAliasDetail(altAlias) }
                 }
             }
         }
@@ -154,14 +156,15 @@ class RoomAliasController @Inject constructor(
     }
 
     private fun buildPublishManuallyForm(data: RoomAliasViewState) {
+        val host = this
         when (data.publishManuallyState) {
             RoomAliasViewState.AddAliasState.Hidden     -> Unit
             RoomAliasViewState.AddAliasState.Closed     -> {
                 settingsButtonItem {
                     id("publishManually")
-                    colorProvider(colorProvider)
+                    colorProvider(host.colorProvider)
                     buttonTitleId(R.string.room_alias_published_alias_add_manually)
-                    buttonClickListener { callback?.toggleManualPublishForm() }
+                    buttonClickListener { host.callback?.toggleManualPublishForm() }
                 }
             }
             is RoomAliasViewState.AddAliasState.Editing -> {
@@ -169,29 +172,30 @@ class RoomAliasController @Inject constructor(
                     id("publishManuallyEdit")
                     value(data.publishManuallyState.value)
                     showBottomSeparator(false)
-                    hint(stringProvider.getString(R.string.room_alias_address_hint))
+                    hint(host.stringProvider.getString(R.string.room_alias_address_hint))
                     inputType(InputType.TYPE_CLASS_TEXT)
                     onTextChange { text ->
-                        callback?.setNewAlias(text)
+                        host.callback?.setNewAlias(text)
                     }
                 }
                 settingsContinueCancelItem {
                     id("publishManuallySubmit")
-                    continueText(stringProvider.getString(R.string.room_alias_published_alias_add_manually_submit))
-                    continueOnClick { callback?.addAlias() }
-                    cancelOnClick { callback?.toggleManualPublishForm() }
+                    continueText(host.stringProvider.getString(R.string.room_alias_published_alias_add_manually_submit))
+                    continueOnClick { host.callback?.addAlias() }
+                    cancelOnClick { host.callback?.toggleManualPublishForm() }
                 }
             }
         }
     }
 
     private fun buildLocalInfo(data: RoomAliasViewState) {
+        val host = this
         buildProfileSection(
                 stringProvider.getString(R.string.room_alias_local_address_title)
         )
         settingsInfoItem {
             id("localInfo")
-            helperText(stringProvider.getString(R.string.room_alias_local_address_subtitle, data.homeServerName))
+            helperText(host.stringProvider.getString(R.string.room_alias_local_address_subtitle, data.homeServerName))
         }
 
         when (val localAliases = data.localAliases) {
@@ -211,7 +215,7 @@ class RoomAliasController @Inject constructor(
                         profileActionItem {
                             id("loc_$idx")
                             title(localAlias)
-                            listener { callback?.openAliasDetail(localAlias) }
+                            listener { host.callback?.openAliasDetail(localAlias) }
                         }
                     }
                 }
@@ -219,7 +223,7 @@ class RoomAliasController @Inject constructor(
             is Fail          -> {
                 errorWithRetryItem {
                     id("alt_error")
-                    text(errorFormatter.toHumanReadable(localAliases.error))
+                    text(host.errorFormatter.toHumanReadable(localAliases.error))
                 }
             }
         }
@@ -229,14 +233,15 @@ class RoomAliasController @Inject constructor(
     }
 
     private fun buildAddLocalAlias(data: RoomAliasViewState) {
+        val host = this
         when (data.newLocalAliasState) {
             RoomAliasViewState.AddAliasState.Hidden     -> Unit
             RoomAliasViewState.AddAliasState.Closed     -> {
                 settingsButtonItem {
                     id("newLocalAliasButton")
-                    colorProvider(colorProvider)
+                    colorProvider(host.colorProvider)
                     buttonTitleId(R.string.room_alias_local_address_add)
-                    buttonClickListener { callback?.toggleLocalAliasForm() }
+                    buttonClickListener { host.callback?.toggleLocalAliasForm() }
                 }
             }
             is RoomAliasViewState.AddAliasState.Editing -> {
@@ -245,16 +250,16 @@ class RoomAliasController @Inject constructor(
                     value(data.newLocalAliasState.value)
                     homeServer(":" + data.homeServerName)
                     showBottomSeparator(false)
-                    errorMessage(roomAliasErrorFormatter.format((data.newLocalAliasState.asyncRequest as? Fail)?.error as? RoomAliasError))
+                    errorMessage(host.roomAliasErrorFormatter.format((data.newLocalAliasState.asyncRequest as? Fail)?.error as? RoomAliasError))
                     onTextChange { value ->
-                        callback?.setNewLocalAliasLocalPart(value)
+                        host.callback?.setNewLocalAliasLocalPart(value)
                     }
                 }
                 settingsContinueCancelItem {
                     id("newLocalAliasSubmit")
-                    continueText(stringProvider.getString(R.string.action_add))
-                    continueOnClick { callback?.addLocalAlias() }
-                    cancelOnClick { callback?.toggleLocalAliasForm() }
+                    continueText(host.stringProvider.getString(R.string.action_add))
+                    continueOnClick { host.callback?.addLocalAlias() }
+                    cancelOnClick { host.callback?.toggleLocalAliasForm() }
                 }
             }
         }

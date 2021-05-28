@@ -42,6 +42,7 @@ import javax.inject.Inject
 class SpaceAddRoomFragment @Inject constructor(
         private val spaceEpoxyController: AddRoomListController,
         private val roomEpoxyController: AddRoomListController,
+        private val dmEpoxyController: AddRoomListController,
         private val viewModelFactory: SpaceAddRoomsViewModel.Factory
 ) : VectorBaseFragment<FragmentSpaceAddRoomsBinding>(),
         OnBackPressed, AddRoomListController.Listener, SpaceAddRoomsViewModel.Factory {
@@ -84,6 +85,7 @@ class SpaceAddRoomFragment @Inject constructor(
         viewModel.selectionListLiveData.observe(viewLifecycleOwner) {
             spaceEpoxyController.selectedItems = it
             roomEpoxyController.selectedItems = it
+            dmEpoxyController.selectedItems = it
             saveNeeded = it.values.any { it }
             invalidateOptionsMenu()
         }
@@ -95,6 +97,7 @@ class SpaceAddRoomFragment @Inject constructor(
         viewModel.selectSubscribe(this, SpaceAddRoomsState::ignoreRooms) {
             spaceEpoxyController.ignoreRooms = it
             roomEpoxyController.ignoreRooms = it
+            dmEpoxyController.ignoreRooms = it
         }.disposeOnDestroyView()
 
         viewModel.selectSubscribe(this, SpaceAddRoomsState::isSaving) {
@@ -103,6 +106,10 @@ class SpaceAddRoomFragment @Inject constructor(
             } else {
                 sharedViewModel.handle(SpaceManagedSharedAction.HideLoading)
             }
+        }.disposeOnDestroyView()
+
+        viewModel.selectSubscribe(this, SpaceAddRoomsState::shouldShowDMs) {
+           dmEpoxyController.disabled = !it
         }.disposeOnDestroyView()
 
         views.createNewRoom.debouncedClicks {
@@ -121,11 +128,11 @@ class SpaceAddRoomFragment @Inject constructor(
                             .setNegativeButton(R.string.cancel, null)
                             .show()
                 }
-                is SpaceAddRoomsViewEvents.SaveFailed -> {
+                is SpaceAddRoomsViewEvents.SaveFailed      -> {
                     showErrorInSnackbar(it.reason)
                     invalidateOptionsMenu()
                 }
-                SpaceAddRoomsViewEvents.SavedDone -> {
+                SpaceAddRoomsViewEvents.SavedDone          -> {
                     sharedViewModel.handle(SpaceManagedSharedAction.HandleBack)
                 }
             }
@@ -149,6 +156,7 @@ class SpaceAddRoomFragment @Inject constructor(
         views.roomList.cleanup()
         spaceEpoxyController.listener = null
         roomEpoxyController.listener = null
+        dmEpoxyController.listener = null
         super.onDestroyView()
     }
 
@@ -180,6 +188,19 @@ class SpaceAddRoomFragment @Inject constructor(
 
         concatAdapter.addAdapter(roomEpoxyController.adapter)
         concatAdapter.addAdapter(spaceEpoxyController.adapter)
+
+        // This controller can be disabled depending on the space type (public or not)
+        viewModel.updatableDMLivePageResult.liveBoundaries.observe(viewLifecycleOwner) {
+            dmEpoxyController.boundaryChange(it)
+        }
+        viewModel.updatableDMLivePageResult.livePagedList.observe(viewLifecycleOwner) {
+            dmEpoxyController.totalSize = it.size
+            dmEpoxyController.submitList(it)
+        }
+        dmEpoxyController.sectionName = getString(R.string.direct_chats_header)
+        dmEpoxyController.listener = this
+
+        concatAdapter.addAdapter(dmEpoxyController.adapter)
 
         views.roomList.adapter = concatAdapter
     }

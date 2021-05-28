@@ -25,7 +25,6 @@ import com.airbnb.mvrx.ViewModelContext
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import im.vector.app.core.date.VectorDateFormatter
 import im.vector.app.core.platform.EmptyAction
 import im.vector.app.core.platform.EmptyViewEvents
 import im.vector.app.core.platform.VectorViewModel
@@ -37,10 +36,9 @@ import org.matrix.android.sdk.internal.crypto.algorithms.olm.OlmDecryptionResult
 import timber.log.Timber
 import java.util.UUID
 
-class ViewEditHistoryViewModel @AssistedInject constructor(@Assisted
-                                                           initialState: ViewEditHistoryViewState,
-                                                           val session: Session,
-                                                           val dateFormatter: VectorDateFormatter
+class ViewEditHistoryViewModel @AssistedInject constructor(
+        @Assisted initialState: ViewEditHistoryViewState,
+        private val session: Session
 ) : VectorViewModel<ViewEditHistoryViewState, EmptyAction, EmptyViewEvents>(initialState) {
 
     private val roomId = initialState.roomId

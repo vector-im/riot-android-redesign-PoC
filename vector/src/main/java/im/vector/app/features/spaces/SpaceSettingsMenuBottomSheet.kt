@@ -16,6 +16,7 @@
 
 package im.vector.app.features.spaces
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -27,8 +28,10 @@ import com.airbnb.mvrx.args
 import im.vector.app.R
 import im.vector.app.core.di.ActiveSessionHolder
 import im.vector.app.core.di.ScreenComponent
+import im.vector.app.core.dialogs.withColoredButton
 import im.vector.app.core.extensions.setTextOrHide
 import im.vector.app.core.platform.VectorBaseBottomSheetDialogFragment
+import im.vector.app.core.resources.ColorProvider
 import im.vector.app.databinding.BottomSheetSpaceSettingsBinding
 import im.vector.app.features.home.AvatarRenderer
 import im.vector.app.features.navigation.Navigator
@@ -36,15 +39,18 @@ import im.vector.app.features.powerlevel.PowerLevelsObservableFactory
 import im.vector.app.features.rageshake.BugReporter
 import im.vector.app.features.rageshake.ReportType
 import im.vector.app.features.roomprofile.RoomProfileActivity
+import im.vector.app.features.session.coroutineScope
 import im.vector.app.features.settings.VectorPreferences
 import im.vector.app.features.spaces.manage.ManageType
 import im.vector.app.features.spaces.manage.SpaceManageActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import me.gujun.android.span.span
+import org.matrix.android.sdk.api.extensions.orFalse
 import org.matrix.android.sdk.api.session.events.model.EventType
 import org.matrix.android.sdk.api.session.room.powerlevels.PowerLevelsHelper
+import org.matrix.android.sdk.api.session.room.powerlevels.Role
 import org.matrix.android.sdk.api.util.toMatrixItem
 import timber.log.Timber
 import javax.inject.Inject
@@ -54,6 +60,7 @@ data class SpaceBottomSheetSettingsArgs(
         val spaceId: String
 ) : Parcelable
 
+// XXX make proper view model before leaving beta
 class SpaceSettingsMenuBottomSheet : VectorBaseBottomSheetDialogFragment<BottomSheetSpaceSettingsBinding>() {
 
     @Inject lateinit var navigator: Navigator
@@ -61,6 +68,7 @@ class SpaceSettingsMenuBottomSheet : VectorBaseBottomSheetDialogFragment<BottomS
     @Inject lateinit var avatarRenderer: AvatarRenderer
     @Inject lateinit var vectorPreferences: VectorPreferences
     @Inject lateinit var bugReporter: BugReporter
+    @Inject lateinit var colorProvider: ColorProvider
 
     private val spaceArgs: SpaceBottomSheetSettingsArgs by args()
 
@@ -70,9 +78,13 @@ class SpaceSettingsMenuBottomSheet : VectorBaseBottomSheetDialogFragment<BottomS
 
     var interactionListener: InteractionListener? = null
 
+    override val showExpanded = true
+
     override fun injectWith(injector: ScreenComponent) {
         injector.inject(this)
     }
+
+    var isLastAdmin: Boolean = false
 
     override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): BottomSheetSpaceSettingsBinding {
         return BottomSheetSpaceSettingsBinding.inflate(inflater, container, false)
@@ -105,8 +117,15 @@ class SpaceSettingsMenuBottomSheet : VectorBaseBottomSheetDialogFragment<BottomS
 
                     views.spaceSettings.isVisible = canChangeAvatar || canChangeName || canChangeTopic
 
-                    views.invitePeople.isVisible = canInvite
+                    views.invitePeople.isVisible = canInvite || roomSummary?.isPublic.orFalse()
                     views.addRooms.isVisible = canAddChild
+
+                    val isAdmin = powerLevelsHelper.getUserRole(session.myUserId) is Role.Admin
+                    val otherAdminCount = roomSummary?.otherMemberIds
+                            ?.map { powerLevelsHelper.getUserRole(it) }
+                            ?.count { it is Role.Admin }
+                            ?: 0
+                    isLastAdmin = isAdmin && otherAdminCount == 0
                 }.disposeOnDestroyView()
 
         views.spaceBetaTag.setOnClickListener {
@@ -137,10 +156,29 @@ class SpaceSettingsMenuBottomSheet : VectorBaseBottomSheetDialogFragment<BottomS
         }
 
         views.leaveSpace.views.bottomSheetActionClickableZone.debouncedClicks {
+            val spaceSummary = activeSessionHolder.getSafeActiveSession()?.getRoomSummary(spaceArgs.spaceId)
+                    ?: return@debouncedClicks
+            val warningMessage: CharSequence? = if (spaceSummary.otherMemberIds.isEmpty()) {
+                span(getString(R.string.space_leave_prompt_msg_only_you)) {
+                    textColor = colorProvider.getColor(R.color.riotx_destructive_accent)
+                }
+            } else if (isLastAdmin) {
+                span(getString(R.string.space_leave_prompt_msg_as_admin)) {
+                    textColor = colorProvider.getColor(R.color.riotx_destructive_accent)
+                }
+            } else if (!spaceSummary.isPublic) {
+                span(getString(R.string.space_leave_prompt_msg_private)) {
+                    textColor = colorProvider.getColor(R.color.riotx_destructive_accent)
+                }
+            } else {
+                null
+            }
+
             AlertDialog.Builder(requireContext())
-                    .setMessage(getString(R.string.space_leave_prompt_msg))
+                    .setMessage(warningMessage)
+                    .setTitle(getString(R.string.space_leave_prompt_msg))
                     .setPositiveButton(R.string.leave) { _, _ ->
-                        GlobalScope.launch {
+                        session.coroutineScope.launch {
                             try {
                                 session.getRoom(spaceArgs.spaceId)?.leave(null)
                             } catch (failure: Throwable) {
@@ -151,6 +189,7 @@ class SpaceSettingsMenuBottomSheet : VectorBaseBottomSheetDialogFragment<BottomS
                     }
                     .setNegativeButton(R.string.cancel, null)
                     .show()
+                    .withColoredButton(DialogInterface.BUTTON_POSITIVE)
         }
     }
 

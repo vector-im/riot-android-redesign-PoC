@@ -23,7 +23,8 @@ import io.realm.annotations.PrimaryKey
 
 internal open class RoomEntity(@PrimaryKey var roomId: String = "",
                                var chunks: RealmList<ChunkEntity> = RealmList(),
-                               var sendingTimelineEvents: RealmList<TimelineEventEntity> = RealmList()
+                               var sendingTimelineEvents: RealmList<TimelineEventEntity> = RealmList(),
+                               var accountData: RealmList<RoomAccountDataEntity> = RealmList()
 ) : RealmObject() {
 
     private var membershipStr: String = Membership.NONE.name

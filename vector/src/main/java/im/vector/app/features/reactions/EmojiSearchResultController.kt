@@ -45,19 +45,20 @@ class EmojiSearchResultController @Inject constructor(
 
     override fun buildModels(data: EmojiSearchResultViewState?) {
         val results = data?.results ?: return
+        val host = this
 
         if (results.isEmpty()) {
             if (data.query.isEmpty()) {
                 // display 'Type something to find'
                 genericFooterItem {
                     id("type.query.item")
-                    text(stringProvider.getString(R.string.reaction_search_type_hint))
+                    text(host.stringProvider.getString(R.string.reaction_search_type_hint))
                 }
             } else {
                 // Display no search Results
                 genericFooterItem {
                     id("no.results.item")
-                    text(stringProvider.getString(R.string.no_result_placeholder))
+                    text(host.stringProvider.getString(R.string.no_result_placeholder))
                 }
             }
         } else {
@@ -66,9 +67,9 @@ class EmojiSearchResultController @Inject constructor(
                 emojiSearchResultItem {
                     id(it.name)
                     emojiItem(it)
-                    emojiTypeFace(emojiTypeface)
+                    emojiTypeFace(host.emojiTypeface)
                     currentQuery(data.query)
-                    onClickListener(listener)
+                    onClickListener(host.listener)
                 }
             }
         }

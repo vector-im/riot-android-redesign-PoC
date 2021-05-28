@@ -20,12 +20,13 @@ import im.vector.app.core.platform.VectorViewEvents
 import org.jitsi.meet.sdk.JitsiMeetUserInfo
 
 sealed class JitsiCallViewEvents : VectorViewEvents {
-    data class StartConference(
+    data class JoinConference(
             val enableVideo: Boolean,
             val jitsiUrl: String,
             val subject: String,
             val confId: String,
-            val userInfo: JitsiMeetUserInfo
+            val userInfo: JitsiMeetUserInfo,
+            val token: String?
     ) : JitsiCallViewEvents()
 
     data class ConfirmSwitchingConference(
@@ -33,5 +34,6 @@ sealed class JitsiCallViewEvents : VectorViewEvents {
     ) : JitsiCallViewEvents()
 
     object LeaveConference : JitsiCallViewEvents()
+    object FailJoiningConference: JitsiCallViewEvents()
     object Finish : JitsiCallViewEvents()
 }

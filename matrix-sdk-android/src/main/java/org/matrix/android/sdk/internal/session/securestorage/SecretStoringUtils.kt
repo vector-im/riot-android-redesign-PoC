@@ -18,12 +18,14 @@
 
 package org.matrix.android.sdk.internal.session.securestorage
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.security.KeyPairGeneratorSpec
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import androidx.annotation.RequiresApi
+import org.matrix.android.sdk.internal.util.system.BuildVersionSdkIntProvider
 import timber.log.Timber
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -32,6 +34,7 @@ import java.io.InputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.io.OutputStream
+import java.lang.IllegalArgumentException
 import java.math.BigInteger
 import java.security.KeyPairGenerator
 import java.security.KeyStore
@@ -58,23 +61,19 @@ import javax.security.auth.x500.X500Principal
  * is not available.
  *
  * <b>Android [K-M[</b>
- * For android >=KITKAT and <M, we use the keystore to generate and store a private/public key pair. Then for each secret, a
+ * For android >=L and <M, we use the keystore to generate and store a private/public key pair. Then for each secret, a
  * random secret key in generated to perform encryption.
  * This secret key is encrypted with the public RSA key and stored with the encrypted secret.
  * In order to decrypt the encrypted secret key will be retrieved then decrypted with the RSA private key.
  *
- * <b>Older androids</b>
- * For older androids as a fallback we generate an AES key from the alias using PBKDF2 with random salt.
- * The salt and iv are stored with encrypted data.
- *
  * Sample usage:
  * <code>
  *     val secret = "The answer is 42"
- *     val KEncrypted = SecretStoringUtils.securelyStoreString(secret, "myAlias", context)
+ *     val KEncrypted = SecretStoringUtils.securelyStoreString(secret, "myAlias")
  *     //This can be stored anywhere e.g. encoded in b64 and stored in preference for example
  *
  *     //to get back the secret, just call
- *     val kDecrypted = SecretStoringUtils.loadSecureSecret(KEncrypted!!, "myAlias", context)
+ *     val kDecrypted = SecretStoringUtils.loadSecureSecret(KEncrypted, "myAlias")
  * </code>
  *
  * You can also just use this utility to store a secret key, and use any encryption algorithm that you want.
@@ -82,7 +81,10 @@ import javax.security.auth.x500.X500Principal
  * Important: Keys stored in the keystore can be wiped out (depends of the OS version, like for example if you
  * add a pin or change the schema); So you might and with a useless pile of bytes.
  */
-internal class SecretStoringUtils @Inject constructor(private val context: Context) {
+internal class SecretStoringUtils @Inject constructor(
+        private val context: Context,
+        private val buildVersionSdkIntProvider: BuildVersionSdkIntProvider
+) {
 
     companion object {
         private const val ANDROID_KEY_STORE = "AndroidKeyStore"
@@ -91,7 +93,6 @@ internal class SecretStoringUtils @Inject constructor(private val context: Conte
 
         private const val FORMAT_API_M: Byte = 0
         private const val FORMAT_1: Byte = 1
-        private const val FORMAT_2: Byte = 2
     }
 
     private val keyStore: KeyStore by lazy {
@@ -113,43 +114,52 @@ internal class SecretStoringUtils @Inject constructor(private val context: Conte
     /**
      * Encrypt the given secret using the android Keystore.
      * On android >= M, will directly use the keystore to generate a symmetric key
-     * On android >= KitKat and <M, as symmetric key gen is not available, will use an symmetric key generated
+     * On android >= Lollipop and <M, as symmetric key gen is not available, will use an symmetric key generated
      * in the keystore to encrypted a random symmetric key. The encrypted symmetric key is returned
      * in the bytearray (in can be stored anywhere, it is encrypted)
-     * On older version a key in generated from alias with random salt.
      *
      * The secret is encrypted using the following method: AES/GCM/NoPadding
      */
+    @SuppressLint("NewApi")
     @Throws(Exception::class)
-    fun securelyStoreString(secret: String, keyAlias: String): ByteArray? {
+    fun securelyStoreString(secret: String, keyAlias: String): ByteArray {
         return when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> encryptStringM(secret, keyAlias)
-            else                                           -> encryptString(secret, keyAlias)
+            buildVersionSdkIntProvider.get() >= Build.VERSION_CODES.M -> encryptStringM(secret, keyAlias)
+            else                                                      -> encryptString(secret, keyAlias)
         }
     }
 
     /**
      * Decrypt a secret that was encrypted by #securelyStoreString()
      */
+    @SuppressLint("NewApi")
     @Throws(Exception::class)
-    fun loadSecureSecret(encrypted: ByteArray, keyAlias: String): String? {
-        return when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> decryptStringM(encrypted, keyAlias)
-            else                                           -> decryptString(encrypted, keyAlias)
+    fun loadSecureSecret(encrypted: ByteArray, keyAlias: String): String {
+        encrypted.inputStream().use { inputStream ->
+            // First get the format
+            return when (val format = inputStream.read().toByte()) {
+                FORMAT_API_M -> decryptStringM(inputStream, keyAlias)
+                FORMAT_1     -> decryptString(inputStream, keyAlias)
+                else         -> throw IllegalArgumentException("Unknown format $format")
+            }
         }
     }
 
+    @SuppressLint("NewApi")
     fun securelyStoreObject(any: Any, keyAlias: String, output: OutputStream) {
         when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> saveSecureObjectM(keyAlias, output, any)
-            else                                           -> saveSecureObject(keyAlias, output, any)
+            buildVersionSdkIntProvider.get() >= Build.VERSION_CODES.M -> saveSecureObjectM(keyAlias, output, any)
+            else                                                      -> saveSecureObject(keyAlias, output, any)
         }
     }
 
+    @SuppressLint("NewApi")
     fun <T> loadSecureSecret(inputStream: InputStream, keyAlias: String): T? {
-        return when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> loadSecureObjectM(keyAlias, inputStream)
-            else                                           -> loadSecureObject(keyAlias, inputStream)
+        // First get the format
+        return when (val format = inputStream.read().toByte()) {
+            FORMAT_API_M -> loadSecureObjectM(keyAlias, inputStream)
+            FORMAT_1     -> loadSecureObject(keyAlias, inputStream)
+            else         -> throw IllegalArgumentException("Unknown format $format")
         }
     }
 
@@ -180,7 +190,7 @@ internal class SecretStoringUtils @Inject constructor(private val context: Conte
         - Store the encrypted AES
      Generate a key pair for encryption
      */
-    fun getOrGenerateKeyPairForAlias(alias: String): KeyStore.PrivateKeyEntry {
+    private fun getOrGenerateKeyPairForAlias(alias: String): KeyStore.PrivateKeyEntry {
         val privateKeyEntry = (keyStore.getEntry(alias, null) as? KeyStore.PrivateKeyEntry)
 
         if (privateKeyEntry != null) return privateKeyEntry
@@ -193,7 +203,7 @@ internal class SecretStoringUtils @Inject constructor(private val context: Conte
                 .setAlias(alias)
                 .setSubject(X500Principal("CN=$alias"))
                 .setSerialNumber(BigInteger.TEN)
-                // .setEncryptionRequired() requires that the phone as a pin/schema
+                // .setEncryptionRequired() requires that the phone has a pin/schema
                 .setStartDate(start.time)
                 .setEndDate(end.time)
                 .build()
@@ -205,7 +215,7 @@ internal class SecretStoringUtils @Inject constructor(private val context: Conte
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    fun encryptStringM(text: String, keyAlias: String): ByteArray? {
+    private fun encryptStringM(text: String, keyAlias: String): ByteArray {
         val secretKey = getOrGenerateSymmetricKeyForAliasM(keyAlias)
 
         val cipher = Cipher.getInstance(AES_MODE)
@@ -217,8 +227,8 @@ internal class SecretStoringUtils @Inject constructor(private val context: Conte
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun decryptStringM(encryptedChunk: ByteArray, keyAlias: String): String {
-        val (iv, encryptedText) = formatMExtract(encryptedChunk.inputStream())
+    private fun decryptStringM(inputStream: InputStream, keyAlias: String): String {
+        val (iv, encryptedText) = formatMExtract(inputStream)
 
         val secretKey = getOrGenerateSymmetricKeyForAliasM(keyAlias)
 
@@ -229,7 +239,7 @@ internal class SecretStoringUtils @Inject constructor(private val context: Conte
         return String(cipher.doFinal(encryptedText), Charsets.UTF_8)
     }
 
-    private fun encryptString(text: String, keyAlias: String): ByteArray? {
+    private fun encryptString(text: String, keyAlias: String): ByteArray {
         // we generate a random symmetric key
         val key = ByteArray(16)
         secureRandom.nextBytes(key)
@@ -246,8 +256,8 @@ internal class SecretStoringUtils @Inject constructor(private val context: Conte
         return format1Make(encryptedKey, iv, encryptedBytes)
     }
 
-    private fun decryptString(data: ByteArray, keyAlias: String): String? {
-        val (encryptedKey, iv, encrypted) = format1Extract(ByteArrayInputStream(data))
+    private fun decryptString(inputStream: InputStream, keyAlias: String): String {
+        val (encryptedKey, iv, encrypted) = format1Extract(inputStream)
 
         // we need to decrypt the key
         val sKeyBytes = rsaDecrypt(keyAlias, ByteArrayInputStream(encryptedKey))
@@ -307,29 +317,10 @@ internal class SecretStoringUtils @Inject constructor(private val context: Conte
         output.write(bos1.toByteArray())
     }
 
-//    @RequiresApi(Build.VERSION_CODES.M)
-//    @Throws(IOException::class)
-//    fun saveSecureObjectM(keyAlias: String, file: File, writeObject: Any) {
-//        FileOutputStream(file).use {
-//            saveSecureObjectM(keyAlias, it, writeObject)
-//        }
-//    }
-//
-//    @RequiresApi(Build.VERSION_CODES.M)
-//    @Throws(IOException::class)
-//    fun <T> loadSecureObjectM(keyAlias: String, file: File): T? {
-//        FileInputStream(file).use {
-//            return loadSecureObjectM<T>(keyAlias, it)
-//        }
-//    }
-
     @RequiresApi(Build.VERSION_CODES.M)
     @Throws(IOException::class)
     private fun <T> loadSecureObjectM(keyAlias: String, inputStream: InputStream): T? {
         val secretKey = getOrGenerateSymmetricKeyForAliasM(keyAlias)
-
-        val format = inputStream.read()
-        assert(format.toByte() == FORMAT_API_M)
 
         val ivSize = inputStream.read()
         val iv = ByteArray(ivSize)
@@ -393,9 +384,6 @@ internal class SecretStoringUtils @Inject constructor(private val context: Conte
     }
 
     private fun formatMExtract(bis: InputStream): Pair<ByteArray, ByteArray> {
-        val format = bis.read().toByte()
-        assert(format == FORMAT_API_M)
-
         val ivSize = bis.read()
         val iv = ByteArray(ivSize)
         bis.read(iv, 0, ivSize)
@@ -414,9 +402,6 @@ internal class SecretStoringUtils @Inject constructor(private val context: Conte
     }
 
     private fun format1Extract(bis: InputStream): Triple<ByteArray, ByteArray, ByteArray> {
-        val format = bis.read()
-        assert(format.toByte() == FORMAT_1)
-
         val keySizeBig = bis.read()
         val keySizeLow = bis.read()
         val encryptedKeySize = keySizeBig.shl(8) + keySizeLow
@@ -442,33 +427,5 @@ internal class SecretStoringUtils @Inject constructor(private val context: Conte
         bos.write(encryptedBytes)
 
         return bos.toByteArray()
-    }
-
-    private fun format2Make(salt: ByteArray, iv: ByteArray, encryptedBytes: ByteArray): ByteArray {
-        val bos = ByteArrayOutputStream(3 + salt.size + iv.size + encryptedBytes.size)
-        bos.write(FORMAT_2.toInt())
-        bos.write(salt.size)
-        bos.write(salt)
-        bos.write(iv.size)
-        bos.write(iv)
-        bos.write(encryptedBytes)
-
-        return bos.toByteArray()
-    }
-
-    private fun format2Extract(bis: InputStream): Triple<ByteArray, ByteArray, ByteArray> {
-        val format = bis.read()
-        assert(format.toByte() == FORMAT_2)
-
-        val saltSize = bis.read()
-        val salt = ByteArray(saltSize)
-        bis.read(salt)
-
-        val ivSize = bis.read()
-        val iv = ByteArray(ivSize)
-        bis.read(iv)
-
-        val encrypted = bis.readBytes()
-        return Triple(salt, iv, encrypted)
     }
 }

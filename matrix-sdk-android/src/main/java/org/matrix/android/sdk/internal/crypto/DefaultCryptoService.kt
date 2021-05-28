@@ -545,14 +545,14 @@ internal class DefaultCryptoService @Inject constructor(
         val existingAlgorithm = cryptoStore.getRoomAlgorithm(roomId)
 
         if (!existingAlgorithm.isNullOrEmpty() && existingAlgorithm != algorithm) {
-            Timber.e("## CRYPTO | setEncryptionInRoom() : Ignoring m.room.encryption event which requests a change of config in $roomId")
+            Timber.e("## CRYPTO | setEncryptionInRoom() : Ignoring m.room.encryption event which requests a change of config in $roomId")
             return false
         }
 
         val encryptingClass = MXCryptoAlgorithms.hasEncryptorClassForAlgorithm(algorithm)
 
         if (!encryptingClass) {
-            Timber.e("## CRYPTO | setEncryptionInRoom() : Unable to encrypt room $roomId with $algorithm")
+            Timber.e("## CRYPTO | setEncryptionInRoom() : Unable to encrypt room $roomId with $algorithm")
             return false
         }
 
@@ -649,17 +649,17 @@ internal class DefaultCryptoService @Inject constructor(
             val safeAlgorithm = alg
             if (safeAlgorithm != null) {
                 val t0 = System.currentTimeMillis()
-                Timber.v("## CRYPTO | encryptEventContent() starts")
+                Timber.v("## CRYPTO | encryptEventContent() starts")
                 runCatching {
                     val content = safeAlgorithm.encryptEventContent(eventContent, eventType, userIds)
-                    Timber.v("## CRYPTO | encryptEventContent() : succeeds after ${System.currentTimeMillis() - t0} ms")
+                    Timber.v("## CRYPTO | encryptEventContent() : succeeds after ${System.currentTimeMillis() - t0} ms")
                     MXEncryptEventContentResult(content, EventType.ENCRYPTED)
                 }.foldToCallback(callback)
             } else {
                 val algorithm = getEncryptionAlgorithm(roomId)
                 val reason = String.format(MXCryptoError.UNABLE_TO_ENCRYPT_REASON,
                         algorithm ?: MXCryptoError.NO_MORE_ALGORITHM_REASON)
-                Timber.e("## CRYPTO | encryptEventContent() : $reason")
+                Timber.e("## CRYPTO | encryptEventContent() : $reason")
                 callback.onFailure(Failure.CryptoError(MXCryptoError.Base(MXCryptoError.ErrorType.UNABLE_TO_ENCRYPT, reason)))
             }
         }
@@ -769,7 +769,7 @@ internal class DefaultCryptoService @Inject constructor(
         }
         val alg = roomDecryptorProvider.getOrCreateRoomDecryptor(roomKeyContent.roomId, roomKeyContent.algorithm)
         if (alg == null) {
-            Timber.e("## CRYPTO | GOSSIP onRoomKeyEvent() : Unable to handle keys for ${roomKeyContent.algorithm}")
+            Timber.e("## CRYPTO | GOSSIP onRoomKeyEvent() : Unable to handle keys for ${roomKeyContent.algorithm}")
             return
         }
         alg.onRoomKeyEvent(event, keysBackupService)
@@ -777,7 +777,7 @@ internal class DefaultCryptoService @Inject constructor(
 
     private fun onKeyWithHeldReceived(event: Event) {
         val withHeldContent = event.getClearContent().toModel<RoomKeyWithHeldContent>() ?: return Unit.also {
-            Timber.i("## CRYPTO | Malformed onKeyWithHeldReceived() : missing fields")
+            Timber.i("## CRYPTO | Malformed onKeyWithHeldReceived() : missing fields")
         }
         Timber.i("## CRYPTO | onKeyWithHeldReceived() received from:${event.senderId}, content <$withHeldContent>")
         val alg = roomDecryptorProvider.getOrCreateRoomDecryptor(withHeldContent.roomId, withHeldContent.algorithm)
@@ -790,16 +790,16 @@ internal class DefaultCryptoService @Inject constructor(
     }
 
     private fun onSecretSendReceived(event: Event) {
-        Timber.i("## CRYPTO | GOSSIP onSecretSend() from ${event.senderId} : onSecretSendReceived ${event.content?.get("sender_key")}")
+        Timber.i("## CRYPTO | GOSSIP onSecretSend() from ${event.senderId} : onSecretSendReceived ${event.content?.get("sender_key")}")
         if (!event.isEncrypted()) {
             // secret send messages must be encrypted
-            Timber.e("## CRYPTO | GOSSIP onSecretSend() :Received unencrypted secret send event")
+            Timber.e("## CRYPTO | GOSSIP onSecretSend() :Received unencrypted secret send event")
             return
         }
 
         // Was that sent by us?
         if (event.senderId != userId) {
-            Timber.e("## CRYPTO | GOSSIP onSecretSend() : Ignore secret from other user ${event.senderId}")
+            Timber.e("## CRYPTO | GOSSIP onSecretSend() : Ignore secret from other user ${event.senderId}")
             return
         }
 
@@ -809,13 +809,13 @@ internal class DefaultCryptoService @Inject constructor(
                 .getOutgoingSecretKeyRequests().firstOrNull { it.requestId == secretContent.requestId }
 
         if (existingRequest == null) {
-            Timber.i("## CRYPTO | GOSSIP onSecretSend() : Ignore secret that was not requested: ${secretContent.requestId}")
+            Timber.i("## CRYPTO | GOSSIP onSecretSend() : Ignore secret that was not requested: ${secretContent.requestId}")
             return
         }
 
         if (!handleSDKLevelGossip(existingRequest.secretName, secretContent.secretValue)) {
             // TODO Ask to application layer?
-            Timber.v("## CRYPTO | onSecretSend() : secret not handled by SDK")
+            Timber.v("## CRYPTO | onSecretSend() : secret not handled by SDK")
         }
     }
 
@@ -972,13 +972,13 @@ internal class DefaultCryptoService @Inject constructor(
         cryptoCoroutineScope.launch(coroutineDispatchers.main) {
             runCatching {
                 withContext(coroutineDispatchers.crypto) {
-                    Timber.v("## CRYPTO | importRoomKeys starts")
+                    Timber.v("## CRYPTO | importRoomKeys starts")
 
                     val t0 = System.currentTimeMillis()
                     val roomKeys = MXMegolmExportEncryption.decryptMegolmKeyFile(roomKeysAsArray, password)
                     val t1 = System.currentTimeMillis()
 
-                    Timber.v("## CRYPTO | importRoomKeys : decryptMegolmKeyFile done in ${t1 - t0} ms")
+                    Timber.v("## CRYPTO | importRoomKeys : decryptMegolmKeyFile done in ${t1 - t0} ms")
 
                     val importedSessions = MoshiProvider.providesMoshi()
                             .adapter<List<MegolmSessionData>>(Types.newParameterizedType(List::class.java, MegolmSessionData::class.java))
@@ -986,7 +986,7 @@ internal class DefaultCryptoService @Inject constructor(
 
                     val t2 = System.currentTimeMillis()
 
-                    Timber.v("## CRYPTO | importRoomKeys : JSON parsing ${t2 - t1} ms")
+                    Timber.v("## CRYPTO | importRoomKeys : JSON parsing ${t2 - t1} ms")
 
                     if (importedSessions == null) {
                         throw Exception("Error")
@@ -1125,7 +1125,7 @@ internal class DefaultCryptoService @Inject constructor(
      */
     override fun reRequestRoomKeyForEvent(event: Event) {
         val wireContent = event.content.toModel<EncryptedEventContent>() ?: return Unit.also {
-            Timber.e("## CRYPTO | reRequestRoomKeyForEvent Failed to re-request key, null content")
+            Timber.e("## CRYPTO | reRequestRoomKeyForEvent Failed to re-request key, null content")
         }
 
         val requestBody = RoomKeyRequestBody(
@@ -1140,18 +1140,18 @@ internal class DefaultCryptoService @Inject constructor(
 
     override fun requestRoomKeyForEvent(event: Event) {
         val wireContent = event.content.toModel<EncryptedEventContent>() ?: return Unit.also {
-            Timber.e("## CRYPTO | requestRoomKeyForEvent Failed to request key, null content eventId: ${event.eventId}")
+            Timber.e("## CRYPTO | requestRoomKeyForEvent Failed to request key, null content eventId: ${event.eventId}")
         }
 
         cryptoCoroutineScope.launch(coroutineDispatchers.crypto) {
 //            if (!isStarted()) {
-//                Timber.v("## CRYPTO | requestRoomKeyForEvent() : wait after e2e init")
+//                Timber.v("## CRYPTO | requestRoomKeyForEvent() : wait after e2e init")
 //                internalStart(false)
 //            }
             roomDecryptorProvider
                     .getOrCreateRoomDecryptor(event.roomId, wireContent.algorithm)
                     ?.requestKeysForEvent(event, false) ?: run {
-                Timber.v("## CRYPTO | requestRoomKeyForEvent() : No room decryptor for roomId:${event.roomId} algorithm:${wireContent.algorithm}")
+                Timber.v("## CRYPTO | requestRoomKeyForEvent() : No room decryptor for roomId:${event.roomId} algorithm:${wireContent.algorithm}")
             }
         }
     }
@@ -1180,11 +1180,11 @@ internal class DefaultCryptoService @Inject constructor(
 //        val lastForcedDate = lastNewSessionForcedDates.getObject(senderId, deviceKey) ?: 0
 //        val now = System.currentTimeMillis()
 //        if (now - lastForcedDate < CRYPTO_MIN_FORCE_SESSION_PERIOD_MILLIS) {
-//            Timber.d("## CRYPTO | markOlmSessionForUnwedging: New session already forced with device at $lastForcedDate. Not forcing another")
+//            Timber.d("## CRYPTO | markOlmSessionForUnwedging: New session already forced with device at $lastForcedDate. Not forcing another")
 //            return
 //        }
 //
-//        Timber.d("## CRYPTO | markOlmSessionForUnwedging from $senderId:${deviceInfo.deviceId}")
+//        Timber.d("## CRYPTO | markOlmSessionForUnwedging from $senderId:${deviceInfo.deviceId}")
 //        lastNewSessionForcedDates.setObject(senderId, deviceKey, now)
 //
 //        cryptoCoroutineScope.launch(coroutineDispatchers.crypto) {
@@ -1201,7 +1201,7 @@ internal class DefaultCryptoService @Inject constructor(
 //            val encodedPayload = messageEncrypter.encryptMessage(payloadJson, listOf(deviceInfo))
 //            val sendToDeviceMap = MXUsersDevicesMap<Any>()
 //            sendToDeviceMap.setObject(senderId, deviceInfo.deviceId, encodedPayload)
-//            Timber.v("## CRYPTO | markOlmSessionForUnwedging() : sending to $senderId:${deviceInfo.deviceId}")
+//            Timber.v("## CRYPTO | markOlmSessionForUnwedging() : sending to $senderId:${deviceInfo.deviceId}")
 //            val sendToDeviceParams = SendToDeviceTask.Params(EventType.ENCRYPTED, sendToDeviceMap)
 //            sendToDeviceTask.execute(sendToDeviceParams)
 //        }
@@ -1290,12 +1290,12 @@ internal class DefaultCryptoService @Inject constructor(
 
     override fun prepareToEncrypt(roomId: String, callback: MatrixCallback<Unit>) {
         cryptoCoroutineScope.launch(coroutineDispatchers.crypto) {
-            Timber.d("## CRYPTO | prepareToEncrypt() : Check room members up to date")
+            Timber.d("## CRYPTO | prepareToEncrypt() : Check room members up to date")
             // Ensure to load all room members
             try {
                 loadRoomMembersTask.execute(LoadRoomMembersTask.Params(roomId))
             } catch (failure: Throwable) {
-                Timber.e("## CRYPTO | prepareToEncrypt() : Failed to load room members")
+                Timber.e("## CRYPTO | prepareToEncrypt() : Failed to load room members")
                 callback.onFailure(failure)
                 return@launch
             }
@@ -1308,7 +1308,7 @@ internal class DefaultCryptoService @Inject constructor(
 
             if (alg == null) {
                 val reason = String.format(MXCryptoError.UNABLE_TO_ENCRYPT_REASON, MXCryptoError.NO_MORE_ALGORITHM_REASON)
-                Timber.e("## CRYPTO | prepareToEncrypt() : $reason")
+                Timber.e("## CRYPTO | prepareToEncrypt() : $reason")
                 callback.onFailure(IllegalArgumentException("Missing algorithm"))
                 return@launch
             }
@@ -1318,7 +1318,7 @@ internal class DefaultCryptoService @Inject constructor(
             }.fold(
                     { callback.onSuccess(Unit) },
                     {
-                        Timber.e("## CRYPTO | prepareToEncrypt() failed.")
+                        Timber.e("## CRYPTO | prepareToEncrypt() failed.")
                         callback.onFailure(it)
                     }
             )

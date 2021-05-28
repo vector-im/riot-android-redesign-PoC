@@ -4,6 +4,7 @@
     <!-- Error colors -->
     <color name="vector_success_color">#70BF56</color>
     <color name="vector_warning_color">#ff4b55</color>
+    <color name="vector_warning_color_2">#ff812d</color>
     <color name="vector_error_color">#ff4b55</color>
     <color name="vector_info_color">#2f9edb</color>
 

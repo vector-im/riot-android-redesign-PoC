@@ -22,10 +22,10 @@ import androidx.lifecycle.OnLifecycleEvent
 import arrow.core.Option
 import im.vector.app.core.di.ActiveSessionHolder
 import im.vector.app.core.utils.BehaviorDataSource
+import im.vector.app.features.session.coroutineScope
 import im.vector.app.features.ui.UiStateRepository
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.matrix.android.sdk.api.extensions.tryOrNull
 import org.matrix.android.sdk.api.session.Session
@@ -63,30 +63,30 @@ class AppStateHandler @Inject constructor(
     fun getCurrentRoomGroupingMethod(): RoomGroupingMethod? = selectedSpaceDataSource.currentValue?.orNull()
 
     fun setCurrentSpace(spaceId: String?, session: Session? = null) {
-        val uSession = session ?: activeSessionHolder.getSafeActiveSession()
+        val uSession = session ?: activeSessionHolder.getSafeActiveSession() ?: return
         if (selectedSpaceDataSource.currentValue?.orNull() is RoomGroupingMethod.BySpace
                 && spaceId == selectedSpaceDataSource.currentValue?.orNull()?.space()?.roomId) return
-        val spaceSum = spaceId?.let { uSession?.getRoomSummary(spaceId) }
+        val spaceSum = spaceId?.let { uSession.getRoomSummary(spaceId) }
         selectedSpaceDataSource.post(Option.just(RoomGroupingMethod.BySpace(spaceSum)))
         if (spaceId != null) {
-            GlobalScope.launch(Dispatchers.IO) {
+            uSession.coroutineScope.launch(Dispatchers.IO) {
                 tryOrNull {
-                    uSession?.getRoom(spaceId)?.loadRoomMembersIfNeeded()
+                    uSession.getRoom(spaceId)?.loadRoomMembersIfNeeded()
                 }
             }
         }
     }
 
     fun setCurrentGroup(groupId: String?, session: Session? = null) {
-        val uSession = session ?: activeSessionHolder.getSafeActiveSession()
+        val uSession = session ?: activeSessionHolder.getSafeActiveSession() ?: return
         if (selectedSpaceDataSource.currentValue?.orNull() is RoomGroupingMethod.ByLegacyGroup
                 && groupId == selectedSpaceDataSource.currentValue?.orNull()?.group()?.groupId) return
-        val activeGroup = groupId?.let { uSession?.getGroupSummary(groupId) }
+        val activeGroup = groupId?.let { uSession.getGroupSummary(groupId) }
         selectedSpaceDataSource.post(Option.just(RoomGroupingMethod.ByLegacyGroup(activeGroup)))
         if (groupId != null) {
-            GlobalScope.launch {
+            uSession.coroutineScope.launch {
                 tryOrNull {
-                    uSession?.getGroup(groupId)?.fetchGroupData()
+                    uSession.getGroup(groupId)?.fetchGroupData()
                 }
             }
         }

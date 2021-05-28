@@ -15,7 +15,7 @@
  */
 package org.matrix.android.sdk.internal.session.widgets
 
-import org.matrix.android.sdk.internal.session.openid.RequestOpenIdTokenResponse
+import org.matrix.android.sdk.api.session.openid.OpenIdToken
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -29,7 +29,7 @@ internal interface WidgetsAPI {
      * @param body the body content (Ref: https://github.com/matrix-org/matrix-doc/pull/1961)
      */
     @POST("register")
-    suspend fun register(@Body body: RequestOpenIdTokenResponse,
+    suspend fun register(@Body body: OpenIdToken,
                          @Query("v") version: String?): RegisterWidgetResponse
 
     @GET("account")

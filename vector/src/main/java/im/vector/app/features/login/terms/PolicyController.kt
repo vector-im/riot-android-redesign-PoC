@@ -28,16 +28,17 @@ class PolicyController @Inject constructor() : TypedEpoxyController<List<Localiz
     var homeServer: String? = null
 
     override fun buildModels(data: List<LocalizedFlowDataLoginTermsChecked>) {
+        val host = this
         data.forEach { entry ->
             policyItem {
                 id(entry.localizedFlowDataLoginTerms.policyName)
                 checked(entry.checked)
                 title(entry.localizedFlowDataLoginTerms.localizedName)
-                subtitle(homeServer)
+                subtitle(host.homeServer)
 
-                clickListener(View.OnClickListener { listener?.openPolicy(entry.localizedFlowDataLoginTerms) })
+                clickListener(View.OnClickListener { host.listener?.openPolicy(entry.localizedFlowDataLoginTerms) })
                 checkChangeListener { _, isChecked ->
-                    listener?.setChecked(entry.localizedFlowDataLoginTerms, isChecked)
+                    host.listener?.setChecked(entry.localizedFlowDataLoginTerms, isChecked)
                 }
             }
         }

@@ -42,18 +42,19 @@ class CrossSigningSettingsController @Inject constructor(
 
     override fun buildModels(data: CrossSigningSettingsViewState?) {
         if (data == null) return
+        val host = this
         when {
             data.xSigningKeyCanSign        -> {
                 genericItem {
                     id("can")
                     titleIconResourceId(R.drawable.ic_shield_trusted)
-                    title(stringProvider.getString(R.string.encryption_information_dg_xsigning_complete))
+                    title(host.stringProvider.getString(R.string.encryption_information_dg_xsigning_complete))
                 }
                 genericButtonItem {
                     id("Reset")
-                    text(stringProvider.getString(R.string.reset_cross_signing))
+                    text(host.stringProvider.getString(R.string.reset_cross_signing))
                     buttonClickAction(DebouncedClickListener({
-                        interactionListener?.didTapInitializeCrossSigning()
+                        host.interactionListener?.didTapInitializeCrossSigning()
                     }))
                 }
             }
@@ -61,13 +62,13 @@ class CrossSigningSettingsController @Inject constructor(
                 genericItem {
                     id("trusted")
                     titleIconResourceId(R.drawable.ic_shield_custom)
-                    title(stringProvider.getString(R.string.encryption_information_dg_xsigning_trusted))
+                    title(host.stringProvider.getString(R.string.encryption_information_dg_xsigning_trusted))
                 }
                 genericButtonItem {
                     id("Reset")
-                    text(stringProvider.getString(R.string.reset_cross_signing))
+                    text(host.stringProvider.getString(R.string.reset_cross_signing))
                     buttonClickAction(DebouncedClickListener({
-                        interactionListener?.didTapInitializeCrossSigning()
+                        host.interactionListener?.didTapInitializeCrossSigning()
                     }))
                 }
             }
@@ -75,27 +76,27 @@ class CrossSigningSettingsController @Inject constructor(
                 genericItem {
                     id("enable")
                     titleIconResourceId(R.drawable.ic_shield_black)
-                    title(stringProvider.getString(R.string.encryption_information_dg_xsigning_not_trusted))
+                    title(host.stringProvider.getString(R.string.encryption_information_dg_xsigning_not_trusted))
                 }
                 genericButtonItem {
                     id("Reset")
-                    text(stringProvider.getString(R.string.reset_cross_signing))
+                    text(host.stringProvider.getString(R.string.reset_cross_signing))
                     buttonClickAction(DebouncedClickListener({
-                        interactionListener?.didTapInitializeCrossSigning()
+                        host.interactionListener?.didTapInitializeCrossSigning()
                     }))
                 }
             }
             else                           -> {
                 genericItem {
                     id("not")
-                    title(stringProvider.getString(R.string.encryption_information_dg_xsigning_disabled))
+                    title(host.stringProvider.getString(R.string.encryption_information_dg_xsigning_disabled))
                 }
 
                 genericPositiveButtonItem {
                     id("Initialize")
-                    text(stringProvider.getString(R.string.initialize_cross_signing))
+                    text(host.stringProvider.getString(R.string.initialize_cross_signing))
                     buttonClickAction(DebouncedClickListener({
-                        interactionListener?.didTapInitializeCrossSigning()
+                        host.interactionListener?.didTapInitializeCrossSigning()
                     }))
                 }
             }
@@ -112,8 +113,8 @@ class CrossSigningSettingsController @Inject constructor(
                             +"Master Key:\n"
                             span {
                                 text = it.unpaddedBase64PublicKey ?: ""
-                                textColor = colorProvider.getColorFromAttribute(R.attr.riotx_text_secondary)
-                                textSize = dimensionConverter.spToPx(12)
+                                textColor = host.colorProvider.getColorFromAttribute(R.attr.riotx_text_secondary)
+                                textSize = host.dimensionConverter.spToPx(12)
                             }
                         }
                 )
@@ -128,8 +129,8 @@ class CrossSigningSettingsController @Inject constructor(
                             +"User Key:\n"
                             span {
                                 text = it.unpaddedBase64PublicKey ?: ""
-                                textColor = colorProvider.getColorFromAttribute(R.attr.riotx_text_secondary)
-                                textSize = dimensionConverter.spToPx(12)
+                                textColor = host.colorProvider.getColorFromAttribute(R.attr.riotx_text_secondary)
+                                textSize = host.dimensionConverter.spToPx(12)
                             }
                         }
                 )
@@ -144,8 +145,8 @@ class CrossSigningSettingsController @Inject constructor(
                             +"Self Signed Key:\n"
                             span {
                                 text = it.unpaddedBase64PublicKey ?: ""
-                                textColor = colorProvider.getColorFromAttribute(R.attr.riotx_text_secondary)
-                                textSize = dimensionConverter.spToPx(12)
+                                textColor = host.colorProvider.getColorFromAttribute(R.attr.riotx_text_secondary)
+                                textSize = host.dimensionConverter.spToPx(12)
                             }
                         }
                 )

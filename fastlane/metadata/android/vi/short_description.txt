@@ -1,1 +1,1 @@
-Ứng dụng chat và gọi phân tán bảo mật. Bảo vệ dữ liệu của bạn khỏi bên thứ ba.
+Nhắn tin nhóm - tin nhắn được mã hoá, cuộc trò chuyện nhóm và cuộc gọi video

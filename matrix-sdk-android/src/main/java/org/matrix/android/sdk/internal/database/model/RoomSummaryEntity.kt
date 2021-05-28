@@ -233,6 +233,12 @@ internal open class RoomSummaryEntity(
         }
 
     @Index
+    var isHiddenFromUser: Boolean = false
+        set(value) {
+            if (value != field) field = value
+        }
+
+    @Index
     private var versioningStateStr: String = VersioningState.NONE.name
     var versioningState: VersioningState
         get() {

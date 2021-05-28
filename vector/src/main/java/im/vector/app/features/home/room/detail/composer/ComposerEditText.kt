@@ -41,8 +41,8 @@ class ComposerEditText @JvmOverloads constructor(context: Context, attrs: Attrib
 
     var callback: Callback? = null
 
-    override fun onCreateInputConnection(editorInfo: EditorInfo): InputConnection {
-        val ic: InputConnection = super.onCreateInputConnection(editorInfo)
+    override fun onCreateInputConnection(editorInfo: EditorInfo): InputConnection? {
+        val ic = super.onCreateInputConnection(editorInfo) ?: return null
         EditorInfoCompat.setContentMimeTypes(editorInfo, arrayOf("*/*"))
 
         val callback =

@@ -23,6 +23,7 @@
 
     <string-array name="room_directory_servers" translatable="false">
         <item>matrix.org</item>
+        <item>gitter.im</item>
     </string-array>
 
 </resources>

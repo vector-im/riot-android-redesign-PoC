@@ -1956,8 +1956,8 @@
     <string name="message_action_item_redact">Supprimer…</string>
     <string name="share_confirm_room">Voulez-vous envoyer cette pièce jointe à %1$s \?</string>
     <plurals name="send_images_with_original_size">
-        <item quantity="one">Envoyer l’image en taille originale</item>
-        <item quantity="other">Envoyer les images en taille originale</item>
+        <item quantity="one">Envoyer l’image en taille d’origine</item>
+        <item quantity="other">Envoyer les images en taille d’origine</item>
     </plurals>
     <string name="delete_event_dialog_title">Confirmer la suppression</string>
     <string name="delete_event_dialog_content">Voulez-vous vraiment supprimer cet évènement \? Notez que si vous supprimez un changement de nom ou de sujet du salon, cela pourrait annuler le changement.</string>
@@ -2742,8 +2742,8 @@
     <string name="create_spaces_room_private_header_desc">Créons un salon pour chacun d’entre eux. Vous pourrez en ajouter plus tard, y compris certains déjà existant.</string>
     <string name="create_spaces_room_private_header">Sur quels projets travaillez-vous \?</string>
     <string name="create_spaces_room_public_header_desc">Nous allons créer les salons pour ces sujets. Vous pourrez en ajouter d’autres plus tard.</string>
-    <string name="create_spaces_room_public_header">De quoi allez vous parler dans %s \?</string>
-    <string name="create_space_error_empty_field_space_name">Donnez lui un nom pour poursuivre.</string>
+    <string name="create_spaces_room_public_header">De quoi allez-vous parler dans %s \?</string>
+    <string name="create_space_error_empty_field_space_name">Donnez-lui un nom pour poursuivre.</string>
     <string name="create_spaces_details_private_header">Ajoutez quelques informations pour renforcer son identité. Vous pourrez changer ceci plus tard.</string>
     <string name="create_spaces_details_public_header">Ajoutez quelques informations pour l’aider à se démarquer. Vous pourrez changer ceci plus tard.</string>
     <string name="activity_create_space_title">Créer un espace</string>
@@ -2758,4 +2758,24 @@
     <string name="create_spaces_make_sure_access">Assurez-vous que les accès à %s sont accordés aux bonnes personnes. Vous pourrez changer ceci plus tard.</string>
     <string name="create_spaces_who_are_you_working_with">Avec qui travaillez-vous \?</string>
     <string name="create_spaces_join_info_help">Pour rejoindre un espace existant, il vous faut une invitation.</string>
+    <string name="error_file_too_big_simple">Le fichier est trop volumineux pour être envoyé.</string>
+    <string name="send_file_step_compressing_video">Compression de la vidéo %d %%</string>
+    <string name="send_file_step_compressing_image">Compression de l’image…</string>
+    <string name="use_as_default_and_do_not_ask_again">Utiliser par défaut et ne plus demander</string>
+    <string name="option_always_ask">Toujours demander</string>
+    <string name="labs_use_restricted_join_rule_desc">Attention, nécessite la prise en charge par le serveur ainsi qu’une version de salon expérimentale</string>
+    <string name="space_manage_rooms_and_spaces">Gérer les salons et les espaces</string>
+    <string name="space_mark_as_not_suggested">Marquer comme non recommandé</string>
+    <string name="space_mark_as_suggested">Marquer comme recommandé</string>
+    <string name="space_suggested">Recommandé</string>
+    <string name="make_this_space_public">Rendre cet espace public</string>
+    <string name="space_settings_manage_rooms">Gérer les salons</string>
+    <string name="looking_for_someone_not_in_space">Vous cherchez quelqu’un qui n’est pas dans %s \?</string>
+    <string name="user_invites_you">%s vous invite</string>
+    <string name="a11y_public_room">Ce salon est public</string>
+    <string name="send_images_and_video_with_original_size">Envoyer le média en taille d’origine</string>
+    <plurals name="send_videos_with_original_size">
+        <item quantity="one">Envoyer la vidéo en taille originale</item>
+        <item quantity="other">Envoyer les vidéos en taille originale</item>
+    </plurals>
 </resources>

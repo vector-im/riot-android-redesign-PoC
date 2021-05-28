@@ -73,12 +73,13 @@ class RoomAliasBottomSheetController @Inject constructor() : TypedEpoxyControlle
     }
 
     private fun RoomAliasBottomSheetSharedAction.toBottomSheetItem(index: Int) {
+        val host = this@RoomAliasBottomSheetController
         return bottomSheetActionItem {
             id("action_$index")
             iconRes(iconResId)
             textRes(titleRes)
             destructive(this@toBottomSheetItem.destructive)
-            listener(View.OnClickListener { listener?.didSelectMenuAction(this@toBottomSheetItem) })
+            listener(View.OnClickListener { host.listener?.didSelectMenuAction(this@toBottomSheetItem) })
         }
     }
 

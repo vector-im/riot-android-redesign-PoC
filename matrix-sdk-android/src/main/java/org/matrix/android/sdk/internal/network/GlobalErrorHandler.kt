@@ -16,13 +16,13 @@
 
 package org.matrix.android.sdk.internal.network
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.matrix.android.sdk.api.failure.GlobalError
 import org.matrix.android.sdk.internal.auth.SessionParamsStore
 import org.matrix.android.sdk.internal.di.SessionId
 import org.matrix.android.sdk.internal.session.SessionScope
 import org.matrix.android.sdk.internal.task.TaskExecutor
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -44,7 +44,6 @@ internal class GlobalErrorHandler @Inject constructor(
                 sessionParamsStore.setTokenInvalid(sessionId)
             }
         }
-
         listener?.onGlobalError(globalError)
     }
 

@@ -23,8 +23,11 @@ import org.matrix.android.sdk.api.session.content.ContentAttachmentData
 import org.matrix.android.sdk.api.util.MimeTypes
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
+import javax.inject.Inject
 
-internal object ThumbnailExtractor {
+internal class ThumbnailExtractor @Inject constructor(
+        private val context: Context
+) {
 
     class ThumbnailData(
             val width: Int,
@@ -34,22 +37,22 @@ internal object ThumbnailExtractor {
             val mimeType: String
     )
 
-    fun extractThumbnail(context: Context, attachment: ContentAttachmentData): ThumbnailData? {
+    fun extractThumbnail(attachment: ContentAttachmentData): ThumbnailData? {
         return if (attachment.type == ContentAttachmentData.Type.VIDEO) {
-            extractVideoThumbnail(context, attachment)
+            extractVideoThumbnail(attachment)
         } else {
             null
         }
     }
 
-    private fun extractVideoThumbnail(context: Context, attachment: ContentAttachmentData): ThumbnailData? {
+    private fun extractVideoThumbnail(attachment: ContentAttachmentData): ThumbnailData? {
         var thumbnailData: ThumbnailData? = null
         val mediaMetadataRetriever = MediaMetadataRetriever()
         try {
             mediaMetadataRetriever.setDataSource(context, attachment.queryUri)
             mediaMetadataRetriever.frameAtTime?.let { thumbnail ->
                 val outputStream = ByteArrayOutputStream()
-                thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                thumbnail.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
                 val thumbnailWidth = thumbnail.width
                 val thumbnailHeight = thumbnail.height
                 val thumbnailSize = outputStream.size()

@@ -25,8 +25,9 @@ import im.vector.app.R
 import im.vector.app.core.di.ActiveSessionHolder
 import im.vector.app.core.error.ErrorFormatter
 import im.vector.app.core.files.LocalFilesHelper
+import im.vector.app.features.session.coroutineScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
@@ -38,6 +39,9 @@ import javax.inject.Inject
 class VideoContentRenderer @Inject constructor(private val localFilesHelper: LocalFilesHelper,
                                                private val activeSessionHolder: ActiveSessionHolder,
                                                private val errorFormatter: ErrorFormatter) {
+
+    private val sessionScope: CoroutineScope
+        get() = activeSessionHolder.getActiveSession().coroutineScope
 
     @Parcelize
     data class Data(
@@ -76,7 +80,7 @@ class VideoContentRenderer @Inject constructor(private val localFilesHelper: Loc
                 thumbnailView.isVisible = true
                 loadingView.isVisible = true
 
-                GlobalScope.launch {
+                sessionScope.launch {
                     val result = runCatching {
                         activeSessionHolder.getActiveSession().fileService()
                                 .downloadFile(
@@ -119,7 +123,7 @@ class VideoContentRenderer @Inject constructor(private val localFilesHelper: Loc
                 thumbnailView.isVisible = true
                 loadingView.isVisible = true
 
-                GlobalScope.launch {
+                sessionScope.launch {
                     val result = runCatching {
                         activeSessionHolder.getActiveSession().fileService()
                                 .downloadFile(

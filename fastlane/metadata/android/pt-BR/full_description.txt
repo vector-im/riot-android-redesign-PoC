@@ -1,30 +1,39 @@
-Element é um novo tipo de aplicativo de mensagens e colaboração que:
+Element é tanto um mensageiro seguro como um app de colaboração de time de produtividade que é ideal para chats de grupo enquanto se trabalha remotamente. Este app de chat usa encriptação ponta-a-ponta para prover conferência de vídeo, compartilhamento de arquivo e chamadas de voz poderasos.
 
-1. Coloca você no controle de sua privacidade;
-2. Permite que você se comunique com qualquer pessoa na rede Matrix e, através de integrações, outros aplicativos como o Slack;
-3. Protege você de anúncios, mineração de dados e de ecossistemas fechados;
-4. Faz uso da criptografia de ponta a ponta, com autoverificação para confirmar outras pessoas.
+<b>As funções de Element incluem:</b>
+- Ferramentas de comunicação online avançadas
+- Mensagens completamente encriptadas para permitir comunicação de corporação mais segura, até para pessoas trabalhando remotamente
+- Chat descentralizado baseado na framework open source Matrix
+- Compartilhamento de arquivo seguramente com dados encriptados enquanto se gerencia projetos
+- Chats de vídeo com Voz sobre IP e compartilhamento de tela
+- Integração fácil com suas ferramentas de colaboração online favoritas, ferramentas de gerenciamento de projetos, serviços de VoIP e outros apps de mensageria de time
 
-Element é completamente diferente de outros aplicativos de mensagem e colaboração porque é descentralizado e código aberto.
+Element é completamente diferente de outros apps de mensageria e colaboração. Ele opera em Matrix, uma rede aberta para mensageria segura e comunicação descentralizada. Ele permite auto-hospedagem para dar a usuárias(os) máxima propriedade e controle de seus dados e suas mensagens.
 
-É possível hospedar um servidor ou escolher um servidor hospedeiro, para que você tenha privacidade, controle e que você seja o dono de seus dados e conversas. Com o Element, você possui acesso a uma rede aberta; então você não está preso falando somente com outros usuários no Element. O Element também é muito seguro.
+<b>Privacidade e mensageria encriptada</b>
+Element protege você de ads não-desejados, minagem de dados e jardins murados. Ele também assegura todos os seus dados, vídeo um-a-um e comunicação de voz através de encriptação ponta-a-ponta e verificação de dispositivo assinada cruzado.
 
-Element é capaz de fazer tudo isso porque ele opera no Matrix, o padrão para comunicação aberta e descentralizada.
+Element dá a você controle sobre sua privacidade enquanto permite a você se comunicar seguramente com qualquer pessoa na rede Matrix, ou outras ferramentas de colaboração ao se integrar com apps tais como Slack.
 
-Element coloca você no controle ao permitir quem hospeda suas conversas. Neste aplicativo, você pode escolher hospedar de maneiras diferentes:
+<b>Element pode ser auto-hospedado</b>
+Para permitir mais controle de seus dados e conversas sensíveis, Element pode ser auto-hospedado ou você pode escolher qualquer host baseado em Matrix - o standard para comunicação open source e descentralizada. Element dá a você privacidade, conformidade de segurança e flexibilidade de integração.
 
-1. Crie uma conta gratuita no servidor público matrix.org;
-2. Hospede sua conta no seu servidor;
-3. Entre em uma conta em um servidor customizado ao simplesmente se inscrever na plataforma de hospedagem Serviços Matrix Element.
+<b>Tenha posse de seus dados</b>
+Você decidade onde mannter seus dados e mensagens. Sem o risco de minagem de dados ou acesso de terceiros.
 
-<b>Por que escolher o Element?</b>
+Element põe você em controle de diferentes maneiras:
+1. Tenha uma conta grátis no servidor público matrix.org hospedado pelos desenvolvedores Matrix, ou escolha de milhares de servidores públicos hospedados por pessoas se voluntariando
+2. Auto-hospede sua conta ao rodar um servidor em sua própria infraestrutura de TI
+3. Registre-se para uma conta num servidor personalizado ao simplesmente assinar a plataforma de hospedagem Element Matrix Services
 
-<b>SEJA O DONO DE SEUS DADOS</b>: você decide onde manter seus dados e mensagens. Você é o dono deles e também os controla, não alguma mega corporação que minera os seus dados ou compartilha eles com terceiros.
+<b>Mensageria e colaboração abertos</b>
+Você pode fazer chat com qualquer pessoa na rede Matrix, caso ela esteja usando Element, um outro app de Matrix ou mesmo se ela estiver usando um app de mensagem diferente.
 
-<b>COLABORAÇÃO E MENSAGENS ABERTAS</b>: você pode falar com qualquer outra pessoa na rede Matrix, não importa se ela está usando o Element ou algum outro aplicativo Matrix, ou até mesmo se ela está utilizando um sistema de mensagens diferente como o Slack, IRC ou XMPP.
+<b>Super seguro</b>
+Encriptação ponta-a-ponta real (somente aquelas/es na conversa podem decriptar mensagens), e verificação de dispositivo assinada cuzado.
 
-<b>SUPER-SEGURO</b>: criptografia de ponta a ponta verdadeira (apenas aqueles na conversa podem descriptografar mensagens), e assinatura cruzada para verificar os dispositivos de participantes de conversas.
+<b>Comunicação e integração completas</b>
+Messageria, chamas de voz e vídeo, compartilhamento de arquivo, compartilhamento de tela e um monte de integrações, bots e widgets. Construa salas, comunidades, fique em contato e tenha as coisas feitas.
 
-<b>COMUNICAÇÃO COMPLETA</b>: mensagens, chamadas de voz, chamadas de vídeo, compartilhamento de arquivos, compartilhamento de tela e um monte de integrações, robôs e widgets. Construa salas, comunidades, mantenha contato e faça seus projetos.
-
-<b>NÃO IMPORTA ONDE VOCÊ ESTEJA</b>: mantenha contato não importa onde você esteja com o histórico sincronizado de mensagens em todos os seus dispositivos e no navegador em https://app.element.io.
+<b>Continue de onde você parou</b>
+Fique em contato onde quer que você esteja com histórico de mensagem completamente sincronizado por todos os seus dispositivos e na web em https://app.element.io

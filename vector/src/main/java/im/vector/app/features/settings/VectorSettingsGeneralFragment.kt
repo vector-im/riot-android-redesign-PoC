@@ -52,7 +52,6 @@ import im.vector.app.features.MainActivityArgs
 import im.vector.app.features.workers.signout.SignOutUiWorker
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.matrix.android.sdk.api.failure.isInvalidPassword
@@ -224,7 +223,7 @@ class VectorSettingsGeneralFragment @Inject constructor(
             it.summary = TextUtils.formatFileSize(requireContext(), size.toLong())
 
             it.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                GlobalScope.launch(Dispatchers.Main) {
+                lifecycleScope.launch(Dispatchers.Main) {
                     // On UI Thread
                     displayLoadingView()
 

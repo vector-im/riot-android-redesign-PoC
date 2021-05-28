@@ -32,7 +32,7 @@ import org.matrix.android.sdk.api.session.room.model.call.CallAnswerContent
 import org.matrix.android.sdk.api.session.room.model.call.CallHangupContent
 import org.matrix.android.sdk.api.session.room.model.call.CallInviteContent
 import org.matrix.android.sdk.api.session.room.model.call.CallRejectContent
-import org.matrix.android.sdk.api.session.room.model.call.CallSignallingContent
+import org.matrix.android.sdk.api.session.room.model.call.CallSignalingContent
 import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
 import org.matrix.android.sdk.api.util.toMatrixItem
 import javax.inject.Inject
@@ -51,7 +51,7 @@ class CallItemFactory @Inject constructor(
         if (event.root.eventId == null) return null
         val roomId = event.roomId
         val informationData = messageInformationDataFactory.create(params)
-        val callSignalingContent = event.getCallSignallingContent() ?: return null
+        val callSignalingContent = event.getCallSignalingContent() ?: return null
         val callId = callSignalingContent.callId ?: return null
         val call = callManager.getCallById(callId)
         val callKind = when {
@@ -112,7 +112,7 @@ class CallItemFactory @Inject constructor(
         }
     }
 
-    private fun TimelineEvent.getCallSignallingContent(): CallSignallingContent? {
+    private fun TimelineEvent.getCallSignalingContent(): CallSignalingContent? {
         return when (root.getClearType()) {
             EventType.CALL_INVITE -> root.getClearContent().toModel<CallInviteContent>()
             EventType.CALL_HANGUP -> root.getClearContent().toModel<CallHangupContent>()

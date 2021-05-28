@@ -61,19 +61,20 @@ class MessageActionsEpoxyController @Inject constructor(
     var listener: MessageActionsEpoxyControllerListener? = null
 
     override fun buildModels(state: MessageActionState) {
+        val host = this
         // Message preview
         val date = state.timelineEvent()?.root?.originServerTs
         val formattedDate = dateFormatter.format(date, DateFormatKind.MESSAGE_DETAIL)
         bottomSheetMessagePreviewItem {
             id("preview")
-            avatarRenderer(avatarRenderer)
+            avatarRenderer(host.avatarRenderer)
             matrixItem(state.informationData.matrixItem)
-            movementMethod(createLinkMovementMethod(listener))
-            imageContentRenderer(imageContentRenderer)
-            data(state.timelineEvent()?.buildImageContentRendererData(dimensionConverter.dpToPx(66)))
-            userClicked { listener?.didSelectMenuAction(EventSharedAction.OpenUserProfile(state.informationData.senderId)) }
-            body(state.messageBody.linkify(listener))
-            bodyDetails(eventDetailsFormatter.format(state.timelineEvent()?.root))
+            movementMethod(createLinkMovementMethod(host.listener))
+            imageContentRenderer(host.imageContentRenderer)
+            data(state.timelineEvent()?.buildImageContentRendererData(host.dimensionConverter.dpToPx(66)))
+            userClicked { host.listener?.didSelectMenuAction(EventSharedAction.OpenUserProfile(state.informationData.senderId)) }
+            body(state.messageBody.linkify(host.listener))
+            bodyDetails(host.eventDetailsFormatter.format(state.timelineEvent()?.root))
             time(formattedDate)
         }
 
@@ -94,14 +95,14 @@ class MessageActionsEpoxyController @Inject constructor(
             bottomSheetSendStateItem {
                 id("send_state")
                 showProgress(true)
-                text(stringProvider.getString(R.string.event_status_sending_message))
+                text(host.stringProvider.getString(R.string.event_status_sending_message))
             }
         } else if (sendState == SendState.SENT) {
             bottomSheetSendStateItem {
                 id("send_state")
                 showProgress(false)
                 drawableStart(R.drawable.ic_message_sent)
-                text(stringProvider.getString(R.string.event_status_sent_message))
+                text(host.stringProvider.getString(R.string.event_status_sent_message))
             }
         }
 
@@ -110,7 +111,7 @@ class MessageActionsEpoxyController @Inject constructor(
                 bottomSheetSendStateItem {
                     id("e2e_clear")
                     showProgress(false)
-                    text(stringProvider.getString(R.string.unencrypted))
+                    text(host.stringProvider.getString(R.string.unencrypted))
                     drawableStart(R.drawable.ic_shield_warning_small)
                 }
             }
@@ -119,7 +120,7 @@ class MessageActionsEpoxyController @Inject constructor(
                 bottomSheetSendStateItem {
                     id("e2e_unverified")
                     showProgress(false)
-                    text(stringProvider.getString(R.string.encrypted_unverified))
+                    text(host.stringProvider.getString(R.string.encrypted_unverified))
                     drawableStart(R.drawable.ic_shield_warning_small)
                 }
             }
@@ -137,12 +138,12 @@ class MessageActionsEpoxyController @Inject constructor(
 
             bottomSheetQuickReactionsItem {
                 id("quick_reaction")
-                fontProvider(fontProvider)
+                fontProvider(host.fontProvider)
                 texts(state.quickStates()?.map { it.reaction }.orEmpty())
                 selecteds(state.quickStates.invoke().map { it.isSelected })
                 listener(object : BottomSheetQuickReactionsItem.Listener {
                     override fun didSelect(emoji: String, selected: Boolean) {
-                        listener?.didSelectMenuAction(EventSharedAction.QuickReact(state.eventId, emoji, selected))
+                        host.listener?.didSelectMenuAction(EventSharedAction.QuickReact(state.eventId, emoji, selected))
                     }
                 })
             }
@@ -168,7 +169,7 @@ class MessageActionsEpoxyController @Inject constructor(
                     textRes(action.titleRes)
                     showExpand(action is EventSharedAction.ReportContent)
                     expanded(state.expendedReportContentMenu)
-                    listener(View.OnClickListener { listener?.didSelectMenuAction(action) })
+                    listener(View.OnClickListener { host.listener?.didSelectMenuAction(action) })
                     destructive(action.destructive)
                 }
 
@@ -184,7 +185,7 @@ class MessageActionsEpoxyController @Inject constructor(
                             subMenuItem(true)
                             iconRes(actionReport.iconResId)
                             textRes(actionReport.titleRes)
-                            listener(View.OnClickListener { listener?.didSelectMenuAction(actionReport) })
+                            listener(View.OnClickListener { host.listener?.didSelectMenuAction(actionReport) })
                         }
                     }
                 }

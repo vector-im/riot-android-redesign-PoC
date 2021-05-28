@@ -104,7 +104,7 @@ class DefaultErrorFormatter @Inject constructor(
                     }
                 }
             }
-            is Failure.OtherServerError  -> {
+            is Failure.OtherServerError -> {
                 when (throwable.httpCode) {
                     HttpURLConnection.HTTP_NOT_FOUND ->
                         // homeserver not found
@@ -116,9 +116,9 @@ class DefaultErrorFormatter @Inject constructor(
                         throwable.localizedMessage
                 }
             }
-            is DialPadLookup.Failure                                                        ->
+            is DialPadLookup.Failure    ->
                 stringProvider.getString(R.string.call_dial_pad_lookup_error)
-            else                                                                            -> throwable.localizedMessage
+            else                        -> throwable.localizedMessage
         }
                 ?: stringProvider.getString(R.string.unknown_error)
     }

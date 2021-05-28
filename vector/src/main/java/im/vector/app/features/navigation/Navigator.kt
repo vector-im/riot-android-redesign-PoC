@@ -23,25 +23,28 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.util.Pair
 import im.vector.app.features.crypto.recover.SetupMode
+import im.vector.app.features.login.LoginConfig
 import im.vector.app.features.media.AttachmentData
 import im.vector.app.features.pin.PinMode
+import im.vector.app.features.roomdirectory.RoomDirectoryData
 import im.vector.app.features.roomdirectory.roompreview.RoomPreviewData
 import im.vector.app.features.settings.VectorSettingsActivity
 import im.vector.app.features.share.SharedData
 import org.matrix.android.sdk.api.session.room.model.roomdirectory.PublicRoom
-import org.matrix.android.sdk.api.session.room.model.thirdparty.RoomDirectoryData
 import org.matrix.android.sdk.api.session.terms.TermsService
 import org.matrix.android.sdk.api.session.widgets.model.Widget
 import org.matrix.android.sdk.api.util.MatrixItem
 
 interface Navigator {
 
+    fun openLogin(context: Context, loginConfig: LoginConfig? = null, flags: Int = 0)
+
     fun openRoom(context: Context, roomId: String, eventId: String? = null, buildTask: Boolean = false)
 
     sealed class PostSwitchSpaceAction {
         object None : PostSwitchSpaceAction()
         data class OpenDefaultRoom(val roomId: String, val showShareSheet: Boolean) : PostSwitchSpaceAction()
-        object OpenAddExistingRooms: PostSwitchSpaceAction()
+        object OpenAddExistingRooms : PostSwitchSpaceAction()
     }
 
     fun switchToSpace(context: Context, spaceId: String, postSwitchSpaceAction: PostSwitchSpaceAction)

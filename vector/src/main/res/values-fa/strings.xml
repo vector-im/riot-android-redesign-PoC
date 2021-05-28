@@ -2752,4 +2752,23 @@
     <string name="room_settings_guest_access_title">مجوز پیوستن مهمان به اتاق</string>
     <string name="spaces_invited_header">دعوت‌ها</string>
     <string name="suggested_header">اتاق‌های پیشنهادی</string>
+    <string name="space_manage_rooms_and_spaces">مدیریت اتاق‌ها و فضاهای کاری</string>
+    <string name="space_mark_as_not_suggested">نشانه‌گذاری به عنوان غیر پیشنهادی</string>
+    <string name="space_mark_as_suggested">نشانه‌گذاری به عنوان پیشنهادی</string>
+    <string name="space_suggested">پیشنهادی</string>
+    <string name="make_this_space_public">عمومی کردن این فضای کاری</string>
+    <string name="space_settings_manage_rooms">مدیریت اتاق‌ها</string>
+    <string name="looking_for_someone_not_in_space">به دنبال کسی هستید که در %s نباشد؟</string>
+    <string name="user_invites_you">%s شما را دعوت کرده است</string>
+    <string name="a11y_public_room">این اتاق عمومی است</string>
+    <string name="send_images_and_video_with_original_size">رسانه را با اندازه اصلی ارسال کن</string>
+    <plurals name="send_videos_with_original_size">
+        <item quantity="one">ارسال فیلم با اندازه اصلی</item>
+        <item quantity="other">ارسال فیلم‌ها با اندازه اصلی</item>
+    </plurals>
+    <string name="error_file_too_big_simple">پرونده برای بارگذاری بسیار بزرگ است.</string>
+    <string name="send_file_step_compressing_video">فشرده‌سازی فیلم %d%%</string>
+    <string name="send_file_step_compressing_image">فشرده‌سازی تصویر…</string>
+    <string name="use_as_default_and_do_not_ask_again">به عنوان پیش فرض استفاده کن و دیگر سوال نپرس</string>
+    <string name="option_always_ask">همواره بپرس</string>
 </resources>

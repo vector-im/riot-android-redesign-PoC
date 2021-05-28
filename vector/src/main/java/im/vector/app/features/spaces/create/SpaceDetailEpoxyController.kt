@@ -37,13 +37,14 @@ class SpaceDetailEpoxyController @Inject constructor(
 //    var shouldForceFocusOnce = true
 
     override fun buildModels(data: CreateSpaceState?) {
+        val host = this
         genericFooterItem {
             id("info_help")
             text(
                     if (data?.spaceType == SpaceType.Public) {
-                        stringProvider.getString(R.string.create_spaces_details_public_header)
+                        host.stringProvider.getString(R.string.create_spaces_details_public_header)
                     } else {
-                        stringProvider.getString(R.string.create_spaces_details_private_header)
+                        host.stringProvider.getString(R.string.create_spaces_details_private_header)
                     }
             )
         }
@@ -52,18 +53,17 @@ class SpaceDetailEpoxyController @Inject constructor(
             id("avatar")
             enabled(true)
             imageUri(data?.avatarUri)
-            avatarRenderer(avatarRenderer)
+            avatarRenderer(host.avatarRenderer)
             matrixItem(data?.name?.let { MatrixItem.RoomItem("!", it, null).takeIf { !it.displayName.isNullOrBlank() } })
-            clickListener { listener?.onAvatarChange() }
-            deleteListener { listener?.onAvatarDelete() }
+            clickListener { host.listener?.onAvatarChange() }
+            deleteListener { host.listener?.onAvatarDelete() }
         }
 
         formEditTextItem {
             id("name")
             enabled(true)
             value(data?.name)
-            hint(stringProvider.getString(R.string.create_room_name_hint))
-            singleLine(true)
+            hint(host.stringProvider.getString(R.string.create_room_name_hint))
             showBottomSeparator(false)
             errorMessage(data?.nameInlineError)
 //            onBind { _, view, _ ->
@@ -76,7 +76,7 @@ class SpaceDetailEpoxyController @Inject constructor(
 //                }
 //            }
             onTextChange { text ->
-                listener?.onNameChange(text)
+                host.listener?.onNameChange(text)
             }
         }
 
@@ -84,11 +84,11 @@ class SpaceDetailEpoxyController @Inject constructor(
             id("topic")
             enabled(true)
             value(data?.topic)
-            hint(stringProvider.getString(R.string.create_space_topic_hint))
+            hint(host.stringProvider.getString(R.string.create_space_topic_hint))
             showBottomSeparator(false)
             textSizeSp(16)
             onTextChange { text ->
-                listener?.onTopicChange(text)
+                host.listener?.onTopicChange(text)
             }
         }
     }

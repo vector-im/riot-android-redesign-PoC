@@ -62,9 +62,8 @@ class RoomProfileController @Inject constructor(
     }
 
     override fun buildModels(data: RoomProfileViewState?) {
-        if (data == null) {
-            return
-        }
+        data ?: return
+        val host = this
         val roomSummary = data.roomSummary() ?: return
 
         // Topic
@@ -83,7 +82,7 @@ class RoomProfileController @Inject constructor(
                             }
 
                             override fun onUrlLongClicked(url: String): Boolean {
-                                callback?.onUrlInTopicLongClicked(url)
+                                host.callback?.onUrlInTopicLongClicked(url)
                                 return true
                             }
                         }))
@@ -100,7 +99,7 @@ class RoomProfileController @Inject constructor(
         genericFooterItem {
             id("e2e info")
             centered(false)
-            text(stringProvider.getString(learnMoreSubtitle))
+            text(host.stringProvider.getString(learnMoreSubtitle))
         }
         buildEncryptionAction(data.actionPermissions, roomSummary)
 

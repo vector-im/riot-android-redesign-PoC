@@ -37,6 +37,7 @@ class IncomingShareController @Inject constructor(private val roomSummaryItemFac
     var callback: Callback? = null
 
     override fun buildModels(data: IncomingShareViewState) {
+        val host = this
         if (data.sharedData == null || data.filteredRoomSummaries is Incomplete) {
             loadingItem {
                 id("loading")
@@ -47,7 +48,7 @@ class IncomingShareController @Inject constructor(private val roomSummaryItemFac
         if (roomSummaries.isNullOrEmpty()) {
             noResultItem {
                 id("no_result")
-                text(stringProvider.getString(R.string.no_result_placeholder))
+                text(host.stringProvider.getString(R.string.no_result_placeholder))
             }
         } else {
             roomSummaries.forEach { roomSummary ->

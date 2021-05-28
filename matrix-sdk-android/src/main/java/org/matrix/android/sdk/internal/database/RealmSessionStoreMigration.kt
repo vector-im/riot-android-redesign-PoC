@@ -19,6 +19,7 @@ package org.matrix.android.sdk.internal.database
 import io.realm.DynamicRealm
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
+import org.matrix.android.sdk.api.session.room.model.VersioningState
 import org.matrix.android.sdk.api.session.events.model.EventType
 import org.matrix.android.sdk.api.session.room.model.RoomJoinRulesContent
 import org.matrix.android.sdk.api.session.room.model.create.RoomCreateContent
@@ -30,6 +31,7 @@ import org.matrix.android.sdk.internal.database.model.EventEntityFields
 import org.matrix.android.sdk.internal.database.model.HomeServerCapabilitiesEntityFields
 import org.matrix.android.sdk.internal.database.model.PendingThreePidEntityFields
 import org.matrix.android.sdk.internal.database.model.PreviewUrlCacheEntityFields
+import org.matrix.android.sdk.internal.database.model.RoomAccountDataEntityFields
 import org.matrix.android.sdk.internal.database.model.RoomEntityFields
 import org.matrix.android.sdk.internal.database.model.RoomMembersLoadStatusType
 import org.matrix.android.sdk.internal.database.model.RoomSummaryEntityFields
@@ -44,7 +46,7 @@ import javax.inject.Inject
 class RealmSessionStoreMigration @Inject constructor() : RealmMigration {
 
     companion object {
-        const val SESSION_STORE_SCHEMA_VERSION = 12L
+        const val SESSION_STORE_SCHEMA_VERSION = 14L
     }
 
     override fun migrate(realm: DynamicRealm, oldVersion: Long, newVersion: Long) {
@@ -62,6 +64,8 @@ class RealmSessionStoreMigration @Inject constructor() : RealmMigration {
         if (oldVersion <= 9) migrateTo10(realm)
         if (oldVersion <= 10) migrateTo11(realm)
         if (oldVersion <= 11) migrateTo12(realm)
+        if (oldVersion <= 12) migrateTo13(realm)
+        if (oldVersion <= 13) migrateTo14(realm)
     }
 
     private fun migrateTo1(realm: DynamicRealm) {
@@ -273,5 +277,33 @@ class RealmSessionStoreMigration @Inject constructor() : RealmMigration {
         realm.schema.get("SpaceChildSummaryEntity")
                 ?.addField(SpaceChildSummaryEntityFields.SUGGESTED, Boolean::class.java)
                 ?.setNullable(SpaceChildSummaryEntityFields.SUGGESTED, true)
+    }
+
+    private fun migrateTo13(realm: DynamicRealm) {
+        Timber.d("Step 12 -> 13")
+        // Fix issue with the nightly build. Eventually play again the migration which has been included in migrateTo12()
+        realm.schema.get("SpaceChildSummaryEntity")
+                ?.takeIf { !it.hasField(SpaceChildSummaryEntityFields.SUGGESTED) }
+                ?.addField(SpaceChildSummaryEntityFields.SUGGESTED, Boolean::class.java)
+                ?.setNullable(SpaceChildSummaryEntityFields.SUGGESTED, true)
+    }
+
+    private fun migrateTo14(realm: DynamicRealm) {
+        Timber.d("Step 13 -> 14")
+        val roomAccountDataSchema = realm.schema.create("RoomAccountDataEntity")
+                .addField(RoomAccountDataEntityFields.CONTENT_STR, String::class.java)
+                .addField(RoomAccountDataEntityFields.TYPE, String::class.java,  FieldAttribute.INDEXED)
+
+        realm.schema.get("RoomEntity")
+                ?.addRealmListField(RoomEntityFields.ACCOUNT_DATA.`$`, roomAccountDataSchema)
+
+        realm.schema.get("RoomSummaryEntity")
+                ?.addField(RoomSummaryEntityFields.IS_HIDDEN_FROM_USER, Boolean::class.java, FieldAttribute.INDEXED)
+                ?.transform {
+                    val isHiddenFromUser = it.getString(RoomSummaryEntityFields.VERSIONING_STATE_STR) == VersioningState.UPGRADED_ROOM_JOINED.name
+                    it.setBoolean(RoomSummaryEntityFields.IS_HIDDEN_FROM_USER, isHiddenFromUser)
+                }
+
+        roomAccountDataSchema.isEmbedded = true
     }
 }

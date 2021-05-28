@@ -88,6 +88,7 @@ class RoomPermissionsController @Inject constructor(
     }
 
     override fun buildModels(data: RoomPermissionsViewState?) {
+        val host = this
         buildProfileSection(
                 stringProvider.getString(R.string.room_permissions_title)
         )
@@ -97,17 +98,18 @@ class RoomPermissionsController @Inject constructor(
             else       -> {
                 loadingItem {
                     id("loading")
-                    loadingText(stringProvider.getString(R.string.loading))
+                    loadingText(host.stringProvider.getString(R.string.loading))
                 }
             }
         }
     }
 
     private fun buildPermissions(data: RoomPermissionsViewState, content: PowerLevelsContent) {
+        val host = this
         val editable = data.actionPermissions.canChangePowerLevels
         settingsInfoItem {
             id("notice")
-            helperText(stringProvider.getString(if (editable) R.string.room_permissions_notice else R.string.room_permissions_notice_read_only))
+            helperText(host.stringProvider.getString(if (editable) R.string.room_permissions_notice else R.string.room_permissions_notice_read_only))
         }
 
         // Useful permissions
@@ -116,9 +118,9 @@ class RoomPermissionsController @Inject constructor(
         // Toggle
         formAdvancedToggleItem {
             id("showAdvanced")
-            title(stringProvider.getString(if (data.showAdvancedPermissions) R.string.hide_advanced else R.string.show_advanced))
+            title(host.stringProvider.getString(if (data.showAdvancedPermissions) R.string.hide_advanced else R.string.show_advanced))
             expanded(!data.showAdvancedPermissions)
-            listener { callback?.toggleShowAllPermissions() }
+            listener { host.callback?.toggleShowAllPermissions() }
         }
 
         // Advanced permissions

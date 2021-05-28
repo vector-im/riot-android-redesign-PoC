@@ -54,6 +54,9 @@ import im.vector.app.features.home.room.detail.search.SearchActivity
 import im.vector.app.features.home.room.detail.search.SearchArgs
 import im.vector.app.features.home.room.filtered.FilteredRoomsActivity
 import im.vector.app.features.invite.InviteUsersToRoomActivity
+import im.vector.app.features.login.LoginActivity
+import im.vector.app.features.login.LoginConfig
+import im.vector.app.features.login2.LoginActivity2
 import im.vector.app.features.matrixto.MatrixToBottomSheet
 import im.vector.app.features.media.AttachmentData
 import im.vector.app.features.media.BigImageViewerActivity
@@ -62,6 +65,7 @@ import im.vector.app.features.pin.PinActivity
 import im.vector.app.features.pin.PinArgs
 import im.vector.app.features.pin.PinMode
 import im.vector.app.features.roomdirectory.RoomDirectoryActivity
+import im.vector.app.features.roomdirectory.RoomDirectoryData
 import im.vector.app.features.roomdirectory.createroom.CreateRoomActivity
 import im.vector.app.features.roomdirectory.roompreview.RoomPreviewActivity
 import im.vector.app.features.roomdirectory.roompreview.RoomPreviewData
@@ -83,7 +87,6 @@ import im.vector.app.features.widgets.WidgetArgsBuilder
 import im.vector.app.space
 import org.matrix.android.sdk.api.session.crypto.verification.IncomingSasVerificationTransaction
 import org.matrix.android.sdk.api.session.room.model.roomdirectory.PublicRoom
-import org.matrix.android.sdk.api.session.room.model.thirdparty.RoomDirectoryData
 import org.matrix.android.sdk.api.session.terms.TermsService
 import org.matrix.android.sdk.api.session.widgets.model.Widget
 import org.matrix.android.sdk.api.session.widgets.model.WidgetType
@@ -98,6 +101,16 @@ class DefaultNavigator @Inject constructor(
         private val appStateHandler: AppStateHandler,
         private val supportedVerificationMethodsProvider: SupportedVerificationMethodsProvider
 ) : Navigator {
+
+    override fun openLogin(context: Context, loginConfig: LoginConfig?, flags: Int) {
+        val intent = if (context.resources.getBoolean(R.bool.useLoginV2)) {
+            LoginActivity2.newIntent(context, loginConfig)
+        } else {
+            LoginActivity.newIntent(context, loginConfig)
+        }
+        intent.addFlags(flags)
+        context.startActivity(intent)
+    }
 
     override fun openRoom(context: Context, roomId: String, eventId: String?, buildTask: Boolean) {
         if (sessionHolder.getSafeActiveSession()?.getRoom(roomId) == null) {
@@ -116,7 +129,7 @@ class DefaultNavigator @Inject constructor(
         }
         appStateHandler.setCurrentSpace(spaceId)
         when (postSwitchSpaceAction) {
-            Navigator.PostSwitchSpaceAction.None -> {
+            Navigator.PostSwitchSpaceAction.None                 -> {
                 // go back to home if we are showing room details?
                 // This is a bit ugly, but the navigator is supposed to know about the activity stack
                 if (context is RoomDetailActivity) {
@@ -126,7 +139,7 @@ class DefaultNavigator @Inject constructor(
             Navigator.PostSwitchSpaceAction.OpenAddExistingRooms -> {
                 startActivity(context, SpaceManageActivity.newIntent(context, spaceId, ManageType.AddRooms), false)
             }
-            is Navigator.PostSwitchSpaceAction.OpenDefaultRoom -> {
+            is Navigator.PostSwitchSpaceAction.OpenDefaultRoom   -> {
                 val args = RoomDetailArgs(
                         postSwitchSpaceAction.roomId,
                         eventId = null,
@@ -265,7 +278,7 @@ class DefaultNavigator @Inject constructor(
                 val intent = RoomDirectoryActivity.getIntent(context, initialFilter)
                 context.startActivity(intent)
             }
-            is RoomGroupingMethod.BySpace -> {
+            is RoomGroupingMethod.BySpace       -> {
                 val selectedSpace = groupingMethod.space()
                 if (selectedSpace == null) {
                     val intent = RoomDirectoryActivity.getIntent(context, initialFilter)
@@ -307,7 +320,7 @@ class DefaultNavigator @Inject constructor(
                 val intent = InviteUsersToRoomActivity.getIntent(context, roomId)
                 context.startActivity(intent)
             }
-            is RoomGroupingMethod.BySpace -> {
+            is RoomGroupingMethod.BySpace       -> {
                 if (currentGroupingMethod.spaceSummary != null) {
                     // let user decides if he does it from space or room
                     (context as? AppCompatActivity)?.supportFragmentManager?.let { fm ->

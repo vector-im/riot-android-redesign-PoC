@@ -44,6 +44,7 @@ class DeviceTrustInfoEpoxyController @Inject constructor(private val stringProvi
     var interactionListener: InteractionListener? = null
 
     override fun buildModels(data: DeviceListViewState?) {
+        val host = this
         data?.selectedDevice?.let {
             val isVerified = it.trustLevel?.isVerified() == true
             genericItem {
@@ -51,7 +52,7 @@ class DeviceTrustInfoEpoxyController @Inject constructor(private val stringProvi
                 style(ItemStyle.BIG_TEXT)
                 titleIconResourceId(if (isVerified) R.drawable.ic_shield_trusted else R.drawable.ic_shield_warning)
                 title(
-                        stringProvider.getString(
+                        host.stringProvider.getString(
                                 if (isVerified) R.string.verification_profile_verified else R.string.verification_profile_warning
                         )
                 )
@@ -59,16 +60,16 @@ class DeviceTrustInfoEpoxyController @Inject constructor(private val stringProvi
             genericFooterItem {
                 id("desc")
                 centered(false)
-                textColor(colorProvider.getColorFromAttribute(R.attr.riotx_text_primary))
+                textColor(host.colorProvider.getColorFromAttribute(R.attr.riotx_text_primary))
                 apply {
                     if (isVerified) {
                         // TODO FORMAT
-                        text(stringProvider.getString(R.string.verification_profile_device_verified_because,
+                        text(host.stringProvider.getString(R.string.verification_profile_device_verified_because,
                                 data.userItem?.displayName ?: "",
                                 data.userItem?.id ?: ""))
                     } else {
                         // TODO what if mine
-                        text(stringProvider.getString(R.string.verification_profile_device_new_signing,
+                        text(host.stringProvider.getString(R.string.verification_profile_device_new_signing,
                                 data.userItem?.displayName ?: "",
                                 data.userItem?.id ?: ""))
                     }
@@ -84,8 +85,8 @@ class DeviceTrustInfoEpoxyController @Inject constructor(private val stringProvi
                             +(it.displayName() ?: "")
                             span {
                                 text = " (${it.deviceId})"
-                                textColor = colorProvider.getColorFromAttribute(R.attr.riotx_text_secondary)
-                                textSize = dimensionConverter.spToPx(14)
+                                textColor = host.colorProvider.getColorFromAttribute(R.attr.riotx_text_secondary)
+                                textSize = host.dimensionConverter.spToPx(14)
                             }
                         }
                 )
@@ -95,18 +96,18 @@ class DeviceTrustInfoEpoxyController @Inject constructor(private val stringProvi
                 genericFooterItem {
                     id("warn")
                     centered(false)
-                    textColor(colorProvider.getColorFromAttribute(R.attr.riotx_text_primary))
-                    text(stringProvider.getString(R.string.verification_profile_device_untrust_info))
+                    textColor(host.colorProvider.getColorFromAttribute(R.attr.riotx_text_primary))
+                    text(host.stringProvider.getString(R.string.verification_profile_device_untrust_info))
                 }
 
                 bottomSheetVerificationActionItem {
                     id("verify")
-                    title(stringProvider.getString(R.string.cross_signing_verify_by_emoji))
-                    titleColor(colorProvider.getColor(R.color.riotx_accent))
+                    title(host.stringProvider.getString(R.string.cross_signing_verify_by_emoji))
+                    titleColor(host.colorProvider.getColor(R.color.riotx_accent))
                     iconRes(R.drawable.ic_arrow_right)
-                    iconColor(colorProvider.getColor(R.color.riotx_accent))
+                    iconColor(host.colorProvider.getColor(R.color.riotx_accent))
                     listener {
-                        interactionListener?.onVerifyManually(it)
+                        host.interactionListener?.onVerifyManually(it)
                     }
                 }
             }

@@ -44,7 +44,7 @@ class BreadcrumbsController @Inject constructor(
 
     override fun buildModels() {
         val safeViewState = viewState ?: return
-
+        val host = this
         // Add a ZeroItem to avoid automatic scroll when the breadcrumbs are updated from another client
         zeroItem {
             id("top")
@@ -57,7 +57,7 @@ class BreadcrumbsController @Inject constructor(
                     breadcrumbsItem {
                         id(it.roomId)
                         hasTypingUsers(it.typingUsers.isNotEmpty())
-                        avatarRenderer(avatarRenderer)
+                        avatarRenderer(host.avatarRenderer)
                         matrixItem(it.toMatrixItem())
                         unreadNotificationCount(it.notificationCount)
                         showHighlighted(it.highlightCount > 0)
@@ -65,7 +65,7 @@ class BreadcrumbsController @Inject constructor(
                         hasDraft(it.userDrafts.isNotEmpty())
                         itemClickListener(
                                 DebouncedClickListener({ _ ->
-                                    listener?.onBreadcrumbClicked(it.roomId)
+                                    host.listener?.onBreadcrumbClicked(it.roomId)
                                 })
                         )
                     }

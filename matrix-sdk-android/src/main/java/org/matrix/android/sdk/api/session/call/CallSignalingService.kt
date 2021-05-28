@@ -20,8 +20,6 @@ interface CallSignalingService {
 
     suspend fun getTurnServer(): TurnServerResponse
 
-    fun getPSTNProtocolChecker(): PSTNProtocolChecker
-
     /**
      * Create an outgoing call
      */

@@ -55,7 +55,7 @@ data class CallInviteContent(
          */
         @Json(name = "capabilities") val capabilities: CallCapabilities? = null
 
-): CallSignallingContent  {
+): CallSignalingContent  {
     @JsonClass(generateAdapter = true)
     data class Offer(
             /**

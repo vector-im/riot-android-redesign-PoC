@@ -1,0 +1,7 @@
+[tool.towncrier]
+directory = "newsfragment"
+filename = "CHANGES.md"
+name = "Changes in Element"
+# Note: there is a bug, if I use title_format, the title is printed twice
+# title_format = "Changes in Element {version} ({project_date})"
+template="tools/towncrier/template.md"

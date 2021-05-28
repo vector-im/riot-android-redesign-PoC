@@ -1,0 +1,49 @@
+name: Integration Test
+
+on:
+  pull_request: { }
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  integration-tests:
+    name: Integration Tests (Synapse)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        api-level: [21, 30]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Start synapse server
+        run: |
+          python3 -m venv .synapse
+          source .synapse/bin/activate
+          pip install synapse matrix-synapse
+          curl -sL https://raw.githubusercontent.com/matrix-org/synapse/develop/demo/start.sh --no-rate-limit \
+            | sed s/127.0.0.1/0.0.0.0/g | bash
+      - name: Run integration tests on API ${{ matrix.api-level }}
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          # script: ./gradlew -PallWarningsAsErrors=false vector:connectedAndroidTest matrix-sdk-android:connectedAndroidTest
+          script: ./gradlew -PallWarningsAsErrors=false connectedCheck

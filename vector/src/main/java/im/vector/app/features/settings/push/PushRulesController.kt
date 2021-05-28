@@ -27,6 +27,7 @@ class PushRulesController @Inject constructor(
 ) : TypedEpoxyController<PushRulesViewState>() {
 
     override fun buildModels(data: PushRulesViewState?) {
+        val host = this
         data?.let {
             it.rules.forEach {
                 pushRuleItem {
@@ -37,7 +38,7 @@ class PushRulesController @Inject constructor(
         } ?: run {
             genericFooterItem {
                 id("footer")
-                text(stringProvider.getString(R.string.settings_push_rules_no_rules))
+                text(host.stringProvider.getString(R.string.settings_push_rules_no_rules))
             }
         }
     }

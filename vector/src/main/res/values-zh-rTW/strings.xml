@@ -221,13 +221,13 @@
     <string name="notice_room_server_acl_updated_was_banned">• 伺服器符合 %s 已從禁止清單中移除。</string>
     <string name="notice_room_server_acl_updated_banned">• 現在禁止伺服器符合 %s。</string>
     <string name="notice_room_server_acl_updated_title_by_you">您為此聊天室變更了伺服器 ACL。</string>
-    <string name="notice_room_server_acl_updated_title">%s 為此聊天是變更了伺服器 ACL。</string>
+    <string name="notice_room_server_acl_updated_title">%s 為此聊天室變更了伺服器 ACL。</string>
     <string name="notice_room_server_acl_set_ip_literals_not_allowed">• 禁止伺服器符合 IP 文字。</string>
     <string name="notice_room_server_acl_set_ip_literals_allowed">• 允許伺服器符合 IP 文字。</string>
     <string name="notice_room_server_acl_set_allowed">• 已允許伺服器符合 %s。</string>
     <string name="notice_room_server_acl_set_banned">• 已禁止伺服器符合 %s。</string>
-    <string name="notice_room_server_acl_set_title_by_you">您為此聊天是設定了伺服器 ACL。</string>
-    <string name="notice_room_server_acl_set_title">%s 為此聊天是設定了伺服器 ACL。</string>
+    <string name="notice_room_server_acl_set_title_by_you">您為此聊天室設定了伺服器 ACL。</string>
+    <string name="notice_room_server_acl_set_title">%s 為此聊天室設定了伺服器 ACL。</string>
     <string name="notice_room_canonical_alias_no_change_by_you">您變更了此聊天室的地址。</string>
     <string name="notice_room_canonical_alias_no_change">%1$s 變更了此聊天室的地址。</string>
     <string name="notice_room_canonical_alias_main_and_alternative_changed_by_you">您為此聊天室變更了主要及備用地址。</string>
@@ -2336,7 +2336,7 @@
     <string name="template_settings_security_pin_code_grace_period_summary_on">未使用 ${app_name} 2分鐘後，要求輸入 PIN 碼。</string>
     <string name="settings_security_pin_code_grace_period_title">2分鐘後要求輸入 PIN 碼</string>
     <string name="settings_security_pin_code_notifications_summary_off">在簡易通知中僅顯示未讀訊息數量。</string>
-    <string name="settings_security_pin_code_notifications_summary_on">顯示如聊天是名稱與訊息內容等詳細資訊。</string>
+    <string name="settings_security_pin_code_notifications_summary_on">顯示如聊天室名稱與訊息內容等詳細資訊。</string>
     <string name="settings_security_pin_code_notifications_title">在通知中顯示內容</string>
     <string name="template_settings_security_pin_code_use_biometrics_summary_off">PIN 碼是解鎖 ${app_name} 的唯一方式。</string>
     <string name="settings_security_pin_code_use_biometrics_summary_on">啟用特定裝置的生物識別技術，如指紋與臉部辨識。</string>
@@ -2393,7 +2393,7 @@
     <string name="create_room_settings_section">聊天室設定</string>
     <string name="create_room_topic_hint">主題</string>
     <string name="create_room_topic_section">聊天室主題（選擇性）</string>
-    <string name="create_room_name_section">聊天是名稱</string>
+    <string name="create_room_name_section">聊天室名稱</string>
     <string name="settings_export_trail">匯出審核</string>
     <string name="room_member_open_or_create_dm">直接訊息</string>
     <string name="send_bug_report_include_key_share_history">傳送金鑰共享請求歷史</string>
@@ -2688,7 +2688,7 @@
     <string name="command_description_create_space">建立空間</string>
     <string name="a11y_unchecked">未檢查</string>
     <string name="search_hint_room_name">搜尋名稱</string>
-    <string name="room_settings_room_access_restricted_description">擁有此聊天室空間中的任何人都可以尋找並加入。僅此聊天是的管理員可以將其新增到空間中。</string>
+    <string name="room_settings_room_access_restricted_description">擁有此聊天室空間中的任何人都可以尋找並加入。僅此聊天室的管理員可以將其新增到空間中。</string>
     <string name="room_settings_room_access_restricted_title">空間</string>
     <string name="room_settings_room_access_public_description">任何人都可以尋找聊天室並加入</string>
     <string name="room_settings_room_access_public_title">公開</string>
@@ -2700,4 +2700,22 @@
     <string name="spaces_header">空間</string>
     <string name="spaces_invited_header">邀請</string>
     <string name="suggested_header">建議的聊天室</string>
+    <string name="space_manage_rooms_and_spaces">管理聊天室與空間</string>
+    <string name="space_mark_as_not_suggested">標記為不建議</string>
+    <string name="space_mark_as_suggested">標記為建議</string>
+    <string name="space_suggested">建議</string>
+    <string name="make_this_space_public">讓此空間公開</string>
+    <string name="space_settings_manage_rooms">管理聊天室</string>
+    <string name="looking_for_someone_not_in_space">正在尋找不在 %s 中的人？</string>
+    <string name="user_invites_you">%s 邀請您</string>
+    <string name="a11y_public_room">此聊天室是公開的</string>
+    <string name="send_images_and_video_with_original_size">傳送原始大小的媒體</string>
+    <plurals name="send_videos_with_original_size">
+        <item quantity="other">傳送原始大小的影片</item>
+    </plurals>
+    <string name="error_file_too_big_simple">檔案太大了，無法上傳。</string>
+    <string name="send_file_step_compressing_video">正在壓縮影片 %d%%</string>
+    <string name="send_file_step_compressing_image">正在壓縮圖片……</string>
+    <string name="use_as_default_and_do_not_ask_again">預設使用，不再詢問</string>
+    <string name="option_always_ask">總是詢問</string>
 </resources>

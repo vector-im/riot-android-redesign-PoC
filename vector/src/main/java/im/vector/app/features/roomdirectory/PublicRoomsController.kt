@@ -42,6 +42,7 @@ class PublicRoomsController @Inject constructor(private val stringProvider: Stri
     var callback: Callback? = null
 
     override fun buildModels(viewState: PublicRoomsViewState) {
+        val host = this
         val publicRooms = viewState.publicRooms
 
         val unknownRoomItem = viewState.buildUnknownRoomIfNeeded()
@@ -51,7 +52,7 @@ class PublicRoomsController @Inject constructor(private val stringProvider: Stri
             // No result
             noResultItem {
                 id("noResult")
-                text(stringProvider.getString(R.string.no_result_placeholder))
+                text(host.stringProvider.getString(R.string.no_result_placeholder))
             }
         } else {
             publicRooms.forEach {
@@ -71,7 +72,7 @@ class PublicRoomsController @Inject constructor(private val stringProvider: Stri
                     }
                     onVisibilityStateChanged { _, _, visibilityState ->
                         if (visibilityState == VisibilityState.VISIBLE) {
-                            callback?.loadMore()
+                            host.callback?.loadMore()
                         }
                     }
                 }
@@ -81,15 +82,16 @@ class PublicRoomsController @Inject constructor(private val stringProvider: Stri
         if (viewState.asyncPublicRoomsRequest is Fail) {
             errorWithRetryItem {
                 id("error")
-                text(errorFormatter.toHumanReadable(viewState.asyncPublicRoomsRequest.error))
-                listener { callback?.loadMore() }
+                text(host.errorFormatter.toHumanReadable(viewState.asyncPublicRoomsRequest.error))
+                listener { host.callback?.loadMore() }
             }
         }
     }
 
     private fun buildPublicRoom(publicRoom: PublicRoom, viewState: PublicRoomsViewState) {
+        val host = this
         publicRoomItem {
-            avatarRenderer(avatarRenderer)
+            avatarRenderer(host.avatarRenderer)
             id(publicRoom.roomId)
             matrixItem(publicRoom.toMatrixItem())
             roomAlias(publicRoom.getPrimaryAlias())
@@ -107,10 +109,10 @@ class PublicRoomsController @Inject constructor(private val stringProvider: Stri
             joinState(joinState)
 
             joinListener {
-                callback?.onPublicRoomJoin(publicRoom)
+                host.callback?.onPublicRoomJoin(publicRoom)
             }
             globalListener {
-                callback?.onPublicRoomClicked(publicRoom, joinState)
+                host.callback?.onPublicRoomClicked(publicRoom, joinState)
             }
         }
     }
@@ -124,13 +126,14 @@ class PublicRoomsController @Inject constructor(private val stringProvider: Stri
             isRoomId -> MatrixItem.RoomItem(roomIdOrAlias)
             else     -> null
         }
+        val host = this@PublicRoomsController
         return roomItem?.let {
             UnknownRoomItem_().apply {
                 id(roomIdOrAlias)
                 matrixItem(it)
-                avatarRenderer(this@PublicRoomsController.avatarRenderer)
+                avatarRenderer(host.avatarRenderer)
                 globalListener {
-                    callback?.onUnknownRoomClicked(roomIdOrAlias)
+                    host.callback?.onUnknownRoomClicked(roomIdOrAlias)
                 }
             }
         }

@@ -71,6 +71,7 @@ class ThreePidsSettingsController @Inject constructor(
 
     override fun buildModels(data: ThreePidsSettingsViewState?) {
         if (data == null) return
+        val host = this
 
         if (data.uiState is ThreePidsSettingsUiState.Idle) {
             currentInputValue = ""
@@ -80,7 +81,7 @@ class ThreePidsSettingsController @Inject constructor(
             is Loading -> {
                 loadingItem {
                     id("loading")
-                    loadingText(stringProvider.getString(R.string.loading))
+                    loadingText(host.stringProvider.getString(R.string.loading))
                 }
             }
             is Fail    -> {
@@ -97,13 +98,14 @@ class ThreePidsSettingsController @Inject constructor(
     }
 
     private fun buildThreePids(list: List<ThreePid>, data: ThreePidsSettingsViewState) {
+        val host = this
         val splited = list.groupBy { it is ThreePid.Email }
         val emails = splited[true].orEmpty()
         val msisdn = splited[false].orEmpty()
 
         settingsSectionTitleItem {
             id("email")
-            title(stringProvider.getString(R.string.settings_emails))
+            title(host.stringProvider.getString(R.string.settings_emails))
         }
 
         emails.forEach { buildThreePid("email ", it) }
@@ -116,7 +118,7 @@ class ThreePidsSettingsController @Inject constructor(
                     if (pendingList.isEmpty() && emails.isEmpty()) {
                         noResultItem {
                             id("noEmail")
-                            text(stringProvider.getString(R.string.settings_emails_empty))
+                            text(host.stringProvider.getString(R.string.settings_emails_empty))
                         }
                     }
 
@@ -127,15 +129,15 @@ class ThreePidsSettingsController @Inject constructor(
             ThreePidsSettingsUiState.Idle                 ->
                 genericButtonItem {
                     id("addEmail")
-                    text(stringProvider.getString(R.string.settings_add_email_address))
-                    textColor(colorProvider.getColor(R.color.riotx_accent))
-                    buttonClickAction(View.OnClickListener { interactionListener?.addEmail() })
+                    text(host.stringProvider.getString(R.string.settings_add_email_address))
+                    textColor(host.colorProvider.getColor(R.color.riotx_accent))
+                    buttonClickAction(View.OnClickListener { host.interactionListener?.addEmail() })
                 }
             is ThreePidsSettingsUiState.AddingEmail       -> {
                 settingsEditTextItem {
                     id("addingEmail")
                     inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
-                    hint(stringProvider.getString(R.string.medium_email))
+                    hint(host.stringProvider.getString(R.string.medium_email))
                     if (data.editTextReinitiator.isTrue()) {
                         value("")
                         requestFocus(true)
@@ -143,18 +145,18 @@ class ThreePidsSettingsController @Inject constructor(
                     errorText(data.uiState.error)
                     interactionListener(object : SettingsEditTextItem.Listener {
                         override fun onValidate() {
-                            interactionListener?.doAddEmail(currentInputValue)
+                            host.interactionListener?.doAddEmail(host.currentInputValue)
                         }
 
                         override fun onTextChange(text: String) {
-                            currentInputValue = text
+                            host.currentInputValue = text
                         }
                     })
                 }
                 settingsContinueCancelItem {
                     id("contAddingEmail")
-                    continueOnClick { interactionListener?.doAddEmail(currentInputValue) }
-                    cancelOnClick { interactionListener?.cancelAdding() }
+                    continueOnClick { host.interactionListener?.doAddEmail(host.currentInputValue) }
+                    cancelOnClick { host.interactionListener?.cancelAdding() }
                 }
             }
             is ThreePidsSettingsUiState.AddingPhoneNumber -> Unit
@@ -162,7 +164,7 @@ class ThreePidsSettingsController @Inject constructor(
 
         settingsSectionTitleItem {
             id("msisdn")
-            title(stringProvider.getString(R.string.settings_phone_numbers))
+            title(host.stringProvider.getString(R.string.settings_phone_numbers))
         }
 
         msisdn.forEach { buildThreePid("msisdn ", it) }
@@ -175,7 +177,7 @@ class ThreePidsSettingsController @Inject constructor(
                     if (pendingList.isEmpty() && msisdn.isEmpty()) {
                         noResultItem {
                             id("noMsisdn")
-                            text(stringProvider.getString(R.string.settings_phone_number_empty))
+                            text(host.stringProvider.getString(R.string.settings_phone_number_empty))
                         }
                     }
 
@@ -186,20 +188,20 @@ class ThreePidsSettingsController @Inject constructor(
             ThreePidsSettingsUiState.Idle                 ->
                 genericButtonItem {
                     id("addMsisdn")
-                    text(stringProvider.getString(R.string.settings_add_phone_number))
-                    textColor(colorProvider.getColor(R.color.riotx_accent))
-                    buttonClickAction(View.OnClickListener { interactionListener?.addMsisdn() })
+                    text(host.stringProvider.getString(R.string.settings_add_phone_number))
+                    textColor(host.colorProvider.getColor(R.color.riotx_accent))
+                    buttonClickAction(View.OnClickListener { host.interactionListener?.addMsisdn() })
                 }
             is ThreePidsSettingsUiState.AddingEmail       -> Unit
             is ThreePidsSettingsUiState.AddingPhoneNumber -> {
                 settingsInfoItem {
                     id("addingMsisdnInfo")
-                    helperText(stringProvider.getString(R.string.login_msisdn_notice))
+                    helperText(host.stringProvider.getString(R.string.login_msisdn_notice))
                 }
                 settingsEditTextItem {
                     id("addingMsisdn")
                     inputType(InputType.TYPE_CLASS_PHONE)
-                    hint(stringProvider.getString(R.string.medium_phone_number))
+                    hint(host.stringProvider.getString(R.string.medium_phone_number))
                     if (data.editTextReinitiator.isTrue()) {
                         value("")
                         requestFocus(true)
@@ -207,34 +209,36 @@ class ThreePidsSettingsController @Inject constructor(
                     errorText(data.uiState.error)
                     interactionListener(object : SettingsEditTextItem.Listener {
                         override fun onValidate() {
-                            interactionListener?.doAddMsisdn(currentInputValue)
+                            host.interactionListener?.doAddMsisdn(host.currentInputValue)
                         }
 
                         override fun onTextChange(text: String) {
-                            currentInputValue = text
+                            host.currentInputValue = text
                         }
                     })
                 }
                 settingsContinueCancelItem {
                     id("contAddingMsisdn")
-                    continueOnClick { interactionListener?.doAddMsisdn(currentInputValue) }
-                    cancelOnClick { interactionListener?.cancelAdding() }
+                    continueOnClick { host.interactionListener?.doAddMsisdn(host.currentInputValue) }
+                    cancelOnClick { host.interactionListener?.cancelAdding() }
                 }
             }
         }.exhaustive
     }
 
     private fun buildThreePid(idPrefix: String, threePid: ThreePid) {
+        val host = this
         threePidItem {
             id(idPrefix + threePid.value)
             // TODO Add an icon for emails
             // iconResId(if (threePid is ThreePid.Msisdn) R.drawable.ic_phone else null)
             title(threePid.getFormattedValue())
-            deleteClickListener { interactionListener?.deleteThreePid(threePid) }
+            deleteClickListener { host.interactionListener?.deleteThreePid(threePid) }
         }
     }
 
     private fun buildPendingThreePid(data: ThreePidsSettingsViewState, idPrefix: String, threePid: ThreePid) {
+        val host = this
         threePidItem {
             id(idPrefix + threePid.value)
             // TODO Add an icon for emails
@@ -246,43 +250,43 @@ class ThreePidsSettingsController @Inject constructor(
             is ThreePid.Email  -> {
                 settingsInformationItem {
                     id("info" + idPrefix + threePid.value)
-                    message(stringProvider.getString(R.string.account_email_validation_message))
-                    colorProvider(colorProvider)
+                    message(host.stringProvider.getString(R.string.account_email_validation_message))
+                    colorProvider(host.colorProvider)
                 }
                 settingsContinueCancelItem {
                     id("cont" + idPrefix + threePid.value)
-                    continueOnClick { interactionListener?.continueThreePid(threePid) }
-                    cancelOnClick { interactionListener?.cancelThreePid(threePid) }
+                    continueOnClick { host.interactionListener?.continueThreePid(threePid) }
+                    cancelOnClick { host.interactionListener?.cancelThreePid(threePid) }
                 }
             }
             is ThreePid.Msisdn -> {
                 settingsInformationItem {
                     id("info" + idPrefix + threePid.value)
-                    message(stringProvider.getString(R.string.settings_text_message_sent, threePid.getFormattedValue()))
-                    colorProvider(colorProvider)
+                    message(host.stringProvider.getString(R.string.settings_text_message_sent, threePid.getFormattedValue()))
+                    colorProvider(host.colorProvider)
                 }
                 settingsEditTextItem {
                     id("msisdnVerification${threePid.value}")
                     inputType(InputType.TYPE_CLASS_NUMBER)
-                    hint(stringProvider.getString(R.string.settings_text_message_sent_hint))
+                    hint(host.stringProvider.getString(R.string.settings_text_message_sent_hint))
                     if (data.msisdnValidationReinitiator[threePid]?.isTrue() == true) {
                         value("")
                     }
-                    errorText(getCodeError(data, threePid))
+                    errorText(host.getCodeError(data, threePid))
                     interactionListener(object : SettingsEditTextItem.Listener {
                         override fun onValidate() {
-                            interactionListener?.submitCode(threePid, currentCodes[threePid] ?: "")
+                            host.interactionListener?.submitCode(threePid, host.currentCodes[threePid] ?: "")
                         }
 
                         override fun onTextChange(text: String) {
-                            currentCodes[threePid] = text
+                            host.currentCodes[threePid] = text
                         }
                     })
                 }
                 settingsContinueCancelItem {
                     id("cont" + idPrefix + threePid.value)
-                    continueOnClick { interactionListener?.submitCode(threePid, currentCodes[threePid] ?: "") }
-                    cancelOnClick { interactionListener?.cancelThreePid(threePid) }
+                    continueOnClick { host.interactionListener?.submitCode(threePid, host.currentCodes[threePid] ?: "") }
+                    cancelOnClick { host.interactionListener?.cancelThreePid(threePid) }
                 }
             }
         }

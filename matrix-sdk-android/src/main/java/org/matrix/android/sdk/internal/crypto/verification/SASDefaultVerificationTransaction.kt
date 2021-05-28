@@ -345,7 +345,7 @@ internal abstract class SASDefaultVerificationTransaction(
     }
 
     protected fun hashUsingAgreedHashMethod(toHash: String): String? {
-        if ("sha256" == accepted?.hash?.toLowerCase(Locale.ROOT)) {
+        if ("sha256" == accepted?.hash?.lowercase(Locale.ROOT)) {
             val olmUtil = OlmUtility()
             val hashBytes = olmUtil.sha256(toHash)
             olmUtil.releaseUtility()
@@ -355,7 +355,7 @@ internal abstract class SASDefaultVerificationTransaction(
     }
 
     private fun macUsingAgreedMethod(message: String, info: String): String? {
-        return when (accepted?.messageAuthenticationCode?.toLowerCase(Locale.ROOT)) {
+        return when (accepted?.messageAuthenticationCode?.lowercase(Locale.ROOT)) {
             SAS_MAC_SHA256_LONGKDF -> getSAS().calculateMacLongKdf(message, info)
             SAS_MAC_SHA256         -> getSAS().calculateMac(message, info)
             else                   -> null

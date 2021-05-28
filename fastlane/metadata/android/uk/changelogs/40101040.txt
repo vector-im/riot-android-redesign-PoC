@@ -1,0 +1,2 @@
+Основні зміни в цій версії: поліпшення швидкодії та виправлення помилок!
+Повний журнал змін: https://github.com/vector-im/element-android/releases/tag/v1.1.4

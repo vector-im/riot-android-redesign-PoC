@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,23 +14,23 @@
         android:id="@+id/itemRoomDirectoryAvatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/layout_horizontal_margin"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/circle"
         android:contentDescription="@string/avatar"
         android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/itemRoomDirectoryBottomSeparator"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars" />
+        tools:src="@drawable/network_matrix" />
 
     <TextView
         android:id="@+id/itemRoomDirectoryName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:lines="1"
         android:maxLines="2"
@@ -39,36 +38,46 @@
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/itemRoomDirectoryDescription"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/itemRoomDirectoryChecked"
         app:layout_constraintStart_toEndOf="@id/itemRoomDirectoryAvatar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
+        app:layout_goneMarginEnd="@dimen/layout_horizontal_margin"
         tools:text="@tools:sample/lorem/random" />
 
     <TextView
         android:id="@+id/itemRoomDirectoryDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:lines="1"
         android:maxLines="2"
         android:textColor="?riotx_text_primary"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/itemRoomDirectoryBottomSeparator"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/itemRoomDirectoryChecked"
         app:layout_constraintStart_toEndOf="@id/itemRoomDirectoryAvatar"
         app:layout_constraintTop_toBottomOf="@id/itemRoomDirectoryName"
-        tools:text="@string/directory_server_all_rooms_on_server" />
+        app:layout_goneMarginEnd="@dimen/layout_horizontal_margin"
+        tools:text="@string/directory_server_native_rooms"
+        tools:visibility="visible" />
 
-    <View
-        android:id="@+id/itemRoomDirectoryBottomSeparator"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="?riotx_header_panel_border_mobile"
+    <ImageView
+        android:id="@+id/itemRoomDirectoryChecked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/layout_horizontal_margin"
+        android:layout_marginEnd="@dimen/layout_horizontal_margin"
+        android:contentDescription="@string/avatar"
+        android:padding="8dp"
+        android:src="@drawable/ic_check_on"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

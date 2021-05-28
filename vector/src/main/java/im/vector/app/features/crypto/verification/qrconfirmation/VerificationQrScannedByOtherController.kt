@@ -44,15 +44,16 @@ class VerificationQrScannedByOtherController @Inject constructor(
 
     override fun buildModels() {
         val state = viewState ?: return
+        val host = this
 
         bottomSheetVerificationNoticeItem {
             id("notice")
             apply {
                 if (state.isMe) {
-                    notice(stringProvider.getString(R.string.qr_code_scanned_self_verif_notice))
+                    notice(host.stringProvider.getString(R.string.qr_code_scanned_self_verif_notice))
                 } else {
                     val name = state.otherUserMxItem?.getBestName() ?: ""
-                    notice(stringProvider.getString(R.string.qr_code_scanned_by_other_notice, name))
+                    notice(host.stringProvider.getString(R.string.qr_code_scanned_by_other_notice, name))
                 }
             }
         }
@@ -68,11 +69,11 @@ class VerificationQrScannedByOtherController @Inject constructor(
 
         bottomSheetVerificationActionItem {
             id("deny")
-            title(stringProvider.getString(R.string.qr_code_scanned_by_other_no))
-            titleColor(colorProvider.getColor(R.color.vector_error_color))
+            title(host.stringProvider.getString(R.string.qr_code_scanned_by_other_no))
+            titleColor(host.colorProvider.getColor(R.color.vector_error_color))
             iconRes(R.drawable.ic_check_off)
-            iconColor(colorProvider.getColor(R.color.vector_error_color))
-            listener { listener?.onUserDeniesQrCodeScanned() }
+            iconColor(host.colorProvider.getColor(R.color.vector_error_color))
+            listener { host.listener?.onUserDeniesQrCodeScanned() }
         }
 
         dividerItem {
@@ -81,11 +82,11 @@ class VerificationQrScannedByOtherController @Inject constructor(
 
         bottomSheetVerificationActionItem {
             id("confirm")
-            title(stringProvider.getString(R.string.qr_code_scanned_by_other_yes))
-            titleColor(colorProvider.getColor(R.color.riotx_accent))
+            title(host.stringProvider.getString(R.string.qr_code_scanned_by_other_yes))
+            titleColor(host.colorProvider.getColor(R.color.riotx_accent))
             iconRes(R.drawable.ic_check_on)
-            iconColor(colorProvider.getColor(R.color.riotx_accent))
-            listener { listener?.onUserConfirmsQrCodeScanned() }
+            iconColor(host.colorProvider.getColor(R.color.riotx_accent))
+            listener { host.listener?.onUserConfirmsQrCodeScanned() }
         }
     }
 

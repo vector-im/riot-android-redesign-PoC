@@ -33,11 +33,12 @@ class RoomListFooterController @Inject constructor(
     var listener: RoomListListener? = null
 
     override fun buildModels(data: RoomListViewState?) {
+        val host = this
         when (data?.displayMode) {
             RoomListDisplayMode.FILTERED -> {
                 filteredRoomFooterItem {
                     id("filter_footer")
-                    listener(listener)
+                    listener(host.listener)
                     currentFilter(data.roomFilter)
                 }
             }
@@ -45,7 +46,7 @@ class RoomListFooterController @Inject constructor(
                 if (userPreferencesProvider.shouldShowLongClickOnRoomHelp()) {
                     helpFooterItem {
                         id("long_click_help")
-                        text(stringProvider.getString(R.string.help_long_click_on_room_for_more_options))
+                        text(host.stringProvider.getString(R.string.help_long_click_on_room_for_more_options))
                     }
                 }
             }

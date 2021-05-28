@@ -27,7 +27,6 @@ import im.vector.app.core.error.ErrorFormatter
 import im.vector.app.core.platform.VectorBaseActivity
 import im.vector.app.core.utils.toast
 import im.vector.app.databinding.ActivityProgressBinding
-import im.vector.app.features.login.LoginActivity
 import im.vector.app.features.login.LoginConfig
 import im.vector.app.features.permalink.PermalinkHandler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -126,9 +125,11 @@ class LinkHandlerActivity : VectorBaseActivity<ActivityProgressBinding>() {
      * Start the login screen with identity server and home server pre-filled
      */
     private fun startLoginActivity(uri: Uri) {
-        val intent = LoginActivity.newIntent(this, LoginConfig.parse(uri))
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
+        navigator.openLogin(
+                context = this,
+                loginConfig = LoginConfig.parse(uri),
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        )
         finish()
     }
 

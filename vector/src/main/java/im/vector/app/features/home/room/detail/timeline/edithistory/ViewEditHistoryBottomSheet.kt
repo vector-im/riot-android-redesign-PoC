@@ -30,24 +30,19 @@ import im.vector.app.core.platform.VectorBaseBottomSheetDialogFragment
 import im.vector.app.databinding.BottomSheetGenericListWithTitleBinding
 import im.vector.app.features.home.room.detail.timeline.action.TimelineEventFragmentArgs
 import im.vector.app.features.home.room.detail.timeline.item.MessageInformationData
-import im.vector.app.features.html.EventHtmlRenderer
 
 import javax.inject.Inject
 
 /**
  * Bottom sheet displaying list of edits for a given event ordered by timestamp
  */
-class ViewEditHistoryBottomSheet :
+class ViewEditHistoryBottomSheet:
         VectorBaseBottomSheetDialogFragment<BottomSheetGenericListWithTitleBinding>() {
 
     private val viewModel: ViewEditHistoryViewModel by fragmentViewModel(ViewEditHistoryViewModel::class)
 
     @Inject lateinit var viewEditHistoryViewModelFactory: ViewEditHistoryViewModel.Factory
-    @Inject lateinit var eventHtmlRenderer: EventHtmlRenderer
-
-    private val epoxyController by lazy {
-        ViewEditHistoryEpoxyController(requireContext(), viewModel.dateFormatter, eventHtmlRenderer)
-    }
+    @Inject lateinit var epoxyController: ViewEditHistoryEpoxyController
 
     override fun injectWith(injector: ScreenComponent) {
         injector.inject(this)

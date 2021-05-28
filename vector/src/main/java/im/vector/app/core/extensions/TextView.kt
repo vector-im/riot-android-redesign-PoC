@@ -62,7 +62,7 @@ fun TextView.setTextWithColoredPart(@StringRes fullTextRes: Int,
                                     @StringRes coloredTextRes: Int,
                                     @AttrRes colorAttribute: Int = R.attr.colorAccent,
                                     underline: Boolean = false,
-                                    onClick: (() -> Unit)?) {
+                                    onClick: (() -> Unit)? = null) {
     val coloredPart = resources.getString(coloredTextRes)
     // Insert colored part into the full text
     val fullText = resources.getString(fullTextRes, coloredPart)

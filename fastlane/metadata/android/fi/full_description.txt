@@ -1,30 +1,39 @@
-Element on uudenlainen viestinsovellus, joka:
+Element on turvallinen pikaviesti- ja tiimityösovellus joka sopii mainiosti ryhmäkeskusteluihin etätöissä. Sovellus käyttää päästä päähän -salausta ja tarjoaa videoneuvottelun, tiedostojen jakamisen ja äänipuhelut.
 
-1. Antaa sinun päättää yksityisyydestäsi
-2. Antaa sinun kommunikoida kenen tahansa kanssa Matrix-verkossa ja jopa sen ulkopuolella siltaamalla sovelluksiin, kuten Slack
-3. Suojaa sinua mainonnalta, tietojen keräämiseltä ja suljetuilta alustoilta
-4. Suojaa sinut päästä päähän -salauksella sekä ristiin varmentamisella muiden todentamiseksi
+<b>Elementin ominaisuuksia:</b>
+- Edistyneet viestintätyökalut
+- Turvallisempaa yritysviestintää täysin salatuilla viesteillä, myös etätyöntekijöille
+- Hajautettu keskustelu, joka perustuu avoimen lähdekoodin Matrix-teknologiaan
+- Turvallinen tiedostojen jakaminen datan salauksella
+- Videoneuvottelut VoIP:lla ja näytön jakamisella
+- Helppo integraatio tiimityövälineisiin, projektinhallintatyökaluihin, VoIP-palveluihin ja muihin ryhmäviestimiin
 
-Element eroaa täysin muista viestintäsovelluksista, koska se on hajautettu ja avointa lähdekoodia.
+Element on täysin erilainen kuin muut viestintä- ja yhteistyösovellukset. Se toimii Matrixilla, avoimella turvallisen ja hajautetun viestinnän verkostolla. Palvelimen ylläpitäminen itse on mahdollista, jos haluaa tietonsa ja viestinsä täysin hallintaansa.
 
-Element antaa sinun isännöidä itse - tai valita palveluntarjoajan - jotta sinulla on yksityisyys ja voit hallita tietojasi sekä keskustelujasi. Se antaa sinulle pääsyn avoimeen verkkoon, joten et jää juttelemaan vain toisten Elementin käyttäjien kanssa. Se on myös hyvin turvallinen.
+<b>Yksityisyys ja salattu viestintä</b>
+Element protects you from unwanted ads, data mining and walled gardens. It also secures all your data, one-to-one video and voice communication through end-to-end encryption and cross-signed device verification.
 
-Element pystyy tekemään kaiken tämän, koska se toimii Matrixilla - avoimella, hajautetun viestinnän standardilla.
+Element gives you control over your privacy while allowing you to communicate securely with anyone on the Matrix network, or other business collaboration tools by integrating with apps such as Slack.
 
-Element antaa sinulle päätösvallan antamalla sinun valita, kuka isännöi keskustelujasi. Element-sovelluksessa voit valita isännän eri tavoin:
+<b>Voit ylläpitää omaa palvelinta</b>
+To allow more control of your sensitive data and conversations, Element can be self-hosted or you can choose any Matrix-based host - the standard for open source, decentralized communication. Element gives you privacy, security compliance and integration flexibility.
 
-1. Hanki ilmainen tili Matrix-kehittäjien ylläpitämällä matrix.org-palvelimella tai valitse tuhansista vapaaehtoisten ylläpitämistä julkisista palvelimista.
-2. Isännöi tiliäsi itse ylläpitämällä palvelinta omalla laitteellasi
-3. Luo tili sinua varten tehdyllä palvelimella tilaamalla Element Matrix Services -palvelu
+<b>Hallitse omia tietojasi</b>
+You decide where to keep your data and messages. Without the risk of data mining or access from third parties.
 
-<b>Miksi valita Element?</b>
+Element puts you in control in different ways:
+1. Get a free account on the matrix.org public server hosted by the Matrix developers, or choose from thousands of public servers hosted by volunteers
+2. Self-host your account by running a server on your own IT infrastructure
+3. Sign up for an account on a custom server by simply subscribing to the Element Matrix Services hosting platform
 
-<b>OMAT TIEDOT</b>: Sinä päätät, missä tietosi ja viestisi säilytetään. Sinä määräät, ei jokin jättiyhtiö, joka tutkii tietojasi tai antaa niitä kolmansille osapuolille.
+<b>Avointa viestintää ja yhteistyötä</b>
+Voit keskustella kenen tahansa kanssa Matrix-verkossa, riippumatta siitä käyttääkö tämä Elementiä, jotain muuta Matrix-sovellusta tai jopa muuta viestintäsovellusta.
 
-<b>AVOINTA VIESTINTÄÄ JA YHTEISTYÖTÄ</b>: Voit keskustella kaikkien muiden Matrix-verkon käyttäjien kanssa, riippumatta siitä käyttävätkö he Elementiä tai muuta Matrix-sovellusta, ja vaikka he käyttäisivät eri viestijärjestelmiä, kuten Slack, IRC tai XMPP.
+<b>Todella turvallinen</b>
+Real end-to-end encryption (only those in the conversation can decrypt messages), and cross-signed device verification.
 
-<b>ERITTÄIN TURVALLINEN</b>: Vahva päästä päähän -salaus (vain keskustelussa olevat voivat purkaa viestien salauksen), ja ristiin varmentaminen keskustelun osallistujien laitteiden tarkistamiseksi.
+<b>Kattavaa viestintää ja integraatioita</b>
+Viestit, ääni- ja videopuhelut, tiedostojen jakaminen, näytön jakaminen ja koko joukko integraatioita, botteja ja sovelmia. Luo huoneita ja yhteisöjä, pidä yhteyttä ja hoida asiasi.
 
-<b>KATTAVAA VIESTINTÄÄ</b>: Viestit, ääni- ja videopuhelut, tiedostojen jakaminen, näytön jakaminen ja koko joukko integraatioita, botteja ja sovelmia. Rakenna huoneita ja yhteisöjä, pidä yhteyttä ja hoida asiasi.
-
-<b>MISSÄ TAHANSA OLETKIN</b>: Pidä yhteyttä missä tahansa, täysin synkronoidun viestihistorian kautta kaikilla laitteillasi ja verkossa osoitteessa https://app.element.io.
+<b>Jatka siitä mihin jäit</b>
+Stay in touch wherever you are with fully synchronised message history across all your devices and on the web at https://app.element.io

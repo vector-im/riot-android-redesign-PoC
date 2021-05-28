@@ -28,7 +28,7 @@ import androidx.core.transition.addListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.transition.Transition
 import im.vector.app.R
 import im.vector.app.core.di.ActiveSessionHolder
@@ -42,6 +42,9 @@ import im.vector.app.features.themes.ActivityOtherThemes
 import im.vector.app.features.themes.ThemeUtils
 import im.vector.lib.attachmentviewer.AttachmentCommands
 import im.vector.lib.attachmentviewer.AttachmentViewerActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 import javax.inject.Inject
@@ -119,11 +122,11 @@ class VectorAttachmentViewerActivity : AttachmentViewerActivity(), BaseAttachmen
         val inMemoryData = intent.getParcelableArrayListExtra<AttachmentData>(EXTRA_IN_MEMORY_DATA)
         val sourceProvider = if (inMemoryData != null) {
             initialIndex = inMemoryData.indexOfFirst { it.eventId == args.eventId }.coerceAtLeast(0)
-            dataSourceFactory.createProvider(inMemoryData, room)
+            dataSourceFactory.createProvider(inMemoryData, room, lifecycleScope)
         } else {
             val events = room?.getAttachmentMessages().orEmpty()
             initialIndex = events.indexOfFirst { it.eventId == args.eventId }.coerceAtLeast(0)
-            dataSourceFactory.createProvider(events)
+            dataSourceFactory.createProvider(events, lifecycleScope)
         }
         sourceProvider.interactionListener = this
         setSourceProvider(sourceProvider)
@@ -264,9 +267,15 @@ class VectorAttachmentViewerActivity : AttachmentViewerActivity(), BaseAttachmen
     }
 
     override fun onShareTapped() {
-        currentSourceProvider?.getFileForSharing(currentPosition) { data ->
-            if (data != null && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-                shareMedia(this@VectorAttachmentViewerActivity, data, getMimeTypeFromUri(this@VectorAttachmentViewerActivity, data.toUri()))
+        lifecycleScope.launch(Dispatchers.IO) {
+            val file = currentSourceProvider?.getFileForSharing(currentPosition) ?: return@launch
+
+            withContext(Dispatchers.Main) {
+                shareMedia(
+                        this@VectorAttachmentViewerActivity,
+                        file,
+                        getMimeTypeFromUri(this@VectorAttachmentViewerActivity, file.toUri())
+                )
             }
         }
     }

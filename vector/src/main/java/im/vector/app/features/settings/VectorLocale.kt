@@ -181,7 +181,7 @@ object VectorLocale {
             }
         }
                 // sort by human display names
-                .sortedBy { localeToLocalisedString(it).toLowerCase(it) }
+                .sortedBy { localeToLocalisedString(it).lowercase(it) }
 
         supportedLocales.clear()
         supportedLocales.addAll(list)

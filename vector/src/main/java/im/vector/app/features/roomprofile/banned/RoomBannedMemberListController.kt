@@ -52,6 +52,7 @@ class RoomBannedMemberListController @Inject constructor(
 
     override fun buildModels(data: RoomBannedMemberListViewState?) {
         val bannedList = data?.bannedMemberSummaries?.invoke() ?: return
+        val host = this
 
         val quantityString = stringProvider.getQuantityString(R.plurals.room_settings_banned_users_count, bannedList.size, bannedList.size)
 
@@ -74,7 +75,7 @@ class RoomBannedMemberListController @Inject constructor(
                                 profileMatrixItemWithProgress {
                                     id(roomMember.userId)
                                     matrixItem(roomMember.toMatrixItem())
-                                    avatarRenderer(avatarRenderer)
+                                    avatarRenderer(host.avatarRenderer)
                                     apply {
                                         if (actionInProgress) {
                                             inProgress(true)
@@ -83,7 +84,7 @@ class RoomBannedMemberListController @Inject constructor(
                                             inProgress(false)
                                             editable(true)
                                             clickListener { _ ->
-                                                callback?.onUnbanClicked(roomMember)
+                                                host.callback?.onUnbanClicked(roomMember)
                                             }
                                         }
                                     }
@@ -92,7 +93,7 @@ class RoomBannedMemberListController @Inject constructor(
                             between = { _, roomMemberBefore ->
                                 dividerItem {
                                     id("divider_${roomMemberBefore.userId}")
-                                    color(dividerColor)
+                                    color(host.dividerColor)
                                 }
                             }
                     )

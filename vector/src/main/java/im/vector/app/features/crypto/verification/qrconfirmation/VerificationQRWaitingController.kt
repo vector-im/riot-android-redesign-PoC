@@ -40,11 +40,12 @@ class VerificationQRWaitingController @Inject constructor(
 
     override fun buildModels() {
         val params = args ?: return
+        val host = this
 
         bottomSheetVerificationNoticeItem {
             id("notice")
             apply {
-                notice(stringProvider.getString(R.string.qr_code_scanned_verif_waiting_notice))
+                notice(host.stringProvider.getString(R.string.qr_code_scanned_verif_waiting_notice))
             }
         }
 
@@ -55,7 +56,7 @@ class VerificationQRWaitingController @Inject constructor(
 
         bottomSheetVerificationWaitingItem {
             id("waiting")
-            title(stringProvider.getString(R.string.qr_code_scanned_verif_waiting, params.otherUserName))
+            title(host.stringProvider.getString(R.string.qr_code_scanned_verif_waiting, params.otherUserName))
         }
     }
 }

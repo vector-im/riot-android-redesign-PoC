@@ -103,7 +103,7 @@ class StartCallActionsHandler(
                 val currentCall = callManager.getCurrentCall()
                 if (currentCall != null) {
                     // resume existing if same room, if not prompt to kill and then restart new call?
-                    if (currentCall.roomId == roomId) {
+                    if (currentCall.signalingRoomId == roomId) {
                         onTapToReturnToCall()
                     }
                     //                        else {

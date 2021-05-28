@@ -2211,7 +2211,7 @@
     <string name="identity_server_set_alternative_submit">Odeslat</string>
     <string name="play_video">Přehrát</string>
     <string name="pause_video">Pozastavit</string>
-    <string name="dismiss">Zavrhnout</string>
+    <string name="dismiss">Odmítnout</string>
     <string name="no_permissions_to_start_conf_call">Nemáte povolení zahájit konferenční hovor v této místnosti</string>
     <string name="conference_call_in_progress">Konference již probíhá!</string>
     <string name="video_meeting">Zahájit video schůzku</string>
@@ -2424,8 +2424,8 @@
     <string name="delete_account_data_warning">Smazat údaje účtu typu %1$s\?
 \n
 \nOpatrně, může vést k neočekávanému chování.</string>
-    <string name="warning_unsaved_change_discard">Změny zavrhnout</string>
-    <string name="warning_unsaved_change">Zůstávají neuložené změny. Zavrhnout změny\?</string>
+    <string name="warning_unsaved_change_discard">Zahodit změny</string>
+    <string name="warning_unsaved_change">Zahodit neuložené změny\?</string>
     <string name="warning_room_not_created_yet">Místnost nebyla ještě založena. Zrušit založení místnosti\?</string>
     <string name="template_settings_security_pin_code_grace_period_summary_off">Kód PIN se vyžaduje při každém otevření ${app_name}u.</string>
     <string name="template_settings_security_pin_code_grace_period_summary_on">Kód PIN se vyžaduje, pokud se ${app_name} nepoužil 2 minuty.</string>
@@ -2804,4 +2804,24 @@
     <string name="room_settings_guest_access_title">Dovolit hostům vstoupit</string>
     <string name="spaces_invited_header">Pozvání</string>
     <string name="suggested_header">Doporučené místnosti</string>
+    <string name="space_manage_rooms_and_spaces">Správa místností a prostorů</string>
+    <string name="space_mark_as_not_suggested">Označit za nikoli doporučené</string>
+    <string name="space_mark_as_suggested">Označit za doporučené</string>
+    <string name="space_suggested">Doporučeno</string>
+    <string name="make_this_space_public">Učinit tento prostor veřejným</string>
+    <string name="space_settings_manage_rooms">Správa místností</string>
+    <string name="looking_for_someone_not_in_space">Hledáte někoho, kdo není v %s\?</string>
+    <string name="user_invites_you">%s Vás zve</string>
+    <string name="a11y_public_room">Tato místnosti je veřejná</string>
+    <string name="send_images_and_video_with_original_size">Poslat media v původní velikosti</string>
+    <plurals name="send_videos_with_original_size">
+        <item quantity="one">Poslat video v původní velikosti</item>
+        <item quantity="few">Poslat videa v původní velikosti</item>
+        <item quantity="other">Poslat videa v původní velikosti</item>
+    </plurals>
+    <string name="error_file_too_big_simple">Soubor je pro nahrání příliš velký.</string>
+    <string name="send_file_step_compressing_video">Komprimuji video %d%%</string>
+    <string name="send_file_step_compressing_image">Komprimuji obrázek…</string>
+    <string name="use_as_default_and_do_not_ask_again">Použít výchozí a dále se neptat</string>
+    <string name="option_always_ask">Vždy se dotázat</string>
 </resources>

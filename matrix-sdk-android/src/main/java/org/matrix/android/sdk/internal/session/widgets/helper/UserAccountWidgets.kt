@@ -19,10 +19,10 @@ package org.matrix.android.sdk.internal.session.widgets.helper
 import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.events.model.toModel
 import org.matrix.android.sdk.api.util.JsonDict
-import org.matrix.android.sdk.api.session.accountdata.UserAccountDataEvent
+import org.matrix.android.sdk.api.session.accountdata.AccountDataEvent
 import org.matrix.android.sdk.api.session.widgets.model.Widget
 
-internal fun UserAccountDataEvent.extractWidgetSequence(widgetFactory: WidgetFactory): Sequence<Widget> {
+internal fun AccountDataEvent.extractWidgetSequence(widgetFactory: WidgetFactory): Sequence<Widget> {
     return content.asSequence()
             .mapNotNull {
                 @Suppress("UNCHECKED_CAST")

@@ -34,25 +34,26 @@ class RoomDevToolRootController @Inject constructor(
     var interactionListener: DevToolsInteractionListener? = null
 
     override fun buildModels() {
+        val host = this
         genericButtonItem {
             id("explore")
-            text(stringProvider.getString(R.string.dev_tools_explore_room_state))
+            text(host.stringProvider.getString(R.string.dev_tools_explore_room_state))
             buttonClickAction(View.OnClickListener {
-                interactionListener?.processAction(RoomDevToolAction.ExploreRoomState)
+                host.interactionListener?.processAction(RoomDevToolAction.ExploreRoomState)
             })
         }
         genericButtonItem {
             id("send")
-            text(stringProvider.getString(R.string.dev_tools_send_custom_event))
+            text(host.stringProvider.getString(R.string.dev_tools_send_custom_event))
             buttonClickAction(View.OnClickListener {
-                interactionListener?.processAction(RoomDevToolAction.SendCustomEvent(false))
+                host.interactionListener?.processAction(RoomDevToolAction.SendCustomEvent(false))
             })
         }
         genericButtonItem {
             id("send_state")
-            text(stringProvider.getString(R.string.dev_tools_send_state_event))
+            text(host.stringProvider.getString(R.string.dev_tools_send_state_event))
             buttonClickAction(View.OnClickListener {
-                interactionListener?.processAction(RoomDevToolAction.SendCustomEvent(true))
+                host.interactionListener?.processAction(RoomDevToolAction.SendCustomEvent(true))
             })
         }
     }

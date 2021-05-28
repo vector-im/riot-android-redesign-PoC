@@ -1,0 +1,47 @@
+{% if top_line %}
+{{ top_line }}
+{{ top_underline * ((top_line)|length)}}
+{% elif versiondata.name %}
+{{ versiondata.name }} {{ versiondata.version }} ({{ versiondata.date }})
+{{ top_underline * ((versiondata.name + versiondata.version + versiondata.date)|length + 4)}}
+{% else %}
+{{ versiondata.version }} ({{ versiondata.date }})
+{{ top_underline * ((versiondata.version + versiondata.date)|length + 3)}}
+{% endif %}
+{% for section, _ in sections.items() %}
+{% set underline = underlines[0] %}{% if section %}{{section}}
+{{ underline * section|length }}{% set underline = underlines[1] %}
+{% endif %}
+
+{% if sections[section] %}
+{% for category, val in definitions.items() if category in sections[section]%}
+{% if definitions[category]['name'] == "Features" %}
+Features ✨:
+{% elif definitions[category]['name'] == "Bugfixes" %}
+Bugfixes 🐛:
+{% elif definitions[category]['name'] == "Deprecations and Removals" %}
+SDK API changes ⚠️:
+{% elif definitions[category]['name'] == "Improved Documentation" %}
+Improved Documentation 📚:
+{% elif definitions[category]['name'] == "Misc" %}
+Other changes:
+{% else %}
+{{ definitions[category]['name'] }}
+{% endif %}
+{% if definitions[category]['showcontent'] %}
+{% for text, values in sections[section][category].items() %}
+ - {{ text }} ({{ values|join(', ') }})
+{% endfor %}
+{% else %}
+ - {{ sections[section][category]['']|join(', ') }}
+{% endif %}
+{% if sections[section][category]|length == 0 %}
+No significant changes.
+{% else %}
+{% endif %}
+
+{% endfor %}
+{% else %}
+No significant changes.
+{% endif %}
+{% endfor %}

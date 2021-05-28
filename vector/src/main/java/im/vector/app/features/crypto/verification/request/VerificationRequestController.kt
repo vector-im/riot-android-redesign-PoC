@@ -50,12 +50,13 @@ class VerificationRequestController @Inject constructor(
     override fun buildModels() {
         val state = viewState ?: return
         val matrixItem = viewState?.otherUserMxItem ?: return
+        val host = this
 
         if (state.selfVerificationMode) {
             if (state.hasAnyOtherSession) {
                 bottomSheetVerificationNoticeItem {
                     id("notice")
-                    notice(stringProvider.getString(R.string.verification_open_other_to_verify))
+                    notice(host.stringProvider.getString(R.string.verification_open_other_to_verify))
                 }
 
                 bottomSheetSelfWaitItem {
@@ -75,12 +76,12 @@ class VerificationRequestController @Inject constructor(
                 }
                 bottomSheetVerificationActionItem {
                     id("passphrase")
-                    title(stringProvider.getString(R.string.verification_cannot_access_other_session))
-                    titleColor(colorProvider.getColorFromAttribute(R.attr.riotx_text_primary))
+                    title(host.stringProvider.getString(R.string.verification_cannot_access_other_session))
+                    titleColor(host.colorProvider.getColorFromAttribute(R.attr.riotx_text_primary))
                     subTitle(subtitle)
                     iconRes(R.drawable.ic_arrow_right)
-                    iconColor(colorProvider.getColorFromAttribute(R.attr.riotx_text_primary))
-                    listener { listener?.onClickRecoverFromPassphrase() }
+                    iconColor(host.colorProvider.getColorFromAttribute(R.attr.riotx_text_primary))
+                    listener { host.listener?.onClickRecoverFromPassphrase() }
                 }
             }
 
@@ -90,11 +91,11 @@ class VerificationRequestController @Inject constructor(
 
             bottomSheetVerificationActionItem {
                 id("skip")
-                title(stringProvider.getString(R.string.skip))
-                titleColor(colorProvider.getColor(R.color.riotx_destructive_accent))
+                title(host.stringProvider.getString(R.string.skip))
+                titleColor(host.colorProvider.getColor(R.color.riotx_destructive_accent))
                 iconRes(R.drawable.ic_arrow_right)
-                iconColor(colorProvider.getColor(R.color.riotx_destructive_accent))
-                listener { listener?.onClickSkip() }
+                iconColor(host.colorProvider.getColor(R.color.riotx_destructive_accent))
+                listener { host.listener?.onClickSkip() }
             }
         } else {
             val styledText =
@@ -121,18 +122,18 @@ class VerificationRequestController @Inject constructor(
                 is Uninitialized -> {
                     bottomSheetVerificationActionItem {
                         id("start")
-                        title(stringProvider.getString(R.string.start_verification))
-                        titleColor(colorProvider.getColor(R.color.riotx_accent))
-                        subTitle(stringProvider.getString(R.string.verification_request_start_notice))
+                        title(host.stringProvider.getString(R.string.start_verification))
+                        titleColor(host.colorProvider.getColor(R.color.riotx_accent))
+                        subTitle(host.stringProvider.getString(R.string.verification_request_start_notice))
                         iconRes(R.drawable.ic_arrow_right)
-                        iconColor(colorProvider.getColorFromAttribute(R.attr.riotx_text_primary))
-                        listener { listener?.onClickOnVerificationStart() }
+                        iconColor(host.colorProvider.getColorFromAttribute(R.attr.riotx_text_primary))
+                        listener { host.listener?.onClickOnVerificationStart() }
                     }
                 }
                 is Loading       -> {
                     bottomSheetVerificationWaitingItem {
                         id("waiting")
-                        title(stringProvider.getString(R.string.verification_request_waiting_for, matrixItem.getBestName()))
+                        title(host.stringProvider.getString(R.string.verification_request_waiting_for, matrixItem.getBestName()))
                     }
                 }
                 is Success       -> {
@@ -140,12 +141,12 @@ class VerificationRequestController @Inject constructor(
                         if (state.isMe) {
                             bottomSheetVerificationWaitingItem {
                                 id("waiting")
-                                title(stringProvider.getString(R.string.verification_request_waiting))
+                                title(host.stringProvider.getString(R.string.verification_request_waiting))
                             }
                         } else {
                             bottomSheetVerificationWaitingItem {
                                 id("waiting")
-                                title(stringProvider.getString(R.string.verification_request_waiting_for, matrixItem.getBestName()))
+                                title(host.stringProvider.getString(R.string.verification_request_waiting_for, matrixItem.getBestName()))
                             }
                         }
                     }
@@ -160,12 +161,12 @@ class VerificationRequestController @Inject constructor(
 
             bottomSheetVerificationActionItem {
                 id("wasnote")
-                title(stringProvider.getString(R.string.verify_new_session_was_not_me))
-                titleColor(colorProvider.getColor(R.color.riotx_destructive_accent))
-                subTitle(stringProvider.getString(R.string.verify_new_session_compromized))
+                title(host.stringProvider.getString(R.string.verify_new_session_was_not_me))
+                titleColor(host.colorProvider.getColor(R.color.riotx_destructive_accent))
+                subTitle(host.stringProvider.getString(R.string.verify_new_session_compromized))
                 iconRes(R.drawable.ic_arrow_right)
-                iconColor(colorProvider.getColorFromAttribute(R.attr.riotx_text_primary))
-                listener { listener?.onClickOnWasNotMe() }
+                iconColor(host.colorProvider.getColorFromAttribute(R.attr.riotx_text_primary))
+                listener { host.listener?.onClickOnWasNotMe() }
             }
         }
     }

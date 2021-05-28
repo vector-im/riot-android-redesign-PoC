@@ -44,7 +44,7 @@ data class CallAnswerContent(
          * Capability advertisement.
          */
         @Json(name = "capabilities") val capabilities: CallCapabilities? = null
-): CallSignallingContent  {
+): CallSignalingContent  {
 
     @JsonClass(generateAdapter = true)
     data class Answer(

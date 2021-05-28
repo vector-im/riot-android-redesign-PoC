@@ -2752,4 +2752,23 @@
     <string name="spaces_header">Kogukonnakeskused</string>
     <string name="spaces_invited_header">Kutsed</string>
     <string name="suggested_header">Soovitatud jututoad</string>
+    <string name="space_manage_rooms_and_spaces">Halda jututubasid ja kogukonnakeskuseid</string>
+    <string name="space_mark_as_not_suggested">Eemalda soovitus</string>
+    <string name="space_mark_as_suggested">Märgi soovituseks</string>
+    <string name="space_suggested">Soovitatud</string>
+    <string name="make_this_space_public">Tee see jututuba avalikuks</string>
+    <string name="space_settings_manage_rooms">Halda jututubasid</string>
+    <string name="looking_for_someone_not_in_space">Kas sa otsid kedagi, kes ei leidu %s kogukonnas\?</string>
+    <string name="user_invites_you">%s kutsus sind</string>
+    <string name="a11y_public_room">See jututuba on avalik</string>
+    <string name="send_images_and_video_with_original_size">Saada meedia algses suuruses</string>
+    <plurals name="send_videos_with_original_size">
+        <item quantity="one">Saada videofail algses suuruses</item>
+        <item quantity="other">Saada videofailid algses suuruses</item>
+    </plurals>
+    <string name="error_file_too_big_simple">See fail on üleslaadimiseks liiga suur.</string>
+    <string name="send_file_step_compressing_video">Teen video väiksemaks %d%%</string>
+    <string name="send_file_step_compressing_image">Teen pildi väiksemaks…</string>
+    <string name="use_as_default_and_do_not_ask_again">Kasuta vaikeseadistusena ja ära küsi uuesti</string>
+    <string name="option_always_ask">Alati küsi</string>
 </resources>

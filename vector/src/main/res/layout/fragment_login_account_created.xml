@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?riotx_background">
+
+    <androidx.core.widget.NestedScrollView style="@style/LoginFormScrollView">
+
+        <LinearLayout style="@style/LoginFormContainer">
+
+            <ImageView
+                style="@style/LoginLogo"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                android:text="@string/login_account_created_title"
+                android:textAppearance="@style/TextAppearance.Vector.Login.Title" />
+
+            <TextView
+                android:id="@+id/loginAccountCreatedSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                android:textAppearance="@style/TextAppearance.Vector.Login.Title.Small"
+                tools:text="@string/login_account_created_subtitle" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/login_account_created_notice"
+                android:textAppearance="@style/TextAppearance.Vector.Login.Text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                android:text="@string/login_account_created_notice_2"
+                android:textAppearance="@style/TextAppearance.Vector.Login.Text" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/loginAccountCreatedMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                android:background="@drawable/bg_login_server_selector"
+                android:padding="4dp">
+
+                <ImageView
+                    android:id="@+id/loginAccountCreatedAvatar"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:contentDescription="@string/avatar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@tools:sample/avatars" />
+
+                <TextView
+                    android:id="@+id/loginAccountCreatedMemberName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="?riotx_text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/loginAccountCreatedTime"
+                    app:layout_constraintStart_toEndOf="@+id/loginAccountCreatedAvatar"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="\@user:domain.org" />
+
+                <TextView
+                    android:id="@+id/loginAccountCreatedTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textColor="?riotx_text_secondary"
+                    android:textSize="12sp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/loginAccountCreatedMemberName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="@tools:sample/date/hhmm" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_account_created_message"
+                    android:textColor="?riotx_text_primary"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/loginAccountCreatedMemberName"
+                    app:layout_constraintTop_toBottomOf="@+id/loginAccountCreatedMemberName" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                android:text="@string/login_account_created_instruction"
+                android:textAppearance="@style/TextAppearance.Vector.Login.Text" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/loginAccountCreatedLater"
+                    style="@style/Style.Vector.Login.Button.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/later" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/loginAccountCreatedDone"
+                    style="@style/Style.Vector.Login.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/done"
+                    android:visibility="gone"
+                    tools:layout_marginEnd="120dp"
+                    tools:visibility="visible" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>
+

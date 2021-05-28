@@ -98,6 +98,26 @@ class SpaceAddRoomsViewModel @AssistedInject constructor(
         )
     }
 
+    val updatableDMLivePageResult: UpdatableLivePageResult by lazy {
+        session.getFilteredPagedRoomSummariesLive(
+                roomSummaryQueryParams {
+                    this.memberships = listOf(Membership.JOIN)
+                    this.excludeType = listOf(RoomType.SPACE)
+                    this.includeType = null
+                    this.roomCategoryFilter = RoomCategoryFilter.ONLY_DM
+                    this.activeSpaceFilter = ActiveSpaceFilter.ExcludeSpace(initialState.spaceId)
+                    this.displayName = QueryStringValue.Contains(initialState.currentFilter, QueryStringValue.Case.INSENSITIVE)
+                },
+                pagedListConfig = PagedList.Config.Builder()
+                        .setPageSize(10)
+                        .setInitialLoadSizeHint(20)
+                        .setEnablePlaceholders(true)
+                        .setPrefetchDistance(10)
+                        .build(),
+                sortOrder = RoomSortOrder.NAME
+        )
+    }
+
     private val selectionList = mutableMapOf<String, Boolean>()
     val selectionListLiveData = MutableLiveData<Map<String, Boolean>>()
 
@@ -106,7 +126,8 @@ class SpaceAddRoomsViewModel @AssistedInject constructor(
         setState {
             copy(
                     spaceName = spaceSummary?.displayName ?: "",
-                    ignoreRooms = (spaceSummary?.flattenParentIds ?: emptyList()) + listOf(initialState.spaceId)
+                    ignoreRooms = (spaceSummary?.flattenParentIds ?: emptyList()) + listOf(initialState.spaceId),
+                    shouldShowDMs = spaceSummary?.isPublic == false
             )
         }
     }

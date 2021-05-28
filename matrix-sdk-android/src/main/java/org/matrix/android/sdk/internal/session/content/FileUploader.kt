@@ -47,14 +47,15 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import javax.inject.Inject
 
-internal class FileUploader @Inject constructor(@Authenticated
-                                                private val okHttpClient: OkHttpClient,
-                                                private val globalErrorReceiver: GlobalErrorReceiver,
-                                                private val homeServerCapabilitiesService: DefaultHomeServerCapabilitiesService,
-                                                private val context: Context,
-                                                private val temporaryFileCreator: TemporaryFileCreator,
-                                                contentUrlResolver: ContentUrlResolver,
-                                                moshi: Moshi) {
+internal class FileUploader @Inject constructor(
+        @Authenticated private val okHttpClient: OkHttpClient,
+        private val globalErrorReceiver: GlobalErrorReceiver,
+        private val homeServerCapabilitiesService: DefaultHomeServerCapabilitiesService,
+        private val context: Context,
+        private val temporaryFileCreator: TemporaryFileCreator,
+        contentUrlResolver: ContentUrlResolver,
+        moshi: Moshi
+) {
 
     private val uploadUrl = contentUrlResolver.uploadUrl
     private val responseAdapter = moshi.adapter(ContentUploadResponse::class.java)
@@ -120,11 +121,17 @@ internal class FileUploader @Inject constructor(@Authenticated
         }
     }
 
-    private suspend fun upload(uploadBody: RequestBody, filename: String?, progressListener: ProgressRequestBody.Listener?): ContentUploadResponse {
+    private suspend fun upload(uploadBody: RequestBody,
+                               filename: String?,
+                               progressListener: ProgressRequestBody.Listener?): ContentUploadResponse {
         val urlBuilder = uploadUrl.toHttpUrlOrNull()?.newBuilder() ?: throw RuntimeException()
 
         val httpUrl = urlBuilder
-                .addQueryParameter("filename", filename)
+                .apply {
+                    if (filename != null) {
+                        addQueryParameter("filename", filename)
+                    }
+                }
                 .build()
 
         val requestBody = if (progressListener != null) ProgressRequestBody(uploadBody, progressListener) else uploadBody

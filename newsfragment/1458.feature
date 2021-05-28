@@ -1,0 +1,1 @@
+Allow user to add custom "network" in room search

@@ -41,13 +41,14 @@ class AttachmentMiniaturePreviewController @Inject constructor() : TypedEpoxyCon
     var callback: Callback? = null
 
     override fun buildModels(data: AttachmentsPreviewViewState) {
+        val host = this
         data.attachments.forEachIndexed { index, contentAttachmentData ->
             attachmentMiniaturePreviewItem {
                 id(contentAttachmentData.queryUri.toString())
                 attachment(contentAttachmentData)
                 checked(data.currentAttachmentIndex == index)
                 clickListener { _ ->
-                    callback?.onAttachmentClicked(index, contentAttachmentData)
+                    host.callback?.onAttachmentClicked(index, contentAttachmentData)
                 }
             }
         }

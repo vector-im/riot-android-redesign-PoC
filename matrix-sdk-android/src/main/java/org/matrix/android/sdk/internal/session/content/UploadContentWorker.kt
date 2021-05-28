@@ -82,6 +82,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
     @Inject lateinit var cancelSendTracker: CancelSendTracker
     @Inject lateinit var imageCompressor: ImageCompressor
     @Inject lateinit var videoCompressor: VideoCompressor
+    @Inject lateinit var thumbnailExtractor: ThumbnailExtractor
     @Inject lateinit var localEchoRepository: LocalEchoRepository
     @Inject lateinit var temporaryFileCreator: TemporaryFileCreator
 
@@ -229,7 +230,6 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                 val encryptedFile: File?
                 val contentUploadResponse = if (params.isEncrypted) {
                     Timber.v("## Encrypt file")
-
                     encryptedFile = temporaryFileCreator.create()
                             .also { filesToDelete.add(it) }
 
@@ -239,16 +239,22 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                                     contentUploadStateTracker.setEncrypting(it, read.toLong(), total.toLong())
                                 }
                             }
-
                     Timber.v("## Uploading file")
-
-                    fileUploader
-                            .uploadFile(encryptedFile, attachment.name, MimeTypes.OctetStream, progressListener)
+                    fileUploader.uploadFile(
+                            file = encryptedFile,
+                            filename = null,
+                            mimeType = MimeTypes.OctetStream,
+                            progressListener = progressListener
+                    )
                 } else {
-                    Timber.v("## Clear file")
+                    Timber.v("## Uploading clear file")
                     encryptedFile = null
-                    fileUploader
-                            .uploadFile(fileToUpload, attachment.name, attachment.getSafeMimeType(), progressListener)
+                    fileUploader.uploadFile(
+                            file = fileToUpload,
+                            filename = attachment.name,
+                            mimeType = attachment.getSafeMimeType(),
+                            progressListener = progressListener
+                    )
                 }
 
                 Timber.v("## Update cache storage for ${contentUploadResponse.contentUri}")
@@ -297,7 +303,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
      * If appropriate, it will create and upload a thumbnail
      */
     private suspend fun dealWithThumbnail(params: Params): UploadThumbnailResult? {
-        return ThumbnailExtractor.extractThumbnail(context, params.attachment)
+        return thumbnailExtractor.extractThumbnail(params.attachment)
                 ?.let { thumbnailData ->
                     val thumbnailProgressListener = object : ProgressRequestBody.Listener {
                         override fun onProgress(current: Long, total: Long) {
@@ -312,7 +318,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                             val encryptionResult = MXEncryptedAttachments.encryptAttachment(thumbnailData.bytes.inputStream(), thumbnailData.mimeType)
                             val contentUploadResponse = fileUploader.uploadByteArray(
                                     byteArray = encryptionResult.encryptedByteArray,
-                                    filename = "thumb_${params.attachment.name}",
+                                    filename = null,
                                     mimeType = MimeTypes.OctetStream,
                                     progressListener = thumbnailProgressListener
                             )

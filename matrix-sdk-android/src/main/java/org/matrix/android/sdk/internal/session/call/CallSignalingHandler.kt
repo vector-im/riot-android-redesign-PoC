@@ -30,7 +30,7 @@ import org.matrix.android.sdk.api.session.room.model.call.CallInviteContent
 import org.matrix.android.sdk.api.session.room.model.call.CallNegotiateContent
 import org.matrix.android.sdk.api.session.room.model.call.CallRejectContent
 import org.matrix.android.sdk.api.session.room.model.call.CallSelectAnswerContent
-import org.matrix.android.sdk.api.session.room.model.call.CallSignallingContent
+import org.matrix.android.sdk.api.session.room.model.call.CallSignalingContent
 import org.matrix.android.sdk.api.util.Optional
 import org.matrix.android.sdk.internal.di.UserId
 import org.matrix.android.sdk.internal.session.SessionScope
@@ -210,11 +210,11 @@ internal class CallSignalingHandler @Inject constructor(private val activeCallHa
         }
     }
 
-    private fun MxCall.partyIdsMatches(contentSignallingContent: CallSignallingContent): Boolean {
-        return opponentPartyId?.getOrNull() == contentSignallingContent.partyId
+    private fun MxCall.partyIdsMatches(contentSignalingContent: CallSignalingContent): Boolean {
+        return opponentPartyId?.getOrNull() == contentSignalingContent.partyId
     }
 
-    private fun CallSignallingContent.getCall(): MxCall? {
+    private fun CallSignalingContent.getCall(): MxCall? {
         val currentCall = callId?.let {
             activeCallHandler.getCallWithId(it)
         }

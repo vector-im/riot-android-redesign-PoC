@@ -41,6 +41,7 @@ import im.vector.app.core.utils.DimensionConverter
 import im.vector.app.features.home.room.detail.timeline.helper.MatrixItemColorProvider
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.ColorFilterTransformation
+import org.matrix.android.sdk.api.auth.login.LoginProfileInfo
 import org.matrix.android.sdk.api.extensions.tryOrNull
 import org.matrix.android.sdk.api.session.content.ContentUrlResolver
 import org.matrix.android.sdk.api.util.MatrixItem
@@ -108,6 +109,23 @@ class AvatarRenderer @Inject constructor(private val activeSessionHolder: Active
         val placeholder = getPlaceholderDrawable(matrixItem)
         GlideApp.with(imageView)
                 .load(mappedContact.photoURI)
+                .apply(RequestOptions.circleCropTransform())
+                .placeholder(placeholder)
+                .into(imageView)
+    }
+
+    @UiThread
+    fun render(profileInfo: LoginProfileInfo, imageView: ImageView) {
+        // Create a Fake MatrixItem, for the placeholder
+        val matrixItem = MatrixItem.UserItem(
+                // Need an id starting with @
+                id = profileInfo.matrixId,
+                displayName = profileInfo.displayName
+        )
+
+        val placeholder = getPlaceholderDrawable(matrixItem)
+        GlideApp.with(imageView)
+                .load(profileInfo.fullAvatarUrl)
                 .apply(RequestOptions.circleCropTransform())
                 .placeholder(placeholder)
                 .into(imageView)

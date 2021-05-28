@@ -30,5 +30,7 @@ data class SpaceChildInfo(
         val autoJoin: Boolean,
         val viaServers: List<String>,
         val parentRoomId: String?,
-        val suggested: Boolean?
+        val suggested: Boolean?,
+        val canonicalAlias: String?,
+        val aliases: List<String>?
 )
