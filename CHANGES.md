@@ -29,6 +29,7 @@ Changes in Element 1.1.7 (2021-05-12)
 ===================================================
 
 Features ✨:
+ - Allow changing nick colors (#2610)
  - Spaces beta
 
 Improvements 🙌:

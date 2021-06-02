@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Incomplete
 import com.airbnb.mvrx.Success
@@ -43,6 +44,7 @@ import im.vector.app.core.extensions.setTextOrHide
 import im.vector.app.core.platform.StateView
 import im.vector.app.core.platform.VectorBaseFragment
 import im.vector.app.core.utils.startSharePlainTextIntent
+import im.vector.app.databinding.DialogBaseEditTextBinding
 import im.vector.app.databinding.DialogShareQrCodeBinding
 import im.vector.app.databinding.FragmentMatrixProfileBinding
 import im.vector.app.databinding.ViewStubRoomMemberProfileHeaderBinding
@@ -50,10 +52,13 @@ import im.vector.app.features.crypto.verification.VerificationBottomSheet
 import im.vector.app.features.home.AvatarRenderer
 import im.vector.app.features.home.room.detail.RoomDetailPendingAction
 import im.vector.app.features.home.room.detail.RoomDetailPendingActionStore
+import im.vector.app.features.home.room.detail.timeline.helper.MatrixItemColorProvider
 import im.vector.app.features.roommemberprofile.devices.DeviceListBottomSheet
 import im.vector.app.features.roommemberprofile.powerlevel.EditPowerLevelDialogs
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import org.matrix.android.sdk.api.crypto.RoomEncryptionTrustLevel
+import org.matrix.android.sdk.api.session.accountdata.UserAccountDataTypes
 import org.matrix.android.sdk.api.session.room.powerlevels.Role
 import org.matrix.android.sdk.api.util.MatrixItem
 import javax.inject.Inject
@@ -68,7 +73,8 @@ class RoomMemberProfileFragment @Inject constructor(
         val viewModelFactory: RoomMemberProfileViewModel.Factory,
         private val roomMemberProfileController: RoomMemberProfileController,
         private val avatarRenderer: AvatarRenderer,
-        private val roomDetailPendingActionStore: RoomDetailPendingActionStore
+        private val roomDetailPendingActionStore: RoomDetailPendingActionStore,
+        private val matrixItemColorProvider: MatrixItemColorProvider
 ) : VectorBaseFragment<FragmentMatrixProfileBinding>(),
         RoomMemberProfileController.Callback {
 
@@ -200,6 +206,7 @@ class RoomMemberProfileFragment @Inject constructor(
                 headerViews.memberProfileIdView.text = userMatrixItem.id
                 val bestName = userMatrixItem.getBestName()
                 headerViews.memberProfileNameView.text = bestName
+                headerViews.memberProfileNameView.setTextColor(matrixItemColorProvider.getColor(userMatrixItem))
                 views.matrixProfileToolbarTitleView.text = bestName
                 avatarRenderer.render(userMatrixItem, headerViews.memberProfileAvatarView)
                 avatarRenderer.render(userMatrixItem, views.matrixProfileToolbarAvatarImageView)
@@ -319,6 +326,42 @@ class RoomMemberProfileFragment @Inject constructor(
 
     private fun onAvatarClicked(view: View, userMatrixItem: MatrixItem) {
         navigator.openBigImageViewer(requireActivity(), view, userMatrixItem)
+    }
+
+    override fun onOverrideColorClicked(): Unit = withState(viewModel)  { state ->
+        val inflater = requireActivity().layoutInflater
+        val layout = inflater.inflate(R.layout.dialog_base_edit_text, null)
+        val views = DialogBaseEditTextBinding.bind(layout)
+        val session = injector().activeSessionHolder().getActiveSession()
+        val overrideColorsSetting = session.getAccountDataEvent(UserAccountDataTypes.TYPE_OVERRIDE_COLORS)
+        val overrideColorSpecs = overrideColorsSetting?.content?.toMap().orEmpty()
+        val userId = state.userId
+        val overrideColorSpec = overrideColorSpecs[userId]?.toString()
+        views.editText.setText(overrideColorSpec)
+        views.editText.hint = "#000000"
+
+        AlertDialog.Builder(requireActivity())
+                .setTitle(R.string.room_member_override_nick_color)
+                .setView(layout)
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    val newOverrideColorSpec = views.editText.text.toString()
+                    if (newOverrideColorSpec != overrideColorSpec) {
+                        val newOverrideColorSpecs = overrideColorSpecs.toMutableMap()
+                        if (matrixItemColorProvider.setOverrideColor(userId, newOverrideColorSpec)) {
+                            newOverrideColorSpecs[userId] = newOverrideColorSpec
+                        } else {
+                            newOverrideColorSpecs.remove(userId)
+                        }
+                        viewModel.viewModelScope.launch {
+                            session.updateAccountData(
+                                    type = UserAccountDataTypes.TYPE_OVERRIDE_COLORS,
+                                    content = newOverrideColorSpecs)
+                        }
+                        invalidate()
+                    }
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
     }
 
     override fun onEditPowerLevel(currentRole: Role) {

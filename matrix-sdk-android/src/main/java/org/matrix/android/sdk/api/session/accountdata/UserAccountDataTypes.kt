@@ -27,4 +27,5 @@ object UserAccountDataTypes {
     const val TYPE_ALLOWED_WIDGETS = "im.vector.setting.allowed_widgets"
     const val TYPE_IDENTITY_SERVER = "m.identity_server"
     const val TYPE_ACCEPTED_TERMS = "m.accepted_terms"
+    const val TYPE_OVERRIDE_COLORS = "im.vector.setting.override_colors"
 }

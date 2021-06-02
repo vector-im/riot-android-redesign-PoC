@@ -2661,6 +2661,8 @@
     <string name="direct_room_profile_section_more_leave">Leave</string>
     <string name="room_profile_leaving_room">"Leaving the room…"</string>
 
+    <string name="room_member_override_nick_color">Override nick color</string>
+
     <string name="room_member_power_level_admins">Admins</string>
     <string name="room_member_power_level_moderators">Moderators</string>
     <string name="room_member_power_level_custom">Custom</string>

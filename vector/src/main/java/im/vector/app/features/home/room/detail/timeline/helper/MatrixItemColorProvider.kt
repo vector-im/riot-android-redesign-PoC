@@ -44,6 +44,39 @@ class MatrixItemColorProvider @Inject constructor(
         }
     }
 
+    fun setOverrideColors(overrideColors: Map<String, String>?) {
+        overrideColors?.forEach() {
+            setOverrideColor(it.key, it.value)
+        }
+    }
+
+    fun setOverrideColor(id: String, colorSpec: String?) : Boolean {
+        val color = parseUserColorSpec(colorSpec)
+        if (color == null) {
+            cache.remove(id)
+            return false
+        } else {
+            cache.put(id, color)
+            return true
+        }
+    }
+
+    @ColorInt
+    private fun parseUserColorSpec(colorText: String?): Int? {
+        if (colorText.isNullOrBlank()) {
+            return null
+        }
+        try {
+            if (colorText.first() == '#') {
+                return (colorText.substring(1).toLong(radix = 16) or 0xff000000L).toInt()
+            } else {
+                return colorProvider.getColor(getUserColorByIndex(colorText.toInt()))
+            }
+        } catch (e: Throwable) {
+            return null
+        }
+    }
+
     companion object {
         @ColorRes
         @VisibleForTesting
@@ -52,7 +85,12 @@ class MatrixItemColorProvider @Inject constructor(
 
             userId?.toList()?.map { chr -> hash = (hash shl 5) - hash + chr.code }
 
-            return when (abs(hash) % 8) {
+            return getUserColorByIndex(abs(hash))
+        }
+
+        @ColorRes
+        private fun getUserColorByIndex(index: Int): Int {
+            return when (index % 8) {
                 1    -> R.color.riotx_username_2
                 2    -> R.color.riotx_username_3
                 3    -> R.color.riotx_username_4
