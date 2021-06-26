@@ -93,6 +93,7 @@ Features ✨:
  - Spaces beta
 
 Improvements 🙌:
+ - Priority conversations for Android 11+ (#2734)
  - Add ability to install APK from directly from Element (#2381)
  - Delete and react to stickers (#3250)
  - Compress video before sending (#442)
@@ -100,6 +101,7 @@ Improvements 🙌:
  - User can now select video when selecting Gallery to send attachments to a room
  - Add option to record a video from the camera
  - Add the public icon on the rooms in the room list (#3292)
+
 
 Bugfix 🐛:
  - Message states cosmetic changes (#3007)

@@ -17,16 +17,21 @@ package im.vector.app.features.notifications
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import androidx.annotation.WorkerThread
 import androidx.core.app.NotificationCompat
 import androidx.core.app.Person
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import im.vector.app.ActiveSessionDataSource
 import im.vector.app.BuildConfig
 import im.vector.app.R
 import im.vector.app.core.resources.StringProvider
 import im.vector.app.core.utils.FirstThrottler
+import im.vector.app.features.home.room.detail.RoomDetailActivity
 import im.vector.app.features.settings.VectorPreferences
 import me.gujun.android.span.span
 import org.matrix.android.sdk.api.session.Session
@@ -318,6 +323,19 @@ class NotificationDrawerManager @Inject constructor(private val context: Context
                             .setIcon(iconLoader.getUserIcon(event.senderAvatarPath))
                             .setKey(event.senderId)
                             .build()
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        val openRoomIntent = RoomDetailActivity.shortcutIntent(context, roomId)
+
+                        val shortcut = ShortcutInfoCompat.Builder(context, roomId)
+                                .setLongLived(true)
+                                .setIntent(openRoomIntent)
+                                .setShortLabel(roomName)
+                                .setIcon(largeBitmap?.let { IconCompat.createWithAdaptiveBitmap(it) } ?: iconLoader.getUserIcon(event.senderAvatarPath))
+                                .build()
+
+                        ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
+                    }
 
                     if (event.outGoingMessage && event.outGoingMessageFailed) {
                         style.addMessage(stringProvider.getString(R.string.notification_inline_reply_failed), event.timestamp, senderPerson)

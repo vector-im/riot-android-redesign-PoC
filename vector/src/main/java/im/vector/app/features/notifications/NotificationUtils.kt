@@ -41,7 +41,6 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import androidx.core.app.TaskStackBuilder
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.fragment.app.Fragment
@@ -504,6 +503,8 @@ class NotificationUtils @Inject constructor(private val context: Context,
                 // that can be displayed in not disturb mode if white listed (the later will need compat28.x)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
 
+                .setShortcutId(roomInfo.roomId)
+
                 // Title for API < 16 devices.
                 .setContentTitle(roomInfo.roomDisplayName)
                 // Content for API < 16 devices.
@@ -866,7 +867,7 @@ class NotificationUtils @Inject constructor(private val context: Context,
         }
 
         // We cannot use NotificationManagerCompat here.
-        val setting = context.getSystemService<NotificationManager>()!!.currentInterruptionFilter
+        val setting = context.getSystemService(NotificationManager::class.java)!!.currentInterruptionFilter
 
         return setting == NotificationManager.INTERRUPTION_FILTER_NONE
                 || setting == NotificationManager.INTERRUPTION_FILTER_ALARMS
