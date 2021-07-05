@@ -17,6 +17,7 @@
 package im.vector.app.features.home
 
 import android.content.Context
+import android.content.pm.ShortcutInfo
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.annotation.WorkerThread
@@ -67,9 +68,12 @@ class ShortcutCreator @Inject constructor(
                 .setShortLabel(roomSummary.displayName)
                 .setIcon(bitmap?.toProfileImageIcon())
                 .setIntent(intent)
+                .setLongLived(true)
 
                 // Make it show up in the direct share menu
-                .setCategories(setOf(directShareCategory))
+                .setCategories(setOf(
+                        directShareCategory,
+                        ShortcutInfo.SHORTCUT_CATEGORY_CONVERSATION))
 
                 .build()
     }

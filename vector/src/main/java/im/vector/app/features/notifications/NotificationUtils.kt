@@ -504,6 +504,9 @@ class NotificationUtils @Inject constructor(private val context: Context,
                 // that can be displayed in not disturb mode if white listed (the later will need compat28.x)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
 
+                // ID of the corresponding shortcut, for conversation features under API 30+
+                .setShortcutId(roomInfo.roomId)
+
                 // Title for API < 16 devices.
                 .setContentTitle(roomInfo.roomDisplayName)
                 // Content for API < 16 devices.

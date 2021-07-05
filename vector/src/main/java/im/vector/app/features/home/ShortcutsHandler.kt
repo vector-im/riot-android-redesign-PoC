@@ -24,7 +24,6 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import im.vector.app.core.di.ActiveSessionHolder
 import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
-import org.matrix.android.sdk.api.query.RoomTagQueryFilter
 import org.matrix.android.sdk.api.session.room.model.Membership
 import org.matrix.android.sdk.api.session.room.roomSummaryQueryParams
 import org.matrix.android.sdk.rx.asObservable
@@ -46,17 +45,23 @@ class ShortcutsHandler @Inject constructor(
                 ?.getPagedRoomSummariesLive(
                         roomSummaryQueryParams {
                             memberships = listOf(Membership.JOIN)
-                            roomTagQueryFilter = RoomTagQueryFilter(isFavorite = true, null, null)
                         }
                 )
                 ?.asObservable()
                 ?.subscribe { rooms ->
                     val shortcuts = rooms
-                            .take(n = 4) // Android only allows us to create 4 shortcuts
+                            .sortedBy { room ->
+                                // pushDynamicShortcut adds each shortcut to the top of the shortcut ranking,
+                                // so higher priority rooms should be at the end of this list to get pushed on last.
+                                if (room.isFavorite) 2
+                                else if (room.isLowPriority) 0
+                                else 1
+                            }
                             .map { shortcutCreator.create(it) }
 
-                    ShortcutManagerCompat.removeAllDynamicShortcuts(context)
-                    ShortcutManagerCompat.addDynamicShortcuts(context, shortcuts)
+                    shortcuts.forEach { shortcut ->
+                        ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
+                    }
                 }
                 ?: Disposables.empty()
     }
