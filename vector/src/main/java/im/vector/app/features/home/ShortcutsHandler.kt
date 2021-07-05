@@ -49,6 +49,13 @@ class ShortcutsHandler @Inject constructor(
                 )
                 ?.asObservable()
                 ?.subscribe { rooms ->
+                    // Remove dead shortcuts (i.e. deleted rooms)
+                    val roomIds = rooms.map { it.roomId }
+                    val deadShortcutIds = ShortcutManagerCompat.getShortcuts(context, ShortcutManagerCompat.FLAG_MATCH_DYNAMIC)
+                            .map { it.id }
+                            .filter { !roomIds.contains(it) }
+                    ShortcutManagerCompat.removeLongLivedShortcuts(context, deadShortcutIds)
+
                     val shortcuts = rooms
                             .sortedBy { room ->
                                 // pushDynamicShortcut adds each shortcut to the top of the shortcut ranking,
