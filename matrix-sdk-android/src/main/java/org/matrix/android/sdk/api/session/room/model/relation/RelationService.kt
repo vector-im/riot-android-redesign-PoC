@@ -19,7 +19,6 @@ import androidx.lifecycle.LiveData
 import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.room.model.EventAnnotationsSummary
 import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
-import org.matrix.android.sdk.api.util.Cancelable
 import org.matrix.android.sdk.api.util.Optional
 
 /**
@@ -53,16 +52,14 @@ interface RelationService {
      * @param targetEventId the id of the event being reacted
      * @param reaction the reaction (preferably emoji)
      */
-    fun sendReaction(targetEventId: String,
-                     reaction: String): Cancelable
+    suspend fun sendReaction(targetEventId: String, reaction: String)
 
     /**
      * Undo a reaction (emoji) to the targetedEvent.
      * @param targetEventId the id of the event being reacted
      * @param reaction the reaction (preferably emoji)
      */
-    fun undoReaction(targetEventId: String,
-                     reaction: String): Cancelable
+    suspend fun undoReaction(targetEventId: String, reaction: String)
 
     /**
      * Edit a text message body. Limited to "m.text" contentType
@@ -70,11 +67,11 @@ interface RelationService {
      * @param newBodyText The edited body
      * @param compatibilityBodyText The text that will appear on clients that don't support yet edition
      */
-    fun editTextMessage(targetEvent: TimelineEvent,
-                        msgType: String,
-                        newBodyText: CharSequence,
-                        newBodyAutoMarkdown: Boolean,
-                        compatibilityBodyText: String = "* $newBodyText"): Cancelable
+    suspend fun editTextMessage(targetEvent: TimelineEvent,
+                                msgType: String,
+                                newBodyText: CharSequence,
+                                newBodyAutoMarkdown: Boolean,
+                                compatibilityBodyText: String = "* $newBodyText")
 
     /**
      * Edit a reply. This is a special case because replies contains fallback text as a prefix.
@@ -84,10 +81,10 @@ interface RelationService {
      * @param newBodyText The edited body (stripped from in reply to content)
      * @param compatibilityBodyText The text that will appear on clients that don't support yet edition
      */
-    fun editReply(replyToEdit: TimelineEvent,
-                  originalTimelineEvent: TimelineEvent,
-                  newBodyText: String,
-                  compatibilityBodyText: String = "* $newBodyText"): Cancelable
+    suspend fun editReply(replyToEdit: TimelineEvent,
+                          originalTimelineEvent: TimelineEvent,
+                          newBodyText: String,
+                          compatibilityBodyText: String = "* $newBodyText")
 
     /**
      * Get the edit history of the given event
@@ -106,9 +103,9 @@ interface RelationService {
      * @param replyText the reply text
      * @param autoMarkdown If true, the SDK will generate a formatted HTML message from the body text if markdown syntax is present
      */
-    fun replyToMessage(eventReplied: TimelineEvent,
-                       replyText: CharSequence,
-                       autoMarkdown: Boolean = false): Cancelable?
+    suspend fun replyToMessage(eventReplied: TimelineEvent,
+                               replyText: CharSequence,
+                               autoMarkdown: Boolean = false)
 
     /**
      * Get the current EventAnnotationsSummary
