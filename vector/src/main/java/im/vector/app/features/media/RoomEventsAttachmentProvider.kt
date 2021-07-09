@@ -62,8 +62,8 @@ class RoomEventsAttachmentProvider(
                         elementToDecrypt = content.encryptedFileInfo?.toElementToDecrypt(),
                         maxHeight = -1,
                         maxWidth = -1,
-                        width = null,
-                        height = null,
+                        width = content.info?.width,
+                        height = content.info?.height,
                         allowNonMxcUrls = it.root.sendState.isSending()
 
                 )

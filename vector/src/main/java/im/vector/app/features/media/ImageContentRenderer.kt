@@ -30,6 +30,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomViewTarget
 import com.bumptech.glide.request.target.Target
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.ORIENTATION_USE_EXIF
+import com.github.chrisbanes.photoview.PhotoView
 import com.github.piasy.biv.view.BigImageView
 import im.vector.app.R
 import im.vector.app.core.di.ActiveSessionHolder
@@ -152,7 +153,11 @@ class ImageContentRenderer @Inject constructor(private val localFilesHelper: Loc
                     .load(resolvedUrl)
         }
 
-        req.override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+        val maximumScale = (contextView as? PhotoView)?.maximumScale?.toInt() ?: 1
+        val width = min(contextView.resources.displayMetrics.widthPixels, data.width ?: 0).times(maximumScale)
+        val height = min(contextView.resources.displayMetrics.heightPixels, data.height ?: 0).times(maximumScale)
+
+        req.override(width, height)
                 .fitCenter()
                 .into(target)
     }
