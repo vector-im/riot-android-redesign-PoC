@@ -139,8 +139,8 @@ android {
 
         // The two booleans must not have the same value. We need two values for the manifest
         // LoginFlowV2 is disabled to be merged on develop (changelog: Improve login/register flow (#1410, #2585, #3172))
-        resValue "bool", "useLoginV1", "true"
-        resValue "bool", "useLoginV2", "false"
+        resValue "bool", "useLoginV1", "false"
+        resValue "bool", "useLoginV2", "true"
 
         buildConfigField "im.vector.app.features.crypto.keysrequest.OutboundSessionKeySharingStrategy", "outboundSessionKeySharingStrategy", "im.vector.app.features.crypto.keysrequest.OutboundSessionKeySharingStrategy.WhenTyping"
 
