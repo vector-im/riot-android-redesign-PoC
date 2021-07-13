@@ -457,7 +457,7 @@ class NotificationDrawerManager @Inject constructor(private val context: Context
 
             if (eventList.isEmpty() || eventList.all { it.isRedacted }) {
                 notificationUtils.cancelNotificationMessage(null, SUMMARY_NOTIFICATION_ID)
-            } else {
+            } else if (hasNewEvent) {
                 // FIXME roomIdToEventMap.size is not correct, this is the number of rooms
                 val nbEvents = roomIdToEventMap.size + simpleEvents.size
                 val sumTitle = stringProvider.getQuantityString(R.plurals.notification_compat_summary_title, nbEvents, nbEvents)
