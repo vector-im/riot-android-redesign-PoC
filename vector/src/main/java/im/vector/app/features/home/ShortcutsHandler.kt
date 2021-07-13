@@ -24,6 +24,7 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import im.vector.app.core.di.ActiveSessionHolder
 import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
+import org.matrix.android.sdk.api.session.room.RoomSortOrder
 import org.matrix.android.sdk.api.session.room.model.Membership
 import org.matrix.android.sdk.api.session.room.roomSummaryQueryParams
 import org.matrix.android.sdk.rx.asObservable
@@ -45,7 +46,8 @@ class ShortcutsHandler @Inject constructor(
                 ?.getPagedRoomSummariesLive(
                         roomSummaryQueryParams {
                             memberships = listOf(Membership.JOIN)
-                        }
+                        },
+                        sortOrder = RoomSortOrder.PRIORITY_AND_ACTIVITY
                 )
                 ?.asObservable()
                 ?.subscribe { rooms ->
@@ -57,13 +59,7 @@ class ShortcutsHandler @Inject constructor(
                     ShortcutManagerCompat.removeLongLivedShortcuts(context, deadShortcutIds)
 
                     val shortcuts = rooms
-                            .sortedBy { room ->
-                                // pushDynamicShortcut adds each shortcut to the top of the shortcut ranking,
-                                // so higher priority rooms should be at the end of this list to get pushed on last.
-                                if (room.isFavorite) 2
-                                else if (room.isLowPriority) 0
-                                else 1
-                            }
+                            .asReversed()
                             .map { shortcutCreator.create(it) }
 
                     shortcuts.forEach { shortcut ->
