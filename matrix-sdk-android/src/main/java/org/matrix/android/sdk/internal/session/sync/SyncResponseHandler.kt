@@ -21,7 +21,7 @@ import com.zhuinden.monarchy.Monarchy
 import org.matrix.android.sdk.api.pushrules.PushRuleService
 import org.matrix.android.sdk.api.pushrules.RuleScope
 import org.matrix.android.sdk.api.session.initsync.InitSyncStep
-import org.matrix.android.sdk.internal.crypto.DefaultCryptoService
+import org.matrix.android.sdk.internal.crypto.CryptoManager
 import org.matrix.android.sdk.internal.di.SessionDatabase
 import org.matrix.android.sdk.internal.di.SessionId
 import org.matrix.android.sdk.internal.di.WorkManagerProvider
@@ -52,7 +52,7 @@ internal class SyncResponseHandler @Inject constructor(
         private val groupSyncHandler: GroupSyncHandler,
         private val cryptoSyncHandler: CryptoSyncHandler,
         private val aggregatorHandler: SyncResponsePostTreatmentAggregatorHandler,
-        private val cryptoService: DefaultCryptoService,
+        private val cryptoManager: CryptoManager,
         private val tokenStore: SyncTokenStore,
         private val processEventForPushTask: ProcessEventForPushTask,
         private val pushRuleService: PushRuleService) {
@@ -64,11 +64,11 @@ internal class SyncResponseHandler @Inject constructor(
         Timber.v("Start handling sync, is InitialSync: $isInitialSync")
 
         measureTimeMillis {
-            if (!cryptoService.isStarted()) {
+            if (!cryptoManager.isStarted()) {
                 Timber.v("Should start cryptoService")
-                cryptoService.start()
+                cryptoManager.start()
             }
-            cryptoService.onSyncWillProcess(isInitialSync)
+            cryptoManager.onSyncWillProcess(isInitialSync)
         }.also {
             Timber.v("Finish handling start cryptoService in $it ms")
         }

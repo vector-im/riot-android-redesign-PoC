@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2021 New Vector Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,8 @@
 
 package org.matrix.android.sdk.internal.crypto.crosssigning
 
-import org.matrix.android.sdk.api.session.crypto.crosssigning.CrossSigningService
-import javax.inject.Inject
-
-internal class DefaultCrossSigningService @Inject constructor(
-        crossSigningManager: CrossSigningManager
-) : CrossSigningService by crossSigningManager
+internal interface CrossSigningManagerInput {
+    fun onSecretMSKGossip(mskPrivateKey: String)
+    fun onSecretSSKGossip(sskPrivateKey: String)
+    fun onSecretUSKGossip(uskPrivateKey: String)
+}

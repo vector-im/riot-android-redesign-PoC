@@ -29,7 +29,7 @@ import org.matrix.android.sdk.internal.crypto.actions.EnsureOlmSessionsForDevice
 import org.matrix.android.sdk.internal.crypto.actions.MessageEncrypter
 import org.matrix.android.sdk.internal.crypto.algorithms.IMXEncrypting
 import org.matrix.android.sdk.internal.crypto.algorithms.IMXGroupEncryption
-import org.matrix.android.sdk.internal.crypto.keysbackup.DefaultKeysBackupService
+import org.matrix.android.sdk.internal.crypto.keysbackup.KeysBackupManager
 import org.matrix.android.sdk.internal.crypto.model.CryptoDeviceInfo
 import org.matrix.android.sdk.internal.crypto.model.MXUsersDevicesMap
 import org.matrix.android.sdk.internal.crypto.model.event.RoomKeyWithHeldContent
@@ -47,7 +47,7 @@ internal class MXMegolmEncryption(
         // The id of the room we will be sending to.
         private val roomId: String,
         private val olmDevice: MXOlmDevice,
-        private val defaultKeysBackupService: DefaultKeysBackupService,
+        private val keysBackupManager: KeysBackupManager,
         private val cryptoStore: IMXCryptoStore,
         private val deviceListManager: DeviceListManager,
         private val ensureOlmSessionsForDevicesAction: EnsureOlmSessionsForDevicesAction,
@@ -142,7 +142,7 @@ internal class MXMegolmEncryption(
         olmDevice.addInboundGroupSession(sessionId!!, olmDevice.getSessionKey(sessionId)!!, roomId, olmDevice.deviceCurve25519Key!!,
                 emptyList(), keysClaimedMap, false)
 
-        defaultKeysBackupService.maybeBackupKeys()
+        keysBackupManager.maybeBackupKeys()
 
         return MXOutboundSessionInfo(sessionId, SharedWithHelper(roomId, sessionId, cryptoStore))
     }

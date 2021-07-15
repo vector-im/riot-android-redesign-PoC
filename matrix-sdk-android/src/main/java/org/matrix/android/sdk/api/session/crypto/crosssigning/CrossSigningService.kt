@@ -77,9 +77,4 @@ interface CrossSigningService {
     fun checkDeviceTrust(otherUserId: String,
                          otherDeviceId: String,
                          locallyTrusted: Boolean?): DeviceTrustResult
-
-    // FIXME Those method do not have to be in the service
-    fun onSecretMSKGossip(mskPrivateKey: String)
-    fun onSecretSSKGossip(sskPrivateKey: String)
-    fun onSecretUSKGossip(uskPrivateKey: String)
 }

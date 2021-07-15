@@ -63,7 +63,7 @@ import org.matrix.android.sdk.api.session.widgets.WidgetService
 import org.matrix.android.sdk.api.util.appendParamToUrl
 import org.matrix.android.sdk.internal.auth.SSO_UIA_FALLBACK_PATH
 import org.matrix.android.sdk.internal.auth.SessionParamsStore
-import org.matrix.android.sdk.internal.crypto.DefaultCryptoService
+import org.matrix.android.sdk.internal.crypto.CryptoManager
 import org.matrix.android.sdk.internal.database.tools.RealmDebugTools
 import org.matrix.android.sdk.internal.di.SessionDatabase
 import org.matrix.android.sdk.internal.di.SessionId
@@ -101,7 +101,8 @@ internal class DefaultSession @Inject constructor(
         private val pushersService: Lazy<PushersService>,
         private val termsService: Lazy<TermsService>,
         private val searchService: Lazy<SearchService>,
-        private val cryptoService: Lazy<DefaultCryptoService>,
+        private val cryptoService: Lazy<CryptoService>,
+        private val cryptoManager: Lazy<CryptoManager>,
         private val defaultFileService: Lazy<FileService>,
         private val permalinkService: Lazy<PermalinkService>,
         private val secureStorageService: Lazy<SecureStorageService>,
@@ -164,7 +165,7 @@ internal class DefaultSession @Inject constructor(
         assert(!isOpen)
         isOpen = true
         globalErrorHandler.listener = this
-        cryptoService.get().ensureDevice()
+        cryptoManager.get().ensureDevice()
         uiHandler.post {
             lifecycleObservers.forEach {
                 it.onSessionStarted(this)
@@ -216,7 +217,7 @@ internal class DefaultSession @Inject constructor(
                 listener.onSessionStopped(this)
             }
         }
-        cryptoService.get().close()
+        cryptoManager.get().close()
         globalErrorHandler.listener = null
         isOpen = false
     }

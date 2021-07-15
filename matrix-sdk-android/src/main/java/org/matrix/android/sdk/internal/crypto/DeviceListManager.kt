@@ -44,10 +44,6 @@ internal class DeviceListManager @Inject constructor(private val cryptoStore: IM
                                                      coroutineDispatchers: MatrixCoroutineDispatchers,
                                                      private val taskExecutor: TaskExecutor) {
 
-    interface UserDevicesUpdateListener {
-        fun onUsersDeviceUpdate(userIds: List<String>)
-    }
-
     private val deviceChangeListeners = mutableListOf<UserDevicesUpdateListener>()
 
     fun addListener(listener: UserDevicesUpdateListener) {

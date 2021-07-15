@@ -26,7 +26,8 @@ import org.matrix.android.sdk.api.session.initsync.InitSyncStep
 import org.matrix.android.sdk.api.session.room.model.Membership
 import org.matrix.android.sdk.api.session.room.model.RoomMemberContent
 import org.matrix.android.sdk.api.session.room.send.SendState
-import org.matrix.android.sdk.internal.crypto.DefaultCryptoService
+import org.matrix.android.sdk.internal.crypto.CryptoManagerInput
+import org.matrix.android.sdk.internal.crypto.EventDecryptor
 import org.matrix.android.sdk.internal.crypto.MXCRYPTO_ALGORITHM_MEGOLM
 import org.matrix.android.sdk.internal.crypto.algorithms.olm.OlmDecryptionResult
 import org.matrix.android.sdk.internal.database.helper.addIfNecessary
@@ -70,7 +71,8 @@ import javax.inject.Inject
 internal class RoomSyncHandler @Inject constructor(private val readReceiptHandler: ReadReceiptHandler,
                                                    private val roomSummaryUpdater: RoomSummaryUpdater,
                                                    private val roomAccountDataHandler: RoomSyncAccountDataHandler,
-                                                   private val cryptoService: DefaultCryptoService,
+                                                   private val cryptoManagerInput: CryptoManagerInput,
+                                                   private val eventDecryptor: EventDecryptor,
                                                    private val roomMemberEventHandler: RoomMemberEventHandler,
                                                    private val roomTypingUsersHandler: RoomTypingUsersHandler,
                                                    private val roomChangeMembershipStateDataSource: RoomChangeMembershipStateDataSource,
@@ -220,7 +222,7 @@ internal class RoomSyncHandler @Inject constructor(private val readReceiptHandle
                     root = eventEntity
                 }
                 // Give info to crypto module
-                cryptoService.onStateEvent(roomId, event)
+                cryptoManagerInput.onStateEvent(roomId, event)
                 roomMemberEventHandler.handle(realm, roomId, event)
             }
         }
@@ -382,7 +384,7 @@ internal class RoomSyncHandler @Inject constructor(private val readReceiptHandle
 
             chunkEntity.addTimelineEvent(roomId, eventEntity, PaginationDirection.FORWARDS, roomMemberContentsByUser)
             // Give info to crypto module
-            cryptoService.onLiveEvent(roomEntity.roomId, event)
+            cryptoManagerInput.onLiveEvent(roomEntity.roomId, event)
 
             // Try to remove local echo
             event.unsignedData?.transactionId?.also {
@@ -413,7 +415,7 @@ internal class RoomSyncHandler @Inject constructor(private val readReceiptHandle
     private fun decryptIfNeeded(event: Event, roomId: String) {
         try {
             // Event from sync does not have roomId, so add it to the event first
-            val result = cryptoService.decryptEvent(event.copy(roomId = roomId), "")
+            val result = eventDecryptor.decryptEvent(event.copy(roomId = roomId), "")
             event.mxDecryptionResult = OlmDecryptionResult(
                     payload = result.clearEvent,
                     senderKey = result.senderCurve25519Key,

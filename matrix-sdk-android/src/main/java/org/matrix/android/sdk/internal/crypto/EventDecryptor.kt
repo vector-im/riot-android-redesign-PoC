@@ -136,7 +136,7 @@ internal class EventDecryptor @Inject constructor(
 
         val lastForcedDate = lastNewSessionForcedDates.getObject(senderId, deviceKey) ?: 0
         val now = System.currentTimeMillis()
-        if (now - lastForcedDate < DefaultCryptoService.CRYPTO_MIN_FORCE_SESSION_PERIOD_MILLIS) {
+        if (now - lastForcedDate < CryptoManager.CRYPTO_MIN_FORCE_SESSION_PERIOD_MILLIS) {
             Timber.w("## CRYPTO | markOlmSessionForUnwedging: New session already forced with device at $lastForcedDate. Not forcing another")
             return
         }

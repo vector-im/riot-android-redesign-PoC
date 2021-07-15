@@ -96,6 +96,14 @@ import org.matrix.android.sdk.internal.session.cache.RealmClearCacheTask
 import io.realm.RealmConfiguration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import org.matrix.android.sdk.api.session.crypto.keysbackup.KeysBackupService
+import org.matrix.android.sdk.api.session.crypto.verification.VerificationService
+import org.matrix.android.sdk.internal.crypto.crosssigning.CrossSigningManager
+import org.matrix.android.sdk.internal.crypto.crosssigning.CrossSigningManagerInput
+import org.matrix.android.sdk.internal.crypto.keysbackup.DefaultKeysBackupService
+import org.matrix.android.sdk.internal.crypto.keysbackup.KeysBackupManager
+import org.matrix.android.sdk.internal.crypto.keysbackup.KeysBackupManagerInput
+import org.matrix.android.sdk.internal.crypto.verification.DefaultVerificationService
 import retrofit2.Retrofit
 import java.io.File
 
@@ -158,6 +166,21 @@ internal abstract class CryptoModule {
 
     @Binds
     abstract fun bindCryptoService(service: DefaultCryptoService): CryptoService
+
+    @Binds
+    abstract fun bindKeysBackupService(service: DefaultKeysBackupService): KeysBackupService
+
+    @Binds
+    abstract fun bindVerificationService(service: DefaultVerificationService): VerificationService
+
+    @Binds
+    abstract fun bindCryptoManagerInput(manager: CryptoManager): CryptoManagerInput
+
+    @Binds
+    abstract fun bindKeysBackupManagerInput(manager: KeysBackupManager): KeysBackupManagerInput
+
+    @Binds
+    abstract fun bindCrossSigningManagerInput(manager: CrossSigningManager): CrossSigningManagerInput
 
     @Binds
     abstract fun bindDeleteDeviceTask(task: DefaultDeleteDeviceTask): DeleteDeviceTask

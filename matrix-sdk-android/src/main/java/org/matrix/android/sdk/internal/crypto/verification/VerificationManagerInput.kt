@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2021 New Vector Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.internal.crypto.crosssigning
+package org.matrix.android.sdk.internal.crypto.verification
 
-import org.matrix.android.sdk.api.session.crypto.crosssigning.CrossSigningService
-import javax.inject.Inject
+import org.matrix.android.sdk.api.session.events.model.Event
 
-internal class DefaultCrossSigningService @Inject constructor(
-        crossSigningManager: CrossSigningManager
-) : CrossSigningService by crossSigningManager
+internal interface VerificationManagerInput {
+    fun onPotentiallyInterestingEventRoomFailToDecrypt(event: Event)
+
+    fun onRoomRequestHandledByOtherDevice(event: Event)
+
+    fun onRoomEvent(event: Event)
+
+    suspend fun onRoomRequestReceived(event: Event)
+}

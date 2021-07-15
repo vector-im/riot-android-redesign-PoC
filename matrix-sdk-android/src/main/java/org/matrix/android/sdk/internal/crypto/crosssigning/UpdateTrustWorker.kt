@@ -65,7 +65,7 @@ internal class UpdateTrustWorker(context: Context,
             val filename: String? = null
     ) : SessionWorkerParams
 
-    @Inject lateinit var crossSigningService: DefaultCrossSigningService
+    @Inject lateinit var crossSigningManager: CrossSigningManager
 
     // It breaks the crypto store contract, but we need to batch things :/
     @CryptoDatabase
@@ -133,7 +133,7 @@ internal class UpdateTrustWorker(context: Context,
                         ?.devices
                         ?.map { CryptoMapper.mapToModel(it) }
 
-                myTrustResult = crossSigningService.checkSelfTrust(myCrossSigningInfo, myDevices)
+                myTrustResult = crossSigningManager.checkSelfTrust(myCrossSigningInfo, myDevices)
                 updateCrossSigningKeysTrust(cryptoRealm, myUserId, myTrustResult.isVerified())
                 // update model reference
                 myCrossSigningInfo = getCrossSigningInfo(cryptoRealm, myUserId)
@@ -147,7 +147,7 @@ internal class UpdateTrustWorker(context: Context,
                 when (entry.key) {
                     myUserId -> myTrustResult
                     else     -> {
-                        crossSigningService.checkOtherMSKTrusted(myCrossSigningInfo, entry.value).also {
+                        crossSigningManager.checkOtherMSKTrusted(myCrossSigningInfo, entry.value).also {
                             Timber.d("## CrossSigning - user:${entry.key} result:$it")
                         }
                     }
@@ -172,7 +172,7 @@ internal class UpdateTrustWorker(context: Context,
                 val trustMap = devicesEntities?.associateWith { device ->
                     // get up to date from DB has could have been updated
                     val otherInfo = getCrossSigningInfo(cryptoRealm, userId)
-                    crossSigningService.checkDeviceTrust(myCrossSigningInfo, otherInfo, CryptoMapper.mapToModel(device))
+                    crossSigningManager.checkDeviceTrust(myCrossSigningInfo, otherInfo, CryptoMapper.mapToModel(device))
                 }
 
                 // Update trust if needed

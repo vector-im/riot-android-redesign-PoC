@@ -21,19 +21,21 @@ import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.events.model.EventType
 import org.matrix.android.sdk.api.session.events.model.toModel
 import org.matrix.android.sdk.api.session.room.model.message.MessageContent
-import org.matrix.android.sdk.internal.crypto.DefaultCryptoService
+import org.matrix.android.sdk.internal.crypto.CryptoManager
 import org.matrix.android.sdk.internal.crypto.MXEventDecryptionResult
 import org.matrix.android.sdk.internal.crypto.algorithms.olm.OlmDecryptionResult
 import org.matrix.android.sdk.internal.crypto.model.event.OlmEventContent
-import org.matrix.android.sdk.internal.crypto.verification.DefaultVerificationService
+import org.matrix.android.sdk.internal.crypto.verification.VerificationManager
 import org.matrix.android.sdk.internal.session.initsync.ProgressReporter
 import org.matrix.android.sdk.internal.session.sync.model.SyncResponse
 import org.matrix.android.sdk.internal.session.sync.model.ToDeviceSyncResponse
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class CryptoSyncHandler @Inject constructor(private val cryptoService: DefaultCryptoService,
-                                                     private val verificationService: DefaultVerificationService) {
+internal class CryptoSyncHandler @Inject constructor(
+        private val cryptoManager: CryptoManager,
+        private val verificationManager: VerificationManager
+) {
 
     fun handleToDevice(toDevice: ToDeviceSyncResponse, progressReporter: ProgressReporter? = null) {
         val total = toDevice.events?.size ?: 0
@@ -46,14 +48,14 @@ internal class CryptoSyncHandler @Inject constructor(private val cryptoService: 
                     && event.getClearContent()?.toModel<MessageContent>()?.msgType == "m.bad.encrypted") {
                 Timber.e("## CRYPTO | handleToDeviceEvent() : Warning: Unable to decrypt to-device event : ${event.content}")
             } else {
-                verificationService.onToDeviceEvent(event)
-                cryptoService.onToDeviceEvent(event)
+                verificationManager.onToDeviceEvent(event)
+                cryptoManager.onToDeviceEvent(event)
             }
         }
     }
 
     fun onSyncCompleted(syncResponse: SyncResponse) {
-        cryptoService.onSyncCompleted(syncResponse)
+        cryptoManager.onSyncCompleted(syncResponse)
     }
 
     /**
@@ -68,12 +70,12 @@ internal class CryptoSyncHandler @Inject constructor(private val cryptoService: 
         if (event.getClearType() == EventType.ENCRYPTED) {
             var result: MXEventDecryptionResult? = null
             try {
-                result = cryptoService.decryptEvent(event, timelineId ?: "")
+                result = cryptoManager.decryptEvent(event, timelineId ?: "")
             } catch (exception: MXCryptoError) {
                 event.mCryptoError = (exception as? MXCryptoError.Base)?.errorType // setCryptoError(exception.cryptoError)
                 val senderKey = event.content.toModel<OlmEventContent>()?.senderKey ?: "<unknown sender key>"
                 // try to find device id to ease log reading
-                val deviceId = cryptoService.getCryptoDeviceInfo(event.senderId!!).firstOrNull {
+                val deviceId = cryptoManager.getCryptoDeviceInfo(event.senderId!!).firstOrNull {
                     it.identityKey() == senderKey
                 }?.deviceId ?: senderKey
                 Timber.e("## CRYPTO | Failed to decrypt to device event from ${event.senderId}|$deviceId reason:<${event.mCryptoError ?: exception}>")

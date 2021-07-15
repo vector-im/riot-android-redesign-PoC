@@ -40,7 +40,7 @@ import javax.inject.Inject
 
 internal class VerificationMessageProcessor @Inject constructor(
         private val eventDecryptor: EventDecryptor,
-        private val verificationService: DefaultVerificationService,
+        private val verificationManager: VerificationManager,
         @UserId private val userId: String,
         @DeviceId private val deviceId: String?
 ) : EventInsertLiveProcessor {
@@ -91,7 +91,7 @@ internal class VerificationMessageProcessor @Inject constructor(
                 )
             } catch (e: MXCryptoError) {
                 Timber.e("## SAS Failed to decrypt event: ${event.eventId}")
-                verificationService.onPotentiallyInterestingEventRoomFailToDecrypt(event)
+                verificationManager.onPotentiallyInterestingEventRoomFailToDecrypt(event)
             }
         }
         Timber.v("## SAS Verification live observer: received msgId: ${event.eventId} type: ${event.getClearType()}")
@@ -120,7 +120,7 @@ internal class VerificationMessageProcessor @Inject constructor(
                         // The verification is started from another device
                         Timber.v("## SAS Verification live observer: Transaction started by other device  tid:$relatesToEventId ")
                         relatesToEventId?.let { txId -> transactionsHandledByOtherDevice.add(txId) }
-                        verificationService.onRoomRequestHandledByOtherDevice(event)
+                        verificationManager.onRoomRequestHandledByOtherDevice(event)
                     }
                 }
             } else if (EventType.KEY_VERIFICATION_READY == event.getClearType()) {
@@ -129,13 +129,13 @@ internal class VerificationMessageProcessor @Inject constructor(
                         // The verification is started from another device
                         Timber.v("## SAS Verification live observer: Transaction started by other device  tid:$relatesToEventId ")
                         relatesToEventId?.let { txId -> transactionsHandledByOtherDevice.add(txId) }
-                        verificationService.onRoomRequestHandledByOtherDevice(event)
+                        verificationManager.onRoomRequestHandledByOtherDevice(event)
                     }
                 }
             } else if (EventType.KEY_VERIFICATION_CANCEL == event.getClearType() || EventType.KEY_VERIFICATION_DONE == event.getClearType()) {
                 relatesToEventId?.let {
                     transactionsHandledByOtherDevice.remove(it)
-                    verificationService.onRoomRequestHandledByOtherDevice(event)
+                    verificationManager.onRoomRequestHandledByOtherDevice(event)
                 }
             }
 
@@ -156,11 +156,11 @@ internal class VerificationMessageProcessor @Inject constructor(
             EventType.KEY_VERIFICATION_CANCEL,
             EventType.KEY_VERIFICATION_READY,
             EventType.KEY_VERIFICATION_DONE -> {
-                verificationService.onRoomEvent(event)
+                verificationManager.onRoomEvent(event)
             }
             EventType.MESSAGE               -> {
                 if (MessageType.MSGTYPE_VERIFICATION_REQUEST == event.getClearContent().toModel<MessageContent>()?.msgType) {
-                    verificationService.onRoomRequestReceived(event)
+                    verificationManager.onRoomRequestReceived(event)
                 }
             }
         }

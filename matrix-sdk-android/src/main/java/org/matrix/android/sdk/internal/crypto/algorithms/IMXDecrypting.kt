@@ -21,7 +21,6 @@ import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.internal.crypto.IncomingRoomKeyRequest
 import org.matrix.android.sdk.internal.crypto.IncomingSecretShareRequest
 import org.matrix.android.sdk.internal.crypto.MXEventDecryptionResult
-import org.matrix.android.sdk.internal.crypto.keysbackup.DefaultKeysBackupService
 
 /**
  * An interface for decrypting data
@@ -42,8 +41,9 @@ internal interface IMXDecrypting {
      * Handle a key event.
      *
      * @param event the key event.
+     * @return true if the key should be backed up
      */
-    fun onRoomKeyEvent(event: Event, defaultKeysBackupService: DefaultKeysBackupService) {}
+    fun onRoomKeyEvent(event: Event): Boolean = false
 
     /**
      * Check if the some messages can be decrypted with a new session

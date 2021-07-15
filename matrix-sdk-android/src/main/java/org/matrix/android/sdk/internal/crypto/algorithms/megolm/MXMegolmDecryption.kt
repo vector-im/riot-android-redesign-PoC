@@ -30,7 +30,6 @@ import org.matrix.android.sdk.internal.crypto.actions.EnsureOlmSessionsForDevice
 import org.matrix.android.sdk.internal.crypto.actions.MessageEncrypter
 import org.matrix.android.sdk.internal.crypto.algorithms.IMXDecrypting
 import org.matrix.android.sdk.internal.crypto.algorithms.IMXWithHeldExtension
-import org.matrix.android.sdk.internal.crypto.keysbackup.DefaultKeysBackupService
 import org.matrix.android.sdk.internal.crypto.model.MXUsersDevicesMap
 import org.matrix.android.sdk.internal.crypto.model.event.EncryptedEventContent
 import org.matrix.android.sdk.internal.crypto.model.event.RoomKeyContent
@@ -229,10 +228,10 @@ internal class MXMegolmDecryption(private val userId: String,
      *
      * @param event the key event.
      */
-    override fun onRoomKeyEvent(event: Event, defaultKeysBackupService: DefaultKeysBackupService) {
+    override fun onRoomKeyEvent(event: Event): Boolean {
         Timber.v("## CRYPTO | onRoomKeyEvent()")
         var exportFormat = false
-        val roomKeyContent = event.getClearContent().toModel<RoomKeyContent>() ?: return
+        val roomKeyContent = event.getClearContent().toModel<RoomKeyContent>() ?: return false
 
         var senderKey: String? = event.getSenderKey()
         var keysClaimed: MutableMap<String, String> = HashMap()
@@ -240,12 +239,12 @@ internal class MXMegolmDecryption(private val userId: String,
 
         if (roomKeyContent.roomId.isNullOrEmpty() || roomKeyContent.sessionId.isNullOrEmpty() || roomKeyContent.sessionKey.isNullOrEmpty()) {
             Timber.e("## CRYPTO | onRoomKeyEvent() :  Key event is missing fields")
-            return
+            return false
         }
         if (event.getClearType() == EventType.FORWARDED_ROOM_KEY) {
             Timber.i("## CRYPTO | onRoomKeyEvent(), forward adding key : ${roomKeyContent.roomId}|${roomKeyContent.sessionId}")
             val forwardedRoomKeyContent = event.getClearContent().toModel<ForwardedRoomKeyContent>()
-                    ?: return
+                    ?: return false
 
             forwardedRoomKeyContent.forwardingCurve25519KeyChain?.let {
                 forwardingCurve25519KeyChain.addAll(it)
@@ -253,7 +252,7 @@ internal class MXMegolmDecryption(private val userId: String,
 
             if (senderKey == null) {
                 Timber.e("## CRYPTO | onRoomKeyEvent() : event is missing sender_key field")
-                return
+                return false
             }
 
             forwardingCurve25519KeyChain.add(senderKey)
@@ -262,12 +261,12 @@ internal class MXMegolmDecryption(private val userId: String,
             senderKey = forwardedRoomKeyContent.senderKey
             if (null == senderKey) {
                 Timber.e("## CRYPTO | onRoomKeyEvent() : forwarded_room_key event is missing sender_key field")
-                return
+                return false
             }
 
             if (null == forwardedRoomKeyContent.senderClaimedEd25519Key) {
                 Timber.e("## CRYPTO | forwarded_room_key_event is missing sender_claimed_ed25519_key field")
-                return
+                return false
             }
 
             keysClaimed["ed25519"] = forwardedRoomKeyContent.senderClaimedEd25519Key
@@ -275,7 +274,7 @@ internal class MXMegolmDecryption(private val userId: String,
             Timber.i("## CRYPTO | onRoomKeyEvent(), Adding key : ${roomKeyContent.roomId}|${roomKeyContent.sessionId}")
             if (null == senderKey) {
                 Timber.e("## onRoomKeyEvent() : key event has no sender key (not encrypted?)")
-                return
+                return false
             }
 
             // inherit the claimed ed25519 key from the setup message
@@ -292,8 +291,6 @@ internal class MXMegolmDecryption(private val userId: String,
                 exportFormat)
 
         if (added) {
-            defaultKeysBackupService.maybeBackupKeys()
-
             val content = RoomKeyRequestBody(
                     algorithm = roomKeyContent.algorithm,
                     roomId = roomKeyContent.roomId,
@@ -305,6 +302,8 @@ internal class MXMegolmDecryption(private val userId: String,
 
             onNewSession(senderKey, roomKeyContent.sessionId)
         }
+
+        return added
     }
 
     /**

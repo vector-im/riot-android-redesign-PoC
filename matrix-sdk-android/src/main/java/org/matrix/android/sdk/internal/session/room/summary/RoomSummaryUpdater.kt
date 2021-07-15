@@ -34,7 +34,7 @@ import org.matrix.android.sdk.api.session.room.model.create.RoomCreateContent
 import org.matrix.android.sdk.api.session.room.send.SendState
 import org.matrix.android.sdk.internal.crypto.EventDecryptor
 import org.matrix.android.sdk.internal.crypto.MXCRYPTO_ALGORITHM_MEGOLM
-import org.matrix.android.sdk.internal.crypto.crosssigning.DefaultCrossSigningService
+import org.matrix.android.sdk.internal.crypto.crosssigning.CrossSigningManager
 import org.matrix.android.sdk.internal.database.mapper.ContentMapper
 import org.matrix.android.sdk.internal.database.mapper.asDomain
 import org.matrix.android.sdk.internal.database.model.CurrentStateEventEntity
@@ -72,7 +72,7 @@ internal class RoomSummaryUpdater @Inject constructor(
         private val roomDisplayNameResolver: RoomDisplayNameResolver,
         private val roomAvatarResolver: RoomAvatarResolver,
         private val eventDecryptor: EventDecryptor,
-        private val crossSigningService: DefaultCrossSigningService,
+        private val crossSigningManager: CrossSigningManager,
         private val roomAccountDataDataSource: RoomAccountDataDataSource) {
 
     fun update(realm: Realm,
@@ -177,7 +177,7 @@ internal class RoomSummaryUpdater @Inject constructor(
             roomSummaryEntity.otherMemberIds.addAll(otherRoomMembers)
             if (roomSummaryEntity.isEncrypted && otherRoomMembers.isNotEmpty()) {
                 // mmm maybe we could only refresh shield instead of checking trust also?
-                crossSigningService.onUsersDeviceUpdate(otherRoomMembers)
+                crossSigningManager.onUsersDeviceUpdate(otherRoomMembers)
             }
         }
     }

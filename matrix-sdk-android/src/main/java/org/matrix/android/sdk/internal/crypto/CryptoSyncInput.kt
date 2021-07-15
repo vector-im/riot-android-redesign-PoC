@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2021 New Vector Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.internal.crypto.crosssigning
+package org.matrix.android.sdk.internal.crypto
 
-import org.matrix.android.sdk.api.session.crypto.crosssigning.CrossSigningService
-import javax.inject.Inject
+import org.matrix.android.sdk.api.session.events.model.Event
+import org.matrix.android.sdk.internal.session.sync.model.SyncResponse
 
-internal class DefaultCrossSigningService @Inject constructor(
-        crossSigningManager: CrossSigningManager
-) : CrossSigningService by crossSigningManager
+internal interface CryptoSyncInput {
+    fun onToDeviceEvent(event: Event)
+
+    fun onSyncCompleted(syncResponse: SyncResponse)
+}

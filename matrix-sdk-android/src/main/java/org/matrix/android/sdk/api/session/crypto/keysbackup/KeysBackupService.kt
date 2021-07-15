@@ -173,8 +173,6 @@ interface KeysBackupService {
                                              password: String,
                                              callback: MatrixCallback<Unit>)
 
-    fun onSecretKeyGossip(secret: String)
-
     /**
      * Restore a backup with a recovery key from a given backup version stored on the homeserver.
      *
