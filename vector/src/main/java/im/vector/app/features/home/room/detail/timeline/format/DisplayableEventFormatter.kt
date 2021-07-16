@@ -16,14 +16,18 @@
 
 package im.vector.app.features.home.room.detail.timeline.format
 
+import dagger.Lazy
 import im.vector.app.EmojiCompatWrapper
 import im.vector.app.R
 import im.vector.app.core.resources.ColorProvider
 import im.vector.app.core.resources.StringProvider
+import im.vector.app.features.html.EventHtmlRenderer
 import me.gujun.android.span.span
+import org.commonmark.node.Document
 import org.matrix.android.sdk.api.session.events.model.EventType
 import org.matrix.android.sdk.api.session.events.model.toModel
 import org.matrix.android.sdk.api.session.room.model.message.MessageOptionsContent
+import org.matrix.android.sdk.api.session.room.model.message.MessageTextContent
 import org.matrix.android.sdk.api.session.room.model.message.MessageType
 import org.matrix.android.sdk.api.session.room.model.message.OPTION_TYPE_BUTTONS
 import org.matrix.android.sdk.api.session.room.model.relation.ReactionContent
@@ -37,7 +41,8 @@ class DisplayableEventFormatter @Inject constructor(
         private val stringProvider: StringProvider,
         private val colorProvider: ColorProvider,
         private val emojiCompatWrapper: EmojiCompatWrapper,
-        private val noticeEventFormatter: NoticeEventFormatter
+        private val noticeEventFormatter: NoticeEventFormatter,
+        private val htmlRenderer: Lazy<EventHtmlRenderer>
 ) {
 
     fun format(timelineEvent: TimelineEvent, appendAuthor: Boolean): CharSequence {
@@ -81,13 +86,13 @@ class DisplayableEventFormatter @Inject constructor(
                             return simpleFormat(senderName, stringProvider.getString(R.string.sent_a_file), appendAuthor)
                         }
                         MessageType.MSGTYPE_TEXT                 -> {
-                            return if (timelineEvent.isReply()) {
-                                // Skip reply prefix, and show important
-                                // TODO add a reply image span ?
-                                simpleFormat(senderName, timelineEvent.getTextEditableContent()
-                                        ?: messageContent.body, appendAuthor)
+                            val body = if (timelineEvent.isReply()) timelineEvent.getTextEditableContent() ?: messageContent.body else messageContent.body
+                            return if (messageContent is MessageTextContent && messageContent.matrixFormattedBody.isNullOrBlank().not()) {
+                                val localFormattedBody = htmlRenderer.get().parse(body) as Document
+                                val renderedBody = htmlRenderer.get().render(localFormattedBody) ?: body
+                                simpleFormat(senderName, renderedBody, appendAuthor)
                             } else {
-                                simpleFormat(senderName, messageContent.body, appendAuthor)
+                                simpleFormat(senderName, body, appendAuthor)
                             }
                         }
                         MessageType.MSGTYPE_RESPONSE             -> {
