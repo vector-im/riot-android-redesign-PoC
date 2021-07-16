@@ -3,18 +3,12 @@
     package="im.vector.app">
 
     <application>
-
-        <!-- Firebase components -->
-        <meta-data
-            android:name="firebase_analytics_collection_deactivated"
-            android:value="true" />
-
-        <service android:name=".gplay.push.fcm.VectorFirebaseMessagingService">
+        <receiver android:enabled="true"  android:name=".push.fcm.EmbeddedDistrib" android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="org.unifiedpush.android.distributor.REGISTER"/>
+                <action android:name="org.unifiedpush.android.distributor.UNREGISTER"/>
             </intent-filter>
-        </service>
-
+        </receiver>
     </application>
 
 </manifest>

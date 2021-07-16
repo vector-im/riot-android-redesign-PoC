@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package im.vector.app.fdroid.receiver
+package im.vector.app.core.receiver
 
 import android.app.AlarmManager
 import android.app.PendingIntent

@@ -300,6 +300,10 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    packagingOptions {
+        exclude 'META-INF/lib_release.kotlin_module'
+    }
 }
 
 dependencies {
@@ -333,6 +337,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
 
@@ -349,6 +354,7 @@ dependencies {
     implementation "com.gabrielittner.threetenbp:lazythreetenbp:0.9.0"
 
     implementation "com.squareup.moshi:moshi-adapters:$moshi_version"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
@@ -440,8 +446,10 @@ dependencies {
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    // gplay flavor only
-    gplayImplementation('com.google.firebase:firebase-messaging:22.0.0') {
+    // UnifiedPush
+    implementation 'com.github.UnifiedPush:android-connector:1.2.0'
+    // UnifiedPush gplay flavor only
+    gplayImplementation('com.github.UnifiedPush:android-embedded_fcm_distributor:1.1.0') {
         exclude group: 'com.google.firebase', module: 'firebase-core'
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
         exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'

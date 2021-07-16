@@ -1,5 +1,11 @@
+package im.vector.app.push.fcm
+
+import android.content.Context
+import org.unifiedpush.android.embedded_fcm_distributor.GetEndpointHandler
+import org.unifiedpush.android.embedded_fcm_distributor.EmbeddedDistributorReceiver
+
 /*
- * Copyright 2018 New Vector Ltd
+ * Copyright (c) 2021 New Vector Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +19,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:Suppress("UNUSED_PARAMETER")
 
-package im.vector.app.push.fcm
-
-import android.content.Context
-
-/**
- * This class has an alter ego in the gplay variant.
- */
-object FcmHelper {
-    fun isPlayServicesAvailable(context: Context): Boolean {
-        return false
+val handlerFCM = object: GetEndpointHandler {
+    override fun getEndpoint(context: Context?, token: String, instance: String): String {
+        // Here token is the FCM Token, used by the gateway (sygnal)
+        return token
     }
 }
+
+class EmbeddedDistrib: EmbeddedDistributorReceiver(handlerFCM)

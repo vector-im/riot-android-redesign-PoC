@@ -37,11 +37,12 @@ import im.vector.app.core.pushers.PushersManager
 import im.vector.app.core.utils.isIgnoringBatteryOptimizations
 import im.vector.app.core.utils.requestDisablingBatteryOptimization
 import im.vector.app.features.notifications.NotificationUtils
-import im.vector.app.push.fcm.FcmHelper
+import im.vector.app.core.pushers.UPHelper
 import kotlinx.coroutines.launch
 import org.matrix.android.sdk.api.extensions.tryOrNull
 import org.matrix.android.sdk.api.pushrules.RuleIds
 import org.matrix.android.sdk.api.pushrules.RuleKind
+import timber.log.Timber
 import javax.inject.Inject
 
 // Referenced in vector_settings_preferences_root.xml
@@ -145,7 +146,7 @@ class VectorSettingsNotificationPreferenceFragment @Inject constructor(
         }
 
         findPreference<VectorPreferenceCategory>(VectorPreferences.SETTINGS_BACKGROUND_SYNC_PREFERENCE_KEY)?.let {
-            it.isVisible = !FcmHelper.isPushSupported()
+            it.isVisible = !UPHelper.hasEndpoint(requireContext())
         }
 
         findPreference<VectorEditTextPreference>(VectorPreferences.SETTINGS_SET_SYNC_TIMEOUT_PREFERENCE_KEY)?.let {
@@ -249,7 +250,7 @@ class VectorSettingsNotificationPreferenceFragment @Inject constructor(
 
     private fun refreshPref() {
         // This pref may have change from troubleshoot pref fragment
-        if (!FcmHelper.isPushSupported()) {
+        if (!UPHelper.hasEndpoint(requireContext())) {
             findPreference<VectorSwitchPreference>(VectorPreferences.SETTINGS_START_ON_BOOT_PREFERENCE_KEY)
                     ?.isChecked = vectorPreferences.autoStartOnBoot()
         }
@@ -289,13 +290,22 @@ class VectorSettingsNotificationPreferenceFragment @Inject constructor(
     private fun updateEnabledForDevice(preference: Preference?) {
         val switchPref = preference as SwitchPreference
         if (switchPref.isChecked) {
-            FcmHelper.getFcmToken(requireContext())?.let {
-                pushManager.registerPusherWithFcmKey(it)
-            }
+            UPHelper.registerUnifiedPush(requireContext())
         } else {
-            FcmHelper.getFcmToken(requireContext())?.let {
+            UPHelper.getUpEndpoint(requireContext())?.let {
                 lifecycleScope.launch {
-                    runCatching { pushManager.unregisterPusher(it) }
+                    runCatching {
+                        try {
+                            pushManager.unregisterPusher(requireContext(), it)
+                        } catch (e: Exception) {
+                            Timber.d("Probably unregistering a non existant pusher")
+                        }
+                        try {
+                            UPHelper.unregister(requireContext())
+                        } catch (e: Exception) {
+                            Timber.d("Probably unregistering to a non-saved distributor")
+                        }
+                    }
                             .fold(
                                     { session.refreshPushers() },
                                     {

@@ -39,6 +39,14 @@
         android:name="android.permission.WRITE_CALENDAR"
         tools:node="remove" />
 
+    <!-- if the user don't have FCM or any unifiedpush distributor -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!--
+    Required for long polling account synchronisation in background.
+    If not present ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS intent action won't work
+    -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
     <!-- Jitsi SDK is now API23+ -->
     <uses-sdk tools:overrideLibrary="org.jitsi.meet.sdk,com.oney.WebRTCModule,com.learnium.RNDeviceInfo,com.reactnativecommunity.asyncstorage,com.ocetnik.timer,com.calendarevents,com.reactnativecommunity.netinfo,com.kevinresol.react_native_default_preference,com.rnimmersive,com.corbt.keepawake,com.BV.LinearGradient,com.horcrux.svg" />
 
@@ -382,6 +390,30 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/sdk_provider_paths" />
         </provider>
+
+        <receiver android:exported="true"  android:enabled="true"  android:name=".core.pushers.VectorMessagingReceiver">
+            <intent-filter>
+                <action android:name="org.unifiedpush.android.connector.MESSAGE"/>
+                <action android:name="org.unifiedpush.android.connector.UNREGISTERED"/>
+                <action android:name="org.unifiedpush.android.connector.NEW_ENDPOINT"/>
+                <action android:name="org.unifiedpush.android.connector.REGISTRATION_FAILED"/>
+                <action android:name="org.unifiedpush.android.connector.REGISTRATION_REFUSED"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- For the fallback with sync loop if the user don't have FCM or a UnifiedPush Distributor -->
+        <receiver android:name=".core.receiver.OnApplicationUpgradeOrRebootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".core.receiver.AlarmSyncBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
     </application>
 
 </manifest>

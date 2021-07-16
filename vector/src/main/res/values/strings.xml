@@ -1116,6 +1116,16 @@
     <string name="template_settings_troubleshoot_test_play_services_failed">${app_name} uses Google Play Services to deliver push messages but it doesn’t seem to be configured correctly:\n%1$s</string>
     <string name="settings_troubleshoot_test_play_services_quickfix">Fix Play Services</string>
 
+    <!-- Unifiedpush Endpoint -->
+    <string name="settings_troubleshoot_test_endpoint_title">Endpoint</string>
+    <string name="settings_troubleshoot_test_endpoint_success">Endpoint successfully retrieved:\n%1$s</string>
+    <string name="settings_troubleshoot_test_endpoint_failed">Failed to retrieved Endpoint.</string>
+
+    <!-- UnifiedPush Distributor Picker Dialog -->
+    <string name="unifiedpush_getdistributors_dialog_title">Choose a distributor</string>
+    <string name="unifiedpush_getdistributors_dialog_fcm_fallback">FCM Fallback</string>
+
+    <!-- FCM Token, not used anymore -->
     <string name="settings_troubleshoot_test_fcm_title">Firebase Token</string>
     <string name="settings_troubleshoot_test_fcm_success">FCM token successfully retrieved:\n%1$s</string>
     <string name="settings_troubleshoot_test_fcm_failed">Failed to retrieved FCM token:\n%1$s</string>
@@ -1127,6 +1137,12 @@
     <string name="template_settings_troubleshoot_test_fcm_failed_account_missing">[%1$s]\nThis error is out of control of ${app_name}. There is no Google account on the phone. Please open the account manager and add a Google account.</string>
     <string name="settings_troubleshoot_test_fcm_failed_account_missing_quick_fix">Add Account</string>
 
+    <!-- Pusher registration -->
+    <string name="settings_troubleshoot_test_pusher_registration_title">Pusher Registration</string>
+    <string name="settings_troubleshoot_test_pusher_registration_success">Pusher successfully registered to HomeServer.</string>
+    <string name="settings_troubleshoot_test_pusher_registration_failed">Failed to register pusher to HomeServer:\n%1$s</string>
+
+    <!-- FCM token, not used -->
     <string name="settings_troubleshoot_test_token_registration_title">Token Registration</string>
     <string name="settings_troubleshoot_test_token_registration_success">FCM token successfully registered to HomeServer.</string>
     <string name="settings_troubleshoot_test_token_registration_failed">Failed to register FCM token to HomeServer:\n%1$s</string>

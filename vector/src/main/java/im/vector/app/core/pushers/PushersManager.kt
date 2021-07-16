@@ -16,6 +16,7 @@
 
 package im.vector.app.core.pushers
 
+import android.content.Context
 import im.vector.app.R
 import im.vector.app.core.di.ActiveSessionHolder
 import im.vector.app.core.resources.AppNameProvider
@@ -33,37 +34,46 @@ class PushersManager @Inject constructor(
         private val stringProvider: StringProvider,
         private val appNameProvider: AppNameProvider
 ) {
-    suspend fun testPush(pushKey: String) {
+    suspend fun testPush(context: Context) {
         val currentSession = activeSessionHolder.getActiveSession()
 
         currentSession.testPush(
-                stringProvider.getString(R.string.pusher_http_url),
-                stringProvider.getString(R.string.pusher_app_id),
-                pushKey,
+                UPHelper.getPushGateway(context)!!,
+                getPusherAppId(context),
+                UPHelper.getUpEndpoint(context)!!,
                 TEST_EVENT_ID
         )
     }
 
-    fun registerPusherWithFcmKey(pushKey: String): UUID {
+    fun registerPusher(context: Context, pushKey: String, gateway: String): UUID {
         val currentSession = activeSessionHolder.getActiveSession()
         val profileTag = DEFAULT_PUSHER_FILE_TAG + "_" + abs(currentSession.myUserId.hashCode())
 
         return currentSession.addHttpPusher(
-                pushKey,
-                stringProvider.getString(R.string.pusher_app_id),
+                pushKey, // this is the UnifiedPush endpoint
+                getPusherAppId(context),
                 profileTag,
                 localeProvider.current().language,
                 appNameProvider.getAppName(),
                 currentSession.sessionParams.deviceId ?: "MOBILE",
-                stringProvider.getString(R.string.pusher_http_url),
+                gateway,
                 append = false,
                 withEventIdOnly = true
         )
     }
 
-    suspend fun unregisterPusher(pushKey: String) {
+    suspend fun unregisterPusher(context: Context, pushKey: String) {
         val currentSession = activeSessionHolder.getSafeActiveSession() ?: return
-        currentSession.removeHttpPusher(pushKey, stringProvider.getString(R.string.pusher_app_id))
+        currentSession.removeHttpPusher(pushKey, getPusherAppId(context))
+    }
+
+    private fun getPusherAppId(context: Context) : String {
+        val appId = stringProvider.getString(R.string.pusher_app_id)
+        return if (UPHelper.isEmbeddedDistributor(context)) {
+            appId
+        } else {
+            "$appId.up"
+        }
     }
 
     companion object {

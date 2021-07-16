@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package im.vector.app.fdroid
+package im.vector.app.core.receiver
 
 import android.content.Context
 import im.vector.app.core.di.ActiveSessionHolder
-import im.vector.app.fdroid.receiver.AlarmSyncBroadcastReceiver
 import im.vector.app.features.settings.BackgroundSyncMode
 import im.vector.app.features.settings.VectorPreferences
 import timber.log.Timber

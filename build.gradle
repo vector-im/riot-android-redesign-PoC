@@ -44,6 +44,8 @@ allprojects {
                 includeGroupByRegex 'com\\.github\\.chrisbanes'
                 // PFLockScreen-Android
                 includeGroupByRegex 'com\\.github\\.vector-im'
+                // UnifiedPush
+                includeGroupByRegex 'com\\.github\\.UnifiedPush'
 
                 // Chat effects
                 includeGroupByRegex 'com\\.github\\.jetradarmobile'

@@ -59,7 +59,7 @@ import im.vector.app.features.settings.VectorLocale
 import im.vector.app.features.settings.VectorPreferences
 import im.vector.app.features.themes.ThemeUtils
 import im.vector.app.features.version.VersionProvider
-import im.vector.app.push.fcm.FcmHelper
+import im.vector.app.core.pushers.StateHelper
 import org.jitsi.meet.sdk.log.JitsiMeetDefaultLogHandler
 import org.matrix.android.sdk.api.Matrix
 import org.matrix.android.sdk.api.MatrixConfiguration
@@ -171,7 +171,7 @@ class VectorApplication :
             @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
             fun entersForeground() {
                 Timber.i("App entered foreground")
-                FcmHelper.onEnterForeground(appContext, activeSessionHolder)
+                StateHelper.onEnterForeground(appContext, activeSessionHolder)
                 activeSessionHolder.getSafeActiveSession()?.also {
                     it.stopAnyBackgroundSync()
                 }
@@ -181,7 +181,7 @@ class VectorApplication :
             fun entersBackground() {
                 Timber.i("App entered background") // call persistInfo
                 notificationDrawerManager.persistInfo()
-                FcmHelper.onEnterBackground(appContext, vectorPreferences, activeSessionHolder)
+                StateHelper.onEnterBackground(appContext, vectorPreferences, activeSessionHolder)
             }
         })
         ProcessLifecycleOwner.get().lifecycle.addObserver(appStateHandler)

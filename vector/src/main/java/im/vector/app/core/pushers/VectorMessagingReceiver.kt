@@ -17,43 +17,60 @@
  * limitations under the License.
  */
 
-package im.vector.app.gplay.push.fcm
+package im.vector.app.core.pushers
 
+import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import im.vector.app.BuildConfig
-import im.vector.app.R
 import im.vector.app.core.di.ActiveSessionHolder
 import im.vector.app.core.extensions.vectorComponent
 import im.vector.app.core.network.WifiDetector
-import im.vector.app.core.pushers.PushersManager
 import im.vector.app.features.badge.BadgeProxy
 import im.vector.app.features.notifications.NotifiableEventResolver
-import im.vector.app.features.notifications.NotifiableMessageEvent
 import im.vector.app.features.notifications.NotificationDrawerManager
 import im.vector.app.features.notifications.NotificationUtils
-import im.vector.app.features.notifications.SimpleNotifiableEvent
+import im.vector.app.features.settings.BackgroundSyncMode
 import im.vector.app.features.settings.VectorPreferences
-import im.vector.app.push.fcm.FcmHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.matrix.android.sdk.api.extensions.tryOrNull
-import org.matrix.android.sdk.api.pushrules.Action
 import org.matrix.android.sdk.api.session.Session
-import org.matrix.android.sdk.api.session.events.model.Event
+import org.unifiedpush.android.connector.MessagingReceiver
+import org.unifiedpush.android.connector.MessagingReceiverHandler
 import timber.log.Timber
 
+data class UnifiedPushMessage(
+        val notification: Notification
+        )
+
+@JsonClass(generateAdapter = true)
+data class Notification(
+        @Json(name = "event_id") val eventId: String = "",
+        @Json(name = "room_id") val roomId: String = "",
+        var unread: Int = 0,
+        val counts: Counts = Counts()
+        )
+
+data class Counts(
+        val unread: Int = 0
+        )
+
 /**
- * Class extending FirebaseMessagingService.
+ * UnifiedPush handler.
  */
-class VectorFirebaseMessagingService : FirebaseMessagingService() {
+val upHandler = object: MessagingReceiverHandler {
 
     private lateinit var notificationDrawerManager: NotificationDrawerManager
     private lateinit var notifiableEventResolver: NotifiableEventResolver
@@ -69,9 +86,8 @@ class VectorFirebaseMessagingService : FirebaseMessagingService() {
         Handler(Looper.getMainLooper())
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        with(vectorComponent()) {
+    fun initVar(context: Context) {
+        with(context.vectorComponent()) {
             notificationDrawerManager = notificationDrawerManager()
             notifiableEventResolver = notifiableEventResolver()
             pusherManager = pusherManager()
@@ -85,17 +101,34 @@ class VectorFirebaseMessagingService : FirebaseMessagingService() {
      * Called when message is received.
      *
      * @param message the message
+     * @param instance connection, for multi-account
      */
-    override fun onMessageReceived(message: RemoteMessage) {
+    override fun onMessage(context: Context?, message: String, instance: String) {
+        initVar(context!!)
         if (BuildConfig.LOW_PRIVACY_LOG_ENABLE) {
-            Timber.d("## onMessageReceived() %s", message.data.toString())
+            Timber.d("## onMessageReceived() %s", message)
         }
-        Timber.d("## onMessageReceived() from FCM with priority %s", message.priority)
+        Timber.d("## onMessage() received")
+
+        val moshi: Moshi = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
+        lateinit var notification: Notification
+
+        if (UPHelper.isEmbeddedDistributor(context)) {
+            notification = moshi.adapter(Notification::class.java)
+                    .fromJson(message)!!
+        } else {
+            val data = moshi.adapter(UnifiedPushMessage::class.java)
+                    .fromJson(message)!!
+            notification = data.notification
+            notification.unread = notification.counts.unread
+        }
 
         // Diagnostic Push
-        if (message.data["event_id"] == PushersManager.TEST_EVENT_ID) {
+        if (notification.eventId == PushersManager.TEST_EVENT_ID) {
             val intent = Intent(NotificationUtils.PUSH_ACTION)
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
             return
         }
 
@@ -109,7 +142,7 @@ class VectorFirebaseMessagingService : FirebaseMessagingService() {
                 // we are in foreground, let the sync do the things?
                 Timber.d("PUSH received in a foreground state, ignore")
             } else {
-                onMessageReceivedInternal(message.data)
+                onMessageReceivedInternal(context, notification)
             }
         }
     }
@@ -120,59 +153,71 @@ class VectorFirebaseMessagingService : FirebaseMessagingService() {
      * when the InstanceID token is initially generated, so this is where
      * you retrieve the token.
      */
-    override fun onNewToken(refreshedToken: String) {
-        Timber.i("onNewToken: FCM Token has been updated")
-        FcmHelper.storeFcmToken(this, refreshedToken)
+    override fun onNewEndpoint(context: Context?, endpoint: String, instance: String) {
+        initVar(context!!)
+        Timber.i("onNewEndpoint: adding $endpoint")
         if (vectorPreferences.areNotificationEnabledForDevice() && activeSessionHolder.hasActiveSession()) {
-            pusherManager.registerPusherWithFcmKey(refreshedToken)
+            val gateway = UPHelper.customOrDefaultGateway(context, endpoint)
+            if (UPHelper.getUpEndpoint(context) != endpoint
+                    || UPHelper.getPushGateway(context) != gateway) {
+                UPHelper.storePushGateway(context, gateway)
+                UPHelper.storeUpEndpoint(context, endpoint)
+                pusherManager.registerPusher(context, endpoint, gateway)
+            } else {
+                Timber.i("onNewEndpoint: skipped")
+            }
         }
+        val mode = BackgroundSyncMode.FDROID_BACKGROUND_SYNC_MODE_DISABLED
+        vectorPreferences.setFdroidSyncBackgroundMode(mode)
     }
 
-    /**
-     * Called when the FCM server deletes pending messages. This may be due to:
-     *      - Too many messages stored on the FCM server.
-     *          This can occur when an app's servers send a bunch of non-collapsible messages to FCM servers while the device is offline.
-     *      - The device hasn't connected in a long time and the app server has recently (within the last 4 weeks)
-     *          sent a message to the app on that device.
-     *
-     *  It is recommended that the app do a full sync with the app server after receiving this call.
-     */
-    override fun onDeletedMessages() {
-        Timber.v("## onDeletedMessages()")
+    override fun onRegistrationFailed(context: Context?, instance: String) {
+        Toast.makeText(context, "Push service registration failed", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onRegistrationRefused(context: Context?, instance: String) {
+        Toast.makeText(context, "Push service registration refused by server", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onUnregistered(context: Context?, instance: String) {
+        Timber.d("Unifiedpush: Unregistered")
+        initVar(context!!)
+        val mode = BackgroundSyncMode.FDROID_BACKGROUND_SYNC_MODE_FOR_BATTERY
+        vectorPreferences.setFdroidSyncBackgroundMode(mode)
+        runBlocking {
+            try {
+                pusherManager.unregisterPusher(context, UPHelper.getUpEndpoint(context)!!)
+            } catch (e: Exception) {
+                Timber.d("Probably unregistering a non existant pusher")
+            }
+        }
     }
 
     /**
      * Internal receive method
      *
-     * @param data Data map containing message data as key/value pairs.
-     * For Set of keys use data.keySet().
+     * @param notification Notification containing message data.
      */
-    private fun onMessageReceivedInternal(data: Map<String, String>) {
+    private fun onMessageReceivedInternal(context: Context, notification: Notification) {
         try {
             if (BuildConfig.LOW_PRIVACY_LOG_ENABLE) {
-                Timber.d("## onMessageReceivedInternal() : $data")
-            } else {
-                Timber.d("## onMessageReceivedInternal() : $data")
+                Timber.d("## onMessageReceivedInternal() : $notification")
             }
 
             // update the badge counter
-            val unreadCount = data["unread"]?.let { Integer.parseInt(it) } ?: 0
-            BadgeProxy.updateBadgeCount(applicationContext, unreadCount)
+            BadgeProxy.updateBadgeCount(context, notification.unread)
 
             val session = activeSessionHolder.getSafeActiveSession()
 
             if (session == null) {
                 Timber.w("## Can't sync from push, no current session")
             } else {
-                val eventId = data["event_id"]
-                val roomId = data["room_id"]
-
-                if (isEventAlreadyKnown(eventId, roomId)) {
+                if (isEventAlreadyKnown(notification.eventId, notification.roomId)) {
                     Timber.d("Ignoring push, event already known")
                 } else {
                     // Try to get the Event content faster
                     Timber.d("Requesting event in fast lane")
-                    getEventFastLane(session, roomId, eventId)
+                    getEventFastLane(session, notification.roomId, notification.eventId)
 
                     Timber.d("Requesting background sync")
                     session.requireBackgroundSync()
@@ -227,87 +272,6 @@ class VectorFirebaseMessagingService : FirebaseMessagingService() {
         }
         return false
     }
-
-    private fun handleNotificationWithoutSyncingMode(data: Map<String, String>, session: Session?) {
-        if (session == null) {
-            Timber.e("## handleNotificationWithoutSyncingMode cannot find session")
-            return
-        }
-
-        // The Matrix event ID of the event being notified about.
-        // This is required if the notification is about a particular Matrix event.
-        // It may be omitted for notifications that only contain updated badge counts.
-        // This ID can and should be used to detect duplicate notification requests.
-        val eventId = data["event_id"] ?: return // Just ignore
-
-        val eventType = data["type"]
-        if (eventType == null) {
-            // Just add a generic unknown event
-            val simpleNotifiableEvent = SimpleNotifiableEvent(
-                    session.myUserId,
-                    eventId,
-                    null,
-                    true, // It's an issue in this case, all event will bing even if expected to be silent.
-                    title = getString(R.string.notification_unknown_new_event),
-                    description = "",
-                    type = null,
-                    timestamp = System.currentTimeMillis(),
-                    soundName = Action.ACTION_OBJECT_VALUE_VALUE_DEFAULT,
-                    isPushGatewayEvent = true
-            )
-            notificationDrawerManager.onNotifiableEventReceived(simpleNotifiableEvent)
-            notificationDrawerManager.refreshNotificationDrawer()
-        } else {
-            val event = parseEvent(data) ?: return
-
-            val notifiableEvent = notifiableEventResolver.resolveEvent(event, session)
-
-            if (notifiableEvent == null) {
-                Timber.e("Unsupported notifiable event $eventId")
-                if (BuildConfig.LOW_PRIVACY_LOG_ENABLE) {
-                    Timber.e("--> $event")
-                }
-            } else {
-                if (notifiableEvent is NotifiableMessageEvent) {
-                    if (notifiableEvent.senderName.isNullOrEmpty()) {
-                        notifiableEvent.senderName = data["sender_display_name"] ?: data["sender"] ?: ""
-                    }
-                    if (notifiableEvent.roomName.isNullOrEmpty()) {
-                        notifiableEvent.roomName = findRoomNameBestEffort(data, session) ?: ""
-                    }
-                }
-
-                notifiableEvent.isPushGatewayEvent = true
-                notifiableEvent.matrixID = session.myUserId
-                notificationDrawerManager.onNotifiableEventReceived(notifiableEvent)
-                notificationDrawerManager.refreshNotificationDrawer()
-            }
-        }
-    }
-
-    private fun findRoomNameBestEffort(data: Map<String, String>, session: Session?): String? {
-        var roomName: String? = data["room_name"]
-        val roomId = data["room_id"]
-        if (null == roomName && null != roomId) {
-            // Try to get the room name from our store
-            roomName = session?.getRoom(roomId)?.roomSummary()?.displayName
-        }
-        return roomName
-    }
-
-    /**
-     * Try to create an event from the FCM data
-     *
-     * @param data the FCM data
-     * @return the event or null if required data are missing
-     */
-    private fun parseEvent(data: Map<String, String>?): Event? {
-        return Event(
-                eventId = data?.get("event_id") ?: return null,
-                senderId = data["sender"],
-                roomId = data["room_id"] ?: return null,
-                type = data["type"] ?: return null,
-                originServerTs = System.currentTimeMillis()
-        )
-    }
 }
+
+class VectorMessagingReceiver : MessagingReceiver(upHandler)
