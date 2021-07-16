@@ -1079,6 +1079,12 @@
     <string name="settings_notification_advanced">Advanced Notification Settings</string>
     <string name="settings_notification_by_event">Notification importance by event</string>
 
+    <string name="settings_notification_global">Global Notifications</string>
+    <string name="settings_notification_mentions_and_keywords">Mentions and Keywords</string>
+    <string name="settings_notification_other">Other</string>
+
+    <string name="settings_notification_notify_me_for">Notify me for</string>
+
     <string name="settings_notification_privacy">Notification privacy</string>
     <string name="settings_notification_troubleshoot">Troubleshoot Notifications</string>
     <string name="settings_troubleshoot_diagnostic">Troubleshooting diagnostics</string>
@@ -1187,14 +1193,27 @@
     <string name="settings_silent_notifications_preferences">Configure Silent Notifications</string>
     <string name="settings_system_preferences_summary">Choose LED color, vibration, sound…</string>
 
-
+    <string name="settings_messages_in_e2e_one_to_one">Encrypted messages in one-to-one chats</string>
+    <string name="settings_messages_in_e2e_group_chat">Encrypted messages in group chats</string>
+    <string name="settings_when_rooms_are_upgraded">When rooms are upgraded</string>
     <string name="settings_containing_my_display_name">Msgs containing my display name</string>
     <string name="settings_containing_my_user_name">Msgs containing my user name</string>
     <string name="settings_messages_in_one_to_one">Msgs in one-to-one chats</string>
     <string name="settings_messages_in_group_chat">Msgs in group chats</string>
     <string name="settings_invited_to_room">When I’m invited to a room</string>
-    <string name="settings_call_invitations">Call invitations</string>
     <string name="settings_messages_sent_by_bot">Messages sent by bot</string>
+
+    <string name="settings_messages_containing_display_name">Messages containing my display name</string>
+    <string name="settings_messages_containing_username">Messages containing my username</string>
+    <string name="settings_messages_direct_messages">Direct messages</string>
+    <string name="settings_encrypted_direct_messages">Encrypted direct messages</string>
+    <string name="settings_group_messages">Group messages</string>
+    <string name="settings_encrypted_group_messages">Encrypted group messages</string>
+    <string name="settings_messages_at_room">Messages containing @room</string>
+    <string name="settings_room_invitations">Room invitations</string>
+    <string name="settings_call_invitations">Call invitations</string>
+    <string name="settings_messages_by_bot">Messages by bot</string>
+    <string name="settings_room_upgrades">Room upgrades</string>
 
     <string name="settings_background_sync">Background synchronization</string>
     <string name="settings_background_fdroid_sync_mode">Background Sync Mode</string>
@@ -2946,10 +2965,6 @@
     <string name="error_failed_to_import_keys">Failed to import keys</string>
 
     <string name="settings_notification_configuration">Notifications configuration</string>
-    <string name="settings_messages_at_room">Messages containing @room</string>
-    <string name="settings_messages_in_e2e_one_to_one">Encrypted messages in one-to-one chats</string>
-    <string name="settings_messages_in_e2e_group_chat">Encrypted messages in group chats</string>
-    <string name="settings_when_rooms_are_upgraded">When rooms are upgraded</string>
     <string name="settings_troubleshoot_title">Troubleshoot</string>
     <string name="settings_notification_advanced_summary">Set notification importance by event</string>
 

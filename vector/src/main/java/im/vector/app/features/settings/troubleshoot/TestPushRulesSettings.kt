@@ -35,11 +35,6 @@ class TestPushRulesSettings @Inject constructor(private val activeSessionHolder:
                     RuleIds.RULE_ID_ONE_TO_ONE_ROOM,
                     RuleIds.RULE_ID_ALL_OTHER_MESSAGES_ROOMS)
 
-    val ruleSettingsName = arrayOf(R.string.settings_containing_my_display_name,
-            R.string.settings_containing_my_user_name,
-            R.string.settings_messages_in_one_to_one,
-            R.string.settings_messages_in_group_chat)
-
     override fun perform(activityResultLauncher: ActivityResultLauncher<Intent>) {
         val session = activeSessionHolder.getSafeActiveSession() ?: return
         val pushRules = session.getPushRules().getAllRules()

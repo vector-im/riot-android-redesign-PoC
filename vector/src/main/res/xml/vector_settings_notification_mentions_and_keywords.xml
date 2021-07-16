@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <im.vector.app.core.preference.VectorPreferenceCategory
+        android:key="SETTINGS_KEYWORDS_AND_MENTIONS"
+        android:title="@string/settings_notification_notify_me_for">
+
+        <im.vector.app.core.preference.VectorCheckboxPreference
+            android:key="SETTINGS_PUSH_RULE_CONTAINING_MY_DISPLAY_NAME_PREFERENCE_KEY"
+            android:persistent="false"
+            android:title="@string/settings_messages_containing_display_name" />
+
+        <im.vector.app.core.preference.VectorCheckboxPreference
+            android:key="SETTINGS_PUSH_RULE_CONTAINING_MY_USER_NAME_PREFERENCE_KEY"
+            android:persistent="false"
+            android:title="@string/settings_messages_containing_username" />
+
+        <im.vector.app.core.preference.VectorCheckboxPreference
+            android:key="SETTINGS_PUSH_RULE_MESSAGES_CONTAINING_AT_ROOM_PREFERENCE_KEY"
+            android:persistent="false"
+            android:title="@string/settings_messages_at_room" />
+
+    </im.vector.app.core.preference.VectorPreferenceCategory>
+</androidx.preference.PreferenceScreen>

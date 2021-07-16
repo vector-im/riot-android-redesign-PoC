@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <im.vector.app.core.preference.VectorPreferenceCategory
+        android:key="SETTINGS_OTHER"
+        android:title="@string/settings_notification_notify_me_for">
+
+        <im.vector.app.core.preference.VectorCheckboxPreference
+            android:key="SETTINGS_PUSH_RULE_INVITED_TO_ROOM_PREFERENCE_KEY"
+            android:persistent="false"
+            android:title="@string/settings_room_invitations" />
+
+        <im.vector.app.core.preference.VectorCheckboxPreference
+            android:key="SETTINGS_PUSH_RULE_CALL_INVITATIONS_PREFERENCE_KEY"
+            android:persistent="false"
+            android:title="@string/settings_call_invitations" />
+
+        <im.vector.app.core.preference.VectorCheckboxPreference
+            android:key="SETTINGS_PUSH_RULE_MESSAGES_SENT_BY_BOT_PREFERENCE_KEY"
+            android:persistent="false"
+            android:title="@string/settings_messages_by_bot" />
+
+        <im.vector.app.core.preference.VectorCheckboxPreference
+            android:key="SETTINGS_PUSH_RULE_ROOMS_UPGRADED_KEY"
+            android:persistent="false"
+            android:title="@string/settings_room_upgrades" />
+    </im.vector.app.core.preference.VectorPreferenceCategory>
+</androidx.preference.PreferenceScreen>
