@@ -130,10 +130,11 @@ class PushRulePreference : VectorPreference {
                 }
             } else {
                 if (NOTIFICATION_OFF_INDEX == index) {
-                    if (safeKind == RuleSetKey.UNDERRIDE || safeRule.ruleId == RuleIds.RULE_ID_SUPPRESS_BOTS_NOTIFICATIONS) {
+                    if (safeKind == RuleSetKey.UNDERRIDE && safeRule.ruleId != RuleIds.RULE_ID_CALL) {
                         safeRule.setNotify(false)
                     } else {
                         safeRule.copy(enabled = false)
+                                .removeNotificationSound()
                     }
                 } else {
                     val newRule = safeRule.copy(enabled = true)
@@ -142,7 +143,7 @@ class PushRulePreference : VectorPreference {
                                     && safeRule.ruleId != RuleIds.RULE_ID_INVITE_ME
                                     && NOTIFICATION_NOISY_INDEX == index)
 
-                    if (NOTIFICATION_NOISY_INDEX == index) {
+                    if (NOTIFICATION_NOISY_INDEX == index && RuleIds.RULE_ID_ROOM_NOTIF != safeRule.ruleId) {
                         newRule.setNotificationSound(
                                 if (safeRule.ruleId == RuleIds.RULE_ID_CALL) {
                                     Action.ACTION_OBJECT_VALUE_VALUE_RING
