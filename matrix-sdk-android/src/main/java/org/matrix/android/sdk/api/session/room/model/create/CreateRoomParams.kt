@@ -22,7 +22,6 @@ import org.matrix.android.sdk.api.session.room.model.GuestAccess
 import org.matrix.android.sdk.api.session.room.model.PowerLevelsContent
 import org.matrix.android.sdk.api.session.room.model.RoomDirectoryVisibility
 import org.matrix.android.sdk.api.session.room.model.RoomHistoryVisibility
-import org.matrix.android.sdk.api.session.room.model.RoomJoinRulesAllowEntry
 import org.matrix.android.sdk.internal.crypto.MXCRYPTO_ALGORITHM_MEGOLM
 
 // TODO Give a way to include other initial states
@@ -156,7 +155,7 @@ open class CreateRoomParams {
 
     var roomVersion: String? = null
 
-    var joinRuleRestricted: List<RoomJoinRulesAllowEntry>? = null
+    var featurePreset: RoomFeaturePreset? = null
 
     companion object {
         private const val CREATION_CONTENT_KEY_M_FEDERATE = "m.federate"

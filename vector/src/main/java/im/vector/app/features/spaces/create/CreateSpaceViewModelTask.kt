@@ -24,11 +24,13 @@ import im.vector.app.features.settings.VectorPreferences
 import org.matrix.android.sdk.api.extensions.tryOrNull
 import org.matrix.android.sdk.api.raw.RawService
 import org.matrix.android.sdk.api.session.Session
+import org.matrix.android.sdk.api.session.homeserver.HomeServerCapabilities
 import org.matrix.android.sdk.api.session.room.failure.CreateRoomFailure
 import org.matrix.android.sdk.api.session.room.model.RoomDirectoryVisibility
 import org.matrix.android.sdk.api.session.room.model.RoomJoinRulesAllowEntry
 import org.matrix.android.sdk.api.session.room.model.create.CreateRoomParams
 import org.matrix.android.sdk.api.session.room.model.create.CreateRoomPreset
+import org.matrix.android.sdk.api.session.room.model.create.RestrictedRoomPreset
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -93,13 +95,26 @@ class CreateSpaceViewModelTask @Inject constructor(
                                         }
                                 )
                             } else {
-                                if (vectorPreferences.labsUseExperimentalRestricted()) {
+                                val homeServerCapabilities = session
+                                        .getHomeServerCapabilities()
+                                val restrictedSupport = homeServerCapabilities
+                                        .isFeatureSupported(HomeServerCapabilities.ROOM_CAP_RESTRICTED)
+
+                                val createRestricted = when (restrictedSupport) {
+                                    HomeServerCapabilities.RoomCapabilitySupport.SUPPORTED          -> true
+                                    HomeServerCapabilities.RoomCapabilitySupport.SUPPORTED_UNSTABLE -> vectorPreferences.labsUseExperimentalRestricted()
+                                    else                                                            -> false
+                                }
+                                if (createRestricted) {
                                     session.createRoom(CreateRoomParams().apply {
                                         this.name = roomName
-                                        this.joinRuleRestricted = listOf(
-                                                RoomJoinRulesAllowEntry(
-                                                        spaceID = spaceID,
-                                                        via = session.sessionParams.homeServerHost?.let { listOf(it) } ?: emptyList()
+                                        this.featurePreset = RestrictedRoomPreset(
+                                                homeServerCapabilities,
+                                                listOf(
+                                                        RoomJoinRulesAllowEntry(
+                                                                spaceID = spaceID,
+                                                                via = session.sessionParams.homeServerHost?.let { listOf(it) } ?: emptyList()
+                                                        )
                                                 )
                                         )
                                         if (e2eByDefault) {

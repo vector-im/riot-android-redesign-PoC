@@ -23,6 +23,7 @@ import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.room.model.GuestAccess
 import org.matrix.android.sdk.api.session.room.model.RoomHistoryVisibility
 import org.matrix.android.sdk.api.session.room.model.RoomJoinRules
+import org.matrix.android.sdk.api.session.room.model.RoomJoinRulesAllowEntry
 import org.matrix.android.sdk.api.util.JsonDict
 import org.matrix.android.sdk.api.util.Optional
 
@@ -53,7 +54,7 @@ interface StateService {
     /**
      * Update the join rule and/or the guest access
      */
-    suspend fun updateJoinRule(joinRules: RoomJoinRules?, guestAccess: GuestAccess?)
+    suspend fun updateJoinRule(joinRules: RoomJoinRules?, guestAccess: GuestAccess?, allowList: List<RoomJoinRulesAllowEntry>? = null)
 
     /**
      * Update the avatar of the room

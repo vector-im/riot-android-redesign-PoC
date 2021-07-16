@@ -1466,11 +1466,21 @@
     <string name="room_settings_room_access_entry_knock">Anyone can knock on the room, members can then accept or reject</string>
     <string name="room_settings_room_access_entry_unknown">Unknown access setting (%s)</string>
     <string name="room_settings_room_access_private_title">Private</string>
+    <string name="room_settings_room_access_private_invite_only_title">Private (Invite Only)</string>
     <string name="room_settings_room_access_private_description">Only people invited can find and join</string>
     <string name="room_settings_room_access_public_title">Public</string>
     <string name="room_settings_room_access_public_description">Anyone can find the room and join</string>
-    <string name="room_settings_room_access_restricted_title">Spaces</string>
+    <string name="room_settings_room_access_restricted_title">Space members only</string>
     <string name="room_settings_room_access_restricted_description">Anyone in a space with this room can find and join it. Only admins of this room can add it to a space.</string>
+    <string name="room_create_member_of_space_name_can_join">Members of Space %s can find, preview and join.</string>
+    <string name="allow_space_member_to_find_and_access">Allow space members to find and access.</string>
+    <string name="spaces_which_can_access">Spaces which can access</string>
+    <string name="decide_which_spaces_can_access">Decide which spaces can access this room.  If a space is selected its members will be able to find  and join Room name.</string>
+    <string name="select_spaces">Select spaces</string>
+    <string name="tap_to_edit_spaces">Tap to edit spaces</string>
+    <string name="decide_who_can_find_and_join">Decide who can find and join this room.</string>
+    <string name="space_you_know_that_contains_this_room">Space you know that contain this room</string>
+    <string name="other_spaces_or_rooms_you_might_not_know">Other spaces or rooms you might not know</string>
 
     <!-- Room settings: banned users -->
     <string name="room_settings_banned_users_title">Banned users</string>
@@ -3425,6 +3435,7 @@
     <string name="it_may_take_some_time">Please be patient, it may take some time.</string>
 
     <string name="upgrade">Upgrade</string>
+    <string name="upgrade_required">Upgrade Required</string>
     <string name="upgrade_public_room">Upgrade public room</string>
     <string name="upgrade_private_room">Upgrade private room</string>
     <string name="upgrade_room_warning">Upgrading a room is an advanced action and is usually recommended when a room is unstable due to bugs, missing features or security vulnerabilities.\nThis usually only affects how the room is processed on the server.</string>
@@ -3432,9 +3443,15 @@
     <string name="upgrade_room_auto_invite">Automatically invite users</string>
     <string name="upgrade_room_update_parent_space">Automatically update space parent</string>
     <string name="upgrade_room_no_power_to_manage">You need permission to upgrade a room</string>
+    <string name="allow_anyone_in_room_to_access">Allow anyone in %s to find and access. You can select other spaces too.</string>
 
     <string name="room_using_unstable_room_version">This room is running room version %s, which this homeserver has marked as unstable.</string>
     <string name="room_upgrade_to_recommended_version">Upgrade to the recommended room version</string>
 
     <string name="error_failed_to_join_room">Sorry, an error occurred while trying to join: %s</string>
+
+    <string name="upgrade_room_for_restricted">Anyone in %s will be able to find and join this room - no need to manually invite everyone.  You’ll be able to change this in room settings anytime.</string>
+    <string name="upgrade_room_for_restricted_no_param">Anyone in a parent space will be able to find and join this room - no need to manually invite everyone.  You’ll be able to change this in room settings anytime.</string>
+
+    <string name="upgrade_room_for_restricted_note">Please note upgrading will make a new version of the room.  All current messages will stay in this archived room.</string>
 </resources>

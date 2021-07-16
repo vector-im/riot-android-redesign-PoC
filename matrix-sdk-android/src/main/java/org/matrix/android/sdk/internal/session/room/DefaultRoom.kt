@@ -24,6 +24,8 @@ import org.matrix.android.sdk.api.session.room.accountdata.RoomAccountDataServic
 import org.matrix.android.sdk.api.session.room.alias.AliasService
 import org.matrix.android.sdk.api.session.room.call.RoomCallService
 import org.matrix.android.sdk.api.session.room.members.MembershipService
+import org.matrix.android.sdk.api.session.room.model.RoomJoinRules
+import org.matrix.android.sdk.api.session.room.model.RoomJoinRulesAllowEntry
 import org.matrix.android.sdk.api.session.room.model.RoomSummary
 import org.matrix.android.sdk.api.session.room.model.RoomType
 import org.matrix.android.sdk.api.session.room.model.relation.RelationService
@@ -163,5 +165,21 @@ internal class DefaultRoom(override val roomId: String,
     override fun asSpace(): Space? {
         if (roomSummary()?.roomType != RoomType.SPACE) return null
         return DefaultSpace(this, roomSummaryDataSource, viaParameterFinder)
+    }
+
+    override suspend fun setJoinRulePublic() {
+        stateService.updateJoinRule(RoomJoinRules.PUBLIC, null)
+    }
+
+    override suspend fun setJoinRuleInviteOnly() {
+        stateService.updateJoinRule(RoomJoinRules.INVITE, null)
+    }
+
+    override suspend fun setJoinRuleRestricted(allowList: List<String>) {
+        // we need to compute correct via parameters and check if PL are correct
+        val allowEntries = allowList.map { spaceId ->
+            RoomJoinRulesAllowEntry(spaceId, viaParameterFinder.computeViaParamsForRestricted(spaceId, 3))
+        }
+        stateService.updateJoinRule(RoomJoinRules.RESTRICTED, null, allowEntries)
     }
 }

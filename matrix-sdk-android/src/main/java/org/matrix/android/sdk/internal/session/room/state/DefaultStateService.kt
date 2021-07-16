@@ -19,8 +19,8 @@ package org.matrix.android.sdk.internal.session.room.state
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import org.matrix.android.sdk.api.query.QueryStringValue
 import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.events.model.EventType
@@ -29,12 +29,13 @@ import org.matrix.android.sdk.api.session.room.model.GuestAccess
 import org.matrix.android.sdk.api.session.room.model.RoomCanonicalAliasContent
 import org.matrix.android.sdk.api.session.room.model.RoomHistoryVisibility
 import org.matrix.android.sdk.api.session.room.model.RoomJoinRules
+import org.matrix.android.sdk.api.session.room.model.RoomJoinRulesAllowEntry
+import org.matrix.android.sdk.api.session.room.model.RoomJoinRulesContent
 import org.matrix.android.sdk.api.session.room.state.StateService
 import org.matrix.android.sdk.api.util.JsonDict
 import org.matrix.android.sdk.api.util.MimeTypes
 import org.matrix.android.sdk.api.util.Optional
 import org.matrix.android.sdk.internal.session.content.FileUploader
-import java.lang.UnsupportedOperationException
 
 internal class DefaultStateService @AssistedInject constructor(@Assisted private val roomId: String,
                                                                private val stateEventDataSource: StateEventDataSource,
@@ -126,12 +127,19 @@ internal class DefaultStateService @AssistedInject constructor(@Assisted private
         )
     }
 
-    override suspend fun updateJoinRule(joinRules: RoomJoinRules?, guestAccess: GuestAccess?) {
+    override suspend fun updateJoinRule(joinRules: RoomJoinRules?, guestAccess: GuestAccess?, allowList: List<RoomJoinRulesAllowEntry>?) {
         if (joinRules != null) {
-            if (joinRules == RoomJoinRules.RESTRICTED) throw UnsupportedOperationException("No yet supported")
+            val body = if (joinRules == RoomJoinRules.RESTRICTED) {
+                RoomJoinRulesContent(
+                        _joinRules = RoomJoinRules.RESTRICTED.value,
+                        allowList = allowList
+                ).toContent()
+            } else {
+                mapOf("join_rule" to joinRules)
+            }
             sendStateEvent(
                     eventType = EventType.STATE_ROOM_JOIN_RULES,
-                    body = mapOf("join_rule" to joinRules),
+                    body = body,
                     stateKey = null
             )
         }

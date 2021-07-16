@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?><!-- https://www.figma.com/file/HOGxCoUWoedha639SjD90n/%5BBeta%5D-Restricted-room-access?node-id=58%3A656 -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:minHeight="50dp"
+    android:paddingStart="@dimen/layout_horizontal_margin"
+    android:paddingTop="8dp"
+    android:paddingEnd="@dimen/layout_horizontal_margin"
+    android:paddingBottom="8dp">
+
+    <ImageView
+        android:id="@+id/radioIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="15dp"
+        android:contentDescription="@string/a11y_checked"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingPrefix"
+        tools:src="@drawable/ic_radio_on" />
+
+    <TextView
+        android:id="@+id/actionTitle"
+        style="@style/Widget.Vector.TextView.Subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="@string/room_settings_room_access_restricted_title"
+        android:textColor="?vctr_content_primary"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/radioIcon"
+        app:layout_constraintTop_toTopOf="@id/radioIcon" />
+
+    <TextView
+        android:id="@+id/actionDescription"
+        style="@style/Widget.Vector.TextView.Body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/allow_space_member_to_find_and_access"
+        android:textColor="?vctr_content_secondary"
+        app:layout_constraintStart_toStartOf="@id/actionTitle"
+        app:layout_constraintTop_toBottomOf="@id/actionTitle"
+        app:layout_goneMarginTop="0dp" />
+
+    <Button
+        android:id="@+id/upgradeRequiredButton"
+        style="@style/Widget.Vector.Button.Outlined"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/upgrade_required"
+        android:textAllCaps="true"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/actionTitle"
+        app:layout_constraintTop_toBottomOf="@id/actionDescription"
+        tools:visibility="visible">
+
+    </Button>
+
+    <TextView
+        android:id="@+id/listTitle"
+        style="@style/Widget.Vector.TextView.Body.Medium"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/spaces_which_can_access"
+        android:textAllCaps="true"
+        android:textColor="?vctr_content_secondary"
+        app:layout_constraintStart_toStartOf="@id/actionTitle"
+        app:layout_constraintTop_toBottomOf="@id/upgradeRequiredButton"
+        app:layout_goneMarginTop="8dp" />
+
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/restrictedSpaceList"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="@id/actionTitle"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/listTitle"-->
+    <!--        tools:itemCount="3"-->
+    <!--        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+    <!--        tools:listitem="@layout/item_space_simple"-->
+    <!--        tools:orientation="horizontal" />-->
+
+
+    <ImageView
+        android:id="@+id/rest1"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:src="@sample/space_avatars" />
+
+    <ImageView
+        android:id="@+id/rest2"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:src="@sample/space_avatars" />
+
+    <ImageView
+        android:id="@+id/rest3"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:src="@sample/space_avatars" />
+
+    <ImageView
+        android:id="@+id/rest4"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:src="@sample/space_avatars" />
+
+    <ImageView
+        android:id="@+id/rest5"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:src="@sample/space_avatars" />
+
+    <ImageView
+        android:id="@+id/rest6"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_rect_shape_8"
+        android:backgroundTint="?vctr_header_background"
+        android:contentDescription="@string/avatar"
+        android:padding="8dp"
+        android:src="@drawable/ic_more_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?vctr_content_secondary"
+        tools:ignore="MissingConstraints" />
+
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/spacesFlow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:constraint_referenced_ids="rest1,rest2,rest3,rest4, rest5, rest6"
+        app:flow_horizontalBias="0"
+        app:flow_horizontalGap="4dp"
+        app:flow_horizontalStyle="packed"
+        app:flow_verticalGap="4dp"
+        app:flow_wrapMode="aligned"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/actionTitle"
+        app:layout_constraintTop_toBottomOf="@id/listTitle" />
+
+    <TextView
+        android:id="@+id/helperText"
+        style="@style/Widget.Vector.TextView.Body.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/tap_to_edit_spaces"
+        android:textColor="?vctr_content_secondary"
+        app:layout_constraintStart_toStartOf="@id/actionTitle"
+        app:layout_constraintTop_toBottomOf="@id/spacesFlow"
+        app:layout_goneMarginTop="0dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

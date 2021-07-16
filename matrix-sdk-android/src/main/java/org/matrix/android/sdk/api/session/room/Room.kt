@@ -101,4 +101,8 @@ interface Room :
      * Use this room as a Space, if the type is correct.
      */
     fun asSpace(): Space?
+
+    suspend fun setJoinRulePublic()
+    suspend fun setJoinRuleInviteOnly()
+    suspend fun setJoinRuleRestricted(allowList: List<String>)
 }

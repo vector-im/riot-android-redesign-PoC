@@ -51,7 +51,7 @@ class RoomJoinRuleController @Inject constructor(
                         description = stringProvider.getString(R.string.room_settings_room_access_restricted_description),
                         title = span {
                             +stringProvider.getString(R.string.room_settings_room_access_restricted_title)
-                            + " "
+                            +" "
                             image(
                                     drawableProvider.getDrawable(R.drawable.ic_beta_pill)!!,
                                     "bottom"
@@ -59,6 +59,6 @@ class RoomJoinRuleController @Inject constructor(
                         },
                         isSelected = state.currentRoomJoinRule == RoomJoinRules.RESTRICTED
                 )
-        )
+        ).filter { state.allowedJoinedRules.map { it.rule }.contains(it.roomJoinRule) }
     }
 }

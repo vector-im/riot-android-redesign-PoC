@@ -16,14 +16,23 @@
 
 package org.matrix.android.sdk.api.session.homeserver
 
+import com.squareup.moshi.JsonClass
+
 data class RoomVersionCapabilities(
         val defaultRoomVersion: String,
-        val supportedVersion: List<RoomVersionInfo>
+        val supportedVersion: List<RoomVersionInfo>,
+        val capabilities: Map<String, RoomCapabilitySupport>?
 )
 
 data class RoomVersionInfo(
         val version: String,
         val status: RoomVersionStatus
+)
+
+@JsonClass(generateAdapter = true)
+data class RoomCapabilitySupport(
+        val preferred: String?,
+        val support: List<String>
 )
 
 enum class RoomVersionStatus {

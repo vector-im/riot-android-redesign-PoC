@@ -21,6 +21,7 @@ import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import im.vector.app.R
 import im.vector.app.core.epoxy.dividerItem
+import im.vector.app.core.epoxy.profiles.buildProfileAction
 import im.vector.app.core.resources.StringProvider
 import im.vector.app.features.discovery.settingsSectionTitleItem
 import im.vector.app.features.form.formAdvancedToggleItem
@@ -29,6 +30,7 @@ import im.vector.app.features.form.formEditableAvatarItem
 import im.vector.app.features.form.formSubmitButtonItem
 import im.vector.app.features.form.formSwitchItem
 import org.matrix.android.sdk.api.session.room.failure.CreateRoomFailure
+import org.matrix.android.sdk.api.session.room.model.RoomJoinRules
 import javax.inject.Inject
 
 class CreateRoomController @Inject constructor(
@@ -83,26 +85,59 @@ class CreateRoomController @Inject constructor(
                 host.listener?.onTopicChange(text)
             }
         }
+
+        settingsSectionTitleItem {
+            id("visibility")
+            titleResId(R.string.room_settings_room_access_title)
+        }
+
+        when (viewState.roomJoinRules) {
+            RoomJoinRules.INVITE     -> {
+                buildProfileAction(
+                        id = "joinRule",
+                        title = stringProvider.getString(R.string.room_settings_room_access_private_title),
+                        subtitle = stringProvider.getString(R.string.room_settings_room_access_private_description),
+                        divider = false,
+                        editable = true,
+                        action = { host.listener?.selectVisibility() }
+                )
+            }
+            RoomJoinRules.PUBLIC     -> {
+                buildProfileAction(
+                        id = "joinRule",
+                        title = stringProvider.getString(R.string.room_settings_room_access_public_title),
+                        subtitle = stringProvider.getString(R.string.room_settings_room_access_public_description),
+                        divider = false,
+                        editable = true,
+                        action = { host.listener?.selectVisibility() }
+                )
+            }
+            RoomJoinRules.RESTRICTED -> {
+                buildProfileAction(
+                        id = "joinRule",
+                        title = stringProvider.getString(R.string.room_settings_room_access_restricted_title),
+                        subtitle = stringProvider.getString(R.string.room_create_member_of_space_name_can_join, viewState.parentSpaceSummary?.displayName),
+                        divider = false,
+                        editable = true,
+                        action = { host.listener?.selectVisibility() }
+                )
+            }
+            else                     -> {
+                // not yet supported
+            }
+        }
+
         settingsSectionTitleItem {
             id("settingsSection")
             titleResId(R.string.create_room_settings_section)
         }
-        formSwitchItem {
-            id("public")
-            enabled(enableFormElement)
-            title(host.stringProvider.getString(R.string.create_room_public_title))
-            summary(host.stringProvider.getString(R.string.create_room_public_description))
-            switchChecked(viewState.roomVisibilityType is CreateRoomViewState.RoomVisibilityType.Public)
-            listener { value ->
-                host.listener?.setIsPublic(value)
-            }
-        }
-        if (viewState.roomVisibilityType is CreateRoomViewState.RoomVisibilityType.Public) {
+
+        if (viewState.roomJoinRules == RoomJoinRules.PUBLIC) {
             // Room alias for public room
             formEditTextItem {
                 id("alias")
                 enabled(enableFormElement)
-                value(viewState.roomVisibilityType.aliasLocalPart)
+                value(viewState.aliasLocalPart)
                 suffixText(":" + viewState.homeServerName)
                 prefixText("#")
                 hint(host.stringProvider.getString(R.string.room_alias_address_hint))
@@ -137,9 +172,10 @@ class CreateRoomController @Inject constructor(
                 }
             }
         }
-        dividerItem {
-            id("divider1")
-        }
+
+//        dividerItem {
+//            id("divider1")
+//        }
         formAdvancedToggleItem {
             id("showAdvanced")
             title(host.stringProvider.getString(if (viewState.showAdvanced) R.string.hide_advanced else R.string.show_advanced))
@@ -169,7 +205,7 @@ class CreateRoomController @Inject constructor(
         fun onAvatarChange()
         fun onNameChange(newName: String)
         fun onTopicChange(newTopic: String)
-        fun setIsPublic(isPublic: Boolean)
+        fun selectVisibility()
         fun setAliasLocalPart(aliasLocalPart: String)
         fun setIsEncrypted(isEncrypted: Boolean)
         fun toggleShowAdvanced()

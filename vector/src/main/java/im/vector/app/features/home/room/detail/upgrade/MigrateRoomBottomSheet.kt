@@ -40,10 +40,17 @@ class MigrateRoomBottomSheet :
         VectorBaseBottomSheetDialogFragment<BottomSheetRoomUpgradeBinding>(),
         MigrateRoomViewModel.Factory {
 
+    enum class MigrationReason {
+        MANUAL,
+        FOR_RESTRICTED
+    }
+
     @Parcelize
     data class Args(
             val roomId: String,
-            val newVersion: String
+            val newVersion: String,
+            val reason: MigrationReason = MigrationReason.MANUAL,
+            val customDescription: CharSequence? = null
     ) : Parcelable
 
     @Inject
@@ -62,11 +69,22 @@ class MigrateRoomBottomSheet :
 
     override fun invalidate() = withState(viewModel) { state ->
         views.headerText.setText(if (state.isPublic) R.string.upgrade_public_room else R.string.upgrade_private_room)
-        views.upgradeFromTo.text = getString(R.string.upgrade_public_room_from_to, state.currentVersion, state.newVersion)
 
-        views.autoInviteSwitch.isVisible = !state.isPublic && state.otherMemberCount > 0
+        if (state.migrationReason == MigrationReason.MANUAL) {
+            views.descriptionText.text = getString(R.string.upgrade_room_warning)
+            views.upgradeFromTo.text = getString(R.string.upgrade_public_room_from_to, state.currentVersion, state.newVersion)
+        } else if (state.migrationReason == MigrationReason.FOR_RESTRICTED) {
+            views.descriptionText.setTextOrHide(state.customDescription)
+            views.upgradeFromTo.text = getString(R.string.upgrade_room_for_restricted_note)
+        }
 
-        views.autoUpdateParent.isVisible = state.knownParents.isNotEmpty()
+        if (state.autoMigrateMembersAndParents) {
+            views.autoUpdateParent.isVisible = false
+            views.autoInviteSwitch.isVisible = false
+        } else {
+            views.autoInviteSwitch.isVisible = !state.isPublic && state.otherMemberCount > 0
+            views.autoUpdateParent.isVisible = state.knownParents.isNotEmpty()
+        }
 
         when (state.upgradingStatus) {
             is Loading -> {
@@ -143,9 +161,12 @@ class MigrateRoomBottomSheet :
         const val REQUEST_KEY = "MigrateRoomBottomSheetRequest"
         const val BUNDLE_KEY_REPLACEMENT_ROOM = "BUNDLE_KEY_REPLACEMENT_ROOM"
 
-        fun newInstance(roomId: String, newVersion: String): MigrateRoomBottomSheet {
+        fun newInstance(roomId: String, newVersion: String,
+                        reason: MigrationReason = MigrationReason.MANUAL,
+                        customDescription: CharSequence? = null
+        ): MigrateRoomBottomSheet {
             return MigrateRoomBottomSheet().apply {
-                setArguments(Args(roomId, newVersion))
+                setArguments(Args(roomId, newVersion, reason, customDescription))
             }
         }
     }

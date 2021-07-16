@@ -29,8 +29,17 @@ import org.matrix.android.sdk.api.session.room.model.RoomJoinRules
 import javax.inject.Inject
 
 @Parcelize
+data class JoinRulesOptionSupport(
+        val rule: RoomJoinRules,
+        val needUpgrade: Boolean = false
+) : Parcelable
+
+fun RoomJoinRules.toOption(needUpgrade: Boolean) = JoinRulesOptionSupport(this, needUpgrade)
+
+@Parcelize
 data class RoomJoinRuleBottomSheetArgs(
-        val currentRoomJoinRule: RoomJoinRules
+        val currentRoomJoinRule: RoomJoinRules,
+        val allowedJoinedRules: List<JoinRulesOptionSupport>
 ) : Parcelable
 
 class RoomJoinRuleBottomSheet : BottomSheetGeneric<RoomJoinRuleState, RoomJoinRuleRadioAction>() {
@@ -61,9 +70,15 @@ class RoomJoinRuleBottomSheet : BottomSheetGeneric<RoomJoinRuleState, RoomJoinRu
     }
 
     companion object {
-        fun newInstance(currentRoomJoinRule: RoomJoinRules): RoomJoinRuleBottomSheet {
+        fun newInstance(currentRoomJoinRule: RoomJoinRules,
+                        allowedJoinedRules: List<JoinRulesOptionSupport> = listOf(
+                                RoomJoinRules.INVITE, RoomJoinRules.PUBLIC
+                        ).map { it.toOption(true) }
+        ): RoomJoinRuleBottomSheet {
             return RoomJoinRuleBottomSheet().apply {
-                setArguments(RoomJoinRuleBottomSheetArgs(currentRoomJoinRule))
+                setArguments(
+                        RoomJoinRuleBottomSheetArgs(currentRoomJoinRule, allowedJoinedRules)
+                )
             }
         }
     }

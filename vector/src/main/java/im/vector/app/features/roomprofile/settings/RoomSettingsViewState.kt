@@ -43,7 +43,9 @@ data class RoomSettingsViewState(
         val newHistoryVisibility: RoomHistoryVisibility? = null,
         val newRoomJoinRules: NewJoinRule = NewJoinRule(),
         val showSaveAction: Boolean = false,
-        val actionPermissions: ActionPermissions = ActionPermissions()
+        val actionPermissions: ActionPermissions = ActionPermissions(),
+        val supportsRestricted: Boolean = false,
+        val canUpgradeToRestricted: Boolean = false
 ) : MvRxState {
 
     constructor(args: RoomProfileArgs) : this(roomId = args.roomId)

@@ -27,6 +27,7 @@ import dagger.assisted.AssistedInject
 import im.vector.app.core.extensions.exhaustive
 import im.vector.app.core.platform.VectorViewModel
 import im.vector.app.features.powerlevel.PowerLevelsObservableFactory
+import im.vector.app.features.settings.VectorPreferences
 import io.reactivex.Completable
 import io.reactivex.Observable
 import org.matrix.android.sdk.api.extensions.tryOrNull
@@ -34,6 +35,7 @@ import org.matrix.android.sdk.api.query.QueryStringValue
 import org.matrix.android.sdk.api.session.Session
 import org.matrix.android.sdk.api.session.events.model.EventType
 import org.matrix.android.sdk.api.session.events.model.toModel
+import org.matrix.android.sdk.api.session.homeserver.HomeServerCapabilities
 import org.matrix.android.sdk.api.session.room.model.RoomAvatarContent
 import org.matrix.android.sdk.api.session.room.model.RoomGuestAccessContent
 import org.matrix.android.sdk.api.session.room.model.RoomHistoryVisibilityContent
@@ -44,6 +46,7 @@ import org.matrix.android.sdk.rx.rx
 import org.matrix.android.sdk.rx.unwrap
 
 class RoomSettingsViewModel @AssistedInject constructor(@Assisted initialState: RoomSettingsViewState,
+                                                        private val vectorPreferences: VectorPreferences,
                                                         private val session: Session)
     : VectorViewModel<RoomSettingsViewState, RoomSettingsAction, RoomSettingsViewEvents>(initialState) {
 
@@ -73,6 +76,24 @@ class RoomSettingsViewModel @AssistedInject constructor(@Assisted initialState: 
         observeGuestAccess()
         observeRoomAvatar()
         observeState()
+
+        val homeServerCapabilities = session.getHomeServerCapabilities()
+        val canUseRestricted = homeServerCapabilities
+                .isFeatureSupported(HomeServerCapabilities.ROOM_CAP_RESTRICTED, room.getRoomVersion())
+
+        val restrictedSupport = homeServerCapabilities.isFeatureSupported(HomeServerCapabilities.ROOM_CAP_RESTRICTED)
+        val couldUpgradeToRestricted = when (restrictedSupport) {
+            HomeServerCapabilities.RoomCapabilitySupport.SUPPORTED          -> true
+            HomeServerCapabilities.RoomCapabilitySupport.SUPPORTED_UNSTABLE -> vectorPreferences.labsUseExperimentalRestricted()
+            else                                                            -> false
+        }
+
+        setState {
+            copy(
+                    supportsRestricted = canUseRestricted,
+                    canUpgradeToRestricted = couldUpgradeToRestricted
+            )
+        }
     }
 
     private fun observeState() {
@@ -247,8 +268,8 @@ class RoomSettingsViewModel @AssistedInject constructor(@Assisted initialState: 
         val summary = state.roomSummary.invoke()
 
         when (val avatarAction = state.avatarAction) {
-            RoomSettingsViewState.AvatarAction.None -> Unit
-            RoomSettingsViewState.AvatarAction.DeleteAvatar -> {
+            RoomSettingsViewState.AvatarAction.None            -> Unit
+            RoomSettingsViewState.AvatarAction.DeleteAvatar    -> {
                 operationList.add(room.rx().deleteAvatar())
             }
             is RoomSettingsViewState.AvatarAction.UpdateAvatar -> {

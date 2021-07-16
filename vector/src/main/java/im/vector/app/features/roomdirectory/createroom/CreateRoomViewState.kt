@@ -20,20 +20,24 @@ import android.net.Uri
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.Uninitialized
-import org.matrix.android.sdk.api.extensions.orTrue
+import org.matrix.android.sdk.api.session.room.model.RoomJoinRules
+import org.matrix.android.sdk.api.session.room.model.RoomSummary
 
 data class CreateRoomViewState(
         val avatarUri: Uri? = null,
         val roomName: String = "",
         val roomTopic: String = "",
-        val roomVisibilityType: RoomVisibilityType = RoomVisibilityType.Private,
+        val roomJoinRules: RoomJoinRules = RoomJoinRules.INVITE,
         val isEncrypted: Boolean = false,
         val showAdvanced: Boolean = false,
         val disableFederation: Boolean = false,
         val homeServerName: String = "",
         val hsAdminHasDisabledE2E: Boolean = false,
         val asyncCreateRoomRequest: Async<String> = Uninitialized,
-        val parentSpaceId: String?
+        val parentSpaceId: String?,
+        val parentSpaceSummary: RoomSummary? = null,
+        val supportsRestricted: Boolean = false,
+        val aliasLocalPart: String? = null
 ) : MvRxState {
 
     constructor(args: CreateRoomArgs) : this(
@@ -47,10 +51,5 @@ data class CreateRoomViewState(
     fun isEmpty() = avatarUri == null
             && roomName.isEmpty()
             && roomTopic.isEmpty()
-            && (roomVisibilityType as? RoomVisibilityType.Public)?.aliasLocalPart?.isEmpty().orTrue()
-
-    sealed class RoomVisibilityType {
-        object Private : RoomVisibilityType()
-        data class Public(val aliasLocalPart: String) : RoomVisibilityType()
-    }
+            && aliasLocalPart.isNullOrEmpty()
 }

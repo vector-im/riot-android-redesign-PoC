@@ -108,6 +108,8 @@ import im.vector.app.features.roomprofile.banned.RoomBannedMemberListFragment
 import im.vector.app.features.roomprofile.members.RoomMemberListFragment
 import im.vector.app.features.roomprofile.permissions.RoomPermissionsFragment
 import im.vector.app.features.roomprofile.settings.RoomSettingsFragment
+import im.vector.app.features.roomprofile.settings.joinrule.RoomJoinRuleChooseRestrictedFragment
+import im.vector.app.features.roomprofile.settings.joinrule.RoomJoinRuleFragment
 import im.vector.app.features.roomprofile.uploads.RoomUploadsFragment
 import im.vector.app.features.roomprofile.uploads.files.RoomUploadsFilesFragment
 import im.vector.app.features.roomprofile.uploads.media.RoomUploadsMediaFragment
@@ -804,4 +806,14 @@ interface FragmentModule {
     @IntoMap
     @FragmentKey(SpaceManageRoomsFragment::class)
     fun bindSpaceManageRoomsFragment(fragment: SpaceManageRoomsFragment): Fragment
+
+    @Binds
+    @IntoMap
+    @FragmentKey(RoomJoinRuleFragment::class)
+    fun bindRoomJoinRuleFragment(fragment: RoomJoinRuleFragment): Fragment
+
+    @Binds
+    @IntoMap
+    @FragmentKey(RoomJoinRuleChooseRestrictedFragment::class)
+    fun bindRoomJoinRuleChooseRestrictedFragment(fragment: RoomJoinRuleChooseRestrictedFragment): Fragment
 }

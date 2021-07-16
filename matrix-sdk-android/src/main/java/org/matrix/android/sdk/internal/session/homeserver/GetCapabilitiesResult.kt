@@ -70,7 +70,22 @@ internal data class RoomVersions(
          * Required. A detailed description of the room versions the server supports.
          */
         @Json(name = "available")
-        val available: JsonDict
+        val available: JsonDict? = null,
+
+        /**
+         *  "room_capabilities": {
+         *      "knock" : {
+         *              "preferred": "7",
+         *              "support" : ["7"]
+         *      },
+         *      "restricted" : {
+         *              "preferred": "9",
+         *              "support" : ["8", "9"]
+         *      }
+         * }
+         */
+        @Json(name = "room_capabilities")
+        val roomCapabilities: JsonDict? = null
 )
 
 // The spec says: If not present, the client should assume that password changes are possible via the API

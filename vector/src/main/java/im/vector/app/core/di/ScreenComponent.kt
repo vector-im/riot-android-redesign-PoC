@@ -77,6 +77,7 @@ import im.vector.app.features.roommemberprofile.devices.DeviceListBottomSheet
 import im.vector.app.features.roomprofile.RoomProfileActivity
 import im.vector.app.features.roomprofile.alias.detail.RoomAliasBottomSheet
 import im.vector.app.features.roomprofile.settings.historyvisibility.RoomHistoryVisibilityBottomSheet
+import im.vector.app.features.roomprofile.settings.joinrule.RoomJoinRuleActivity
 import im.vector.app.features.roomprofile.settings.joinrule.RoomJoinRuleBottomSheet
 import im.vector.app.features.settings.VectorSettingsActivity
 import im.vector.app.features.settings.devices.DeviceVerificationInfoBottomSheet
@@ -169,6 +170,7 @@ interface ScreenComponent {
     fun inject(activity: SpaceCreationActivity)
     fun inject(activity: SpaceExploreActivity)
     fun inject(activity: SpaceManageActivity)
+    fun inject(activity: RoomJoinRuleActivity)
 
     /* ==========================================================================================
      * BottomSheets

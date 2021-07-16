@@ -90,11 +90,23 @@ class MigrateRoomViewModel @AssistedInject constructor(
             copy(upgradingStatus = Loading())
         }
         session.coroutineScope.launch {
+            val userToInvite = if (state.autoMigrateMembersAndParents) {
+                summary?.otherMemberIds?.takeIf { !state.isPublic }
+            } else {
+                summary?.otherMemberIds?.takeIf { state.shouldIssueInvites }
+            }.orEmpty()
+
+            val parentSpaceToUpdate = if (state.autoMigrateMembersAndParents) {
+                summary?.flattenParentIds
+            } else {
+                summary?.flattenParentIds?.takeIf { state.shouldUpdateKnownParents }
+            }.orEmpty()
+
             val result = upgradeRoomViewModelTask.execute(UpgradeRoomViewModelTask.Params(
                     roomId = state.roomId,
                     newVersion = state.newVersion,
-                    userIdsToAutoInvite = summary?.otherMemberIds?.takeIf { state.shouldIssueInvites } ?: emptyList(),
-                    parentSpaceToUpdate = summary?.flattenParentIds?.takeIf { state.shouldUpdateKnownParents } ?: emptyList(),
+                    userIdsToAutoInvite = userToInvite,
+                    parentSpaceToUpdate = parentSpaceToUpdate,
                     progressReporter = { indeterminate, progress, total ->
                         setState {
                             copy(
