@@ -381,7 +381,7 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     // Paging
-    implementation "androidx.paging:paging-runtime-ktx:2.1.2"
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0"
 
     // Functional Programming
     implementation "io.arrow-kt:arrow-core:$arrow_version"

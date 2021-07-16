@@ -41,7 +41,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$kotlin_coroutines_version"
 
     // Paging
-    implementation "androidx.paging:paging-runtime-ktx:2.1.2"
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0"
 
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
