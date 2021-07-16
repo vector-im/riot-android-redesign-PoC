@@ -137,6 +137,8 @@
 
         <item name="vctr_jump_to_unread_style">@style/Widget.Vector.JumpToUnread.Light</item>
 
+        <!-- Voice Message -->
+        <item name="vctr_voice_message_toast_background">@color/vctr_voice_message_toast_background_light</item>
     </style>
 
     <style name="Theme.Vector.Light" parent="Base.Theme.Vector.Light" />

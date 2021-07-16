@@ -20,6 +20,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.matrix.android.sdk.api.session.events.model.Content
 import org.matrix.android.sdk.api.session.room.model.relation.RelationDefaultContent
+import org.matrix.android.sdk.api.util.JsonDict
 import org.matrix.android.sdk.internal.crypto.model.rest.EncryptedFileInfo
 
 @JsonClass(generateAdapter = true)
@@ -50,7 +51,17 @@ data class MessageAudioContent(
         /**
          * Required if the file is encrypted. Information on the encrypted file, as specified in End-to-end encryption.
          */
-        @Json(name = "file") override val encryptedFileInfo: EncryptedFileInfo? = null
+        @Json(name = "file") override val encryptedFileInfo: EncryptedFileInfo? = null,
+
+        /**
+         * Encapsulates waveform and duration of the audio.
+         */
+        @Json(name = "org.matrix.msc1767.audio") val audioWaveformInfo: AudioWaveformInfo? = null,
+
+        /**
+         * Indicates that is a voice message.
+         */
+        @Json(name = "org.matrix.msc3245.voice") val voiceMessageIndicator: JsonDict? = null
 ) : MessageWithAttachmentContent {
 
     override val mimeType: String?

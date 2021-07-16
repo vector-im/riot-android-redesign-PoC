@@ -57,4 +57,9 @@
         android:key="SETTINGS_LABS_SPACES_HOME_AS_ORPHAN"
         android:title="@string/labs_space_show_orphan_in_home"/>
 
+    <im.vector.app.core.preference.VectorSwitchPreference
+        android:defaultValue="false"
+        android:key="SETTINGS_LABS_VOICE_MESSAGE"
+        android:title="@string/labs_use_voice_message"/>
+
 </androidx.preference.PreferenceScreen>

@@ -19,6 +19,7 @@ package im.vector.app.core.error
 import im.vector.app.R
 import im.vector.app.core.resources.StringProvider
 import im.vector.app.features.call.dialpad.DialPadLookup
+import im.vector.app.features.voice.VoiceFailure
 import org.matrix.android.sdk.api.failure.Failure
 import org.matrix.android.sdk.api.failure.MatrixError
 import org.matrix.android.sdk.api.failure.MatrixIdFailure
@@ -123,9 +124,17 @@ class DefaultErrorFormatter @Inject constructor(
                 stringProvider.getString(R.string.call_dial_pad_lookup_error)
             is MatrixIdFailure.InvalidMatrixId     ->
                 stringProvider.getString(R.string.login_signin_matrix_id_error_invalid_matrix_id)
+            is VoiceFailure                        -> voiceMessageError(throwable)
             else                                   -> throwable.localizedMessage
         }
                 ?: stringProvider.getString(R.string.unknown_error)
+    }
+
+    private fun voiceMessageError(throwable: VoiceFailure): String {
+        return when (throwable) {
+            is VoiceFailure.UnableToPlay   -> stringProvider.getString(R.string.error_voice_message_unable_to_play)
+            is VoiceFailure.UnableToRecord -> stringProvider.getString(R.string.error_voice_message_unable_to_record)
+        }
     }
 
     private fun limitExceededError(error: MatrixError): String {

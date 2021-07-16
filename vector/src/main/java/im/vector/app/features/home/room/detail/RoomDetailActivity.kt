@@ -51,6 +51,8 @@ class RoomDetailActivity :
         return ActivityRoomDetailBinding.inflate(layoutInflater)
     }
 
+    override fun getCoordinatorLayout() = views.coordinatorLayout
+
     private lateinit var sharedActionViewModel: RoomDetailSharedActionViewModel
     private val requireActiveMembershipViewModel: RequireActiveMembershipViewModel by viewModel()
 

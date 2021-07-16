@@ -57,7 +57,8 @@ fun MultiPickerAudioType.toContentAttachmentData(): ContentAttachmentData {
             size = size,
             name = displayName,
             duration = duration,
-            queryUri = contentUri
+            queryUri = contentUri,
+            waveform = waveform
     )
 }
 

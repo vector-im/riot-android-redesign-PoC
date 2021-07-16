@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="VoicePlaybackWaveform">
+        <item name="chunkColor">?vctr_content_secondary</item>
+        <item name="chunkAlignTo">center</item>
+        <item name="chunkMinHeight">1dp</item>
+        <item name="chunkRoundedCorners">true</item>
+        <item name="chunkSoftTransition">true</item>
+        <item name="chunkSpace">2dp</item>
+        <item name="chunkWidth">2dp</item>
+        <item name="direction">leftToRight</item>
+    </style>
+
+    <style name="Widget.Vector.TextView.Caption.Toast">
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:background">@drawable/bg_round_corner_8dp</item>
+        <item name="android:backgroundTint">?vctr_voice_message_toast_background</item>
+        <item name="android:textColor">@color/palette_white</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+</resources>

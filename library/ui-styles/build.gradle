@@ -60,4 +60,6 @@ dependencies {
     implementation 'com.github.vector-im:PFLockScreen-Android:1.0.0-beta12'
     // dialpad dimen
     implementation 'im.dlg:android-dialer:1.2.5'
+    // AudioRecordView attr
+    implementation 'com.github.Armen101:AudioRecordView:1.0.5'
 }

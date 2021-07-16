@@ -34,6 +34,7 @@ import im.vector.app.core.platform.VectorBaseActivity
 // Permissions sets
 val PERMISSIONS_FOR_AUDIO_IP_CALL = listOf(Manifest.permission.RECORD_AUDIO)
 val PERMISSIONS_FOR_VIDEO_IP_CALL = listOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
+val PERMISSIONS_FOR_VOICE_MESSAGE = listOf(Manifest.permission.RECORD_AUDIO)
 val PERMISSIONS_FOR_TAKING_PHOTO = listOf(Manifest.permission.CAMERA)
 val PERMISSIONS_FOR_MEMBERS_SEARCH = listOf(Manifest.permission.READ_CONTACTS)
 val PERMISSIONS_FOR_ROOM_AVATAR = listOf(Manifest.permission.CAMERA)

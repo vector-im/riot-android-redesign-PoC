@@ -65,6 +65,7 @@ import org.matrix.android.sdk.api.session.events.model.toModel
 import org.matrix.android.sdk.api.session.room.model.Membership
 import org.matrix.android.sdk.api.session.room.model.ReadReceipt
 import org.matrix.android.sdk.api.session.room.model.RoomMemberContent
+import org.matrix.android.sdk.api.session.room.model.message.MessageAudioContent
 import org.matrix.android.sdk.api.session.room.model.message.MessageImageInfoContent
 import org.matrix.android.sdk.api.session.room.model.message.MessageVideoContent
 import org.matrix.android.sdk.api.session.room.timeline.Timeline
@@ -111,6 +112,8 @@ class TimelineEventController @Inject constructor(private val dateFormatter: Vec
 
         // Introduce ViewModel scoped component (or Hilt?)
         fun getPreviewUrlRetriever(): PreviewUrlRetriever
+
+        fun onVoiceControlButtonClicked(eventId: String, messageAudioContent: MessageAudioContent)
     }
 
     interface ReactionPillCallback {

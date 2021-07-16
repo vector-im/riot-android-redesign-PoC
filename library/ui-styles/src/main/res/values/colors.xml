@@ -128,4 +128,8 @@
     <color name="vctr_chat_effect_snow_background_light">@color/black_alpha</color>
     <color name="vctr_chat_effect_snow_background_dark">@android:color/transparent</color>
 
+    <attr name="vctr_voice_message_toast_background" format="color" />
+    <color name="vctr_voice_message_toast_background_light">@color/palette_black_900</color>
+    <color name="vctr_voice_message_toast_background_dark">@color/palette_gray_450</color>
+
 </resources>

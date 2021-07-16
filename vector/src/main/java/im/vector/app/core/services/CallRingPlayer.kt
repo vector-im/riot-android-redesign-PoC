@@ -136,6 +136,9 @@ class CallRingPlayerOutgoing(
                 mediaPlayer.setAudioAttributes(AudioAttributes.Builder()
                         .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                         .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
+                        // TODO Change to ?
+                        // .setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
+                        // .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
                         .build())
             } else {
                 @Suppress("DEPRECATION")

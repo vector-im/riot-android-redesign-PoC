@@ -29,6 +29,7 @@ import org.matrix.android.sdk.api.session.events.model.RelationType
 import org.matrix.android.sdk.api.session.events.model.UnsignedData
 import org.matrix.android.sdk.api.session.events.model.toContent
 import org.matrix.android.sdk.api.session.room.model.message.AudioInfo
+import org.matrix.android.sdk.api.session.room.model.message.AudioWaveformInfo
 import org.matrix.android.sdk.api.session.room.model.message.FileInfo
 import org.matrix.android.sdk.api.session.room.model.message.ImageInfo
 import org.matrix.android.sdk.api.session.room.model.message.MessageAudioContent
@@ -74,6 +75,7 @@ internal class LocalEchoEventFactory @Inject constructor(
         private val markdownParser: MarkdownParser,
         private val textPillsUtils: TextPillsUtils,
         private val thumbnailExtractor: ThumbnailExtractor,
+        private val waveformSanitizer: WaveFormSanitizer,
         private val localEchoRepository: LocalEchoRepository,
         private val permalinkFactory: PermalinkFactory
 ) {
@@ -289,14 +291,21 @@ internal class LocalEchoEventFactory @Inject constructor(
     }
 
     private fun createAudioEvent(roomId: String, attachment: ContentAttachmentData): Event {
+        val isVoiceMessage = attachment.waveform != null
         val content = MessageAudioContent(
                 msgType = MessageType.MSGTYPE_AUDIO,
                 body = attachment.name ?: "audio",
                 audioInfo = AudioInfo(
+                        duration = attachment.duration?.toInt(),
                         mimeType = attachment.getSafeMimeType()?.takeIf { it.isNotBlank() },
                         size = attachment.size
                 ),
-                url = attachment.queryUri.toString()
+                url = attachment.queryUri.toString(),
+                audioWaveformInfo = if (!isVoiceMessage) null else AudioWaveformInfo(
+                        duration = attachment.duration?.toInt(),
+                        waveform = waveformSanitizer.sanitize(attachment.waveform)
+                ),
+                voiceMessageIndicator = if (!isVoiceMessage) null else emptyMap()
         )
         return createMessageEvent(roomId, content)
     }

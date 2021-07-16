@@ -25,6 +25,7 @@ import kotlinx.coroutines.completeWith
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.matrix.android.sdk.api.failure.Failure
 import org.matrix.android.sdk.api.session.content.ContentUrlResolver
 import org.matrix.android.sdk.api.session.file.FileService
 import org.matrix.android.sdk.internal.crypto.attachments.ElementToDecrypt
@@ -120,13 +121,21 @@ internal class DefaultFileService @Inject constructor(
                             .header(DOWNLOAD_PROGRESS_INTERCEPTOR_HEADER, url)
                             .build()
 
-                    val response = okHttpClient.newCall(request).execute()
-
-                    if (!response.isSuccessful) {
-                        throw IOException()
+                    val response = try {
+                        okHttpClient.newCall(request).execute()
+                    } catch (failure: Throwable) {
+                        throw if (failure is IOException) {
+                            Failure.NetworkConnection(failure)
+                        } else {
+                            failure
+                        }
                     }
 
-                    val source = response.body?.source() ?: throw IOException()
+                    if (!response.isSuccessful) {
+                        throw Failure.NetworkConnection(IOException())
+                    }
+
+                    val source = response.body?.source() ?: throw Failure.NetworkConnection(IOException())
 
                     Timber.v("Response size ${response.body?.contentLength()} - Stream available: ${!source.exhausted()}")
 

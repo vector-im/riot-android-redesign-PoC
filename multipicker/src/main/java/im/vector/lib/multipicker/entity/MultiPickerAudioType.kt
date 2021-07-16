@@ -23,5 +23,6 @@ data class MultiPickerAudioType(
         override val size: Long,
         override val mimeType: String?,
         override val contentUri: Uri,
-        val duration: Long
+        val duration: Long,
+        var waveform: List<Int>? = null
 ) : MultiPickerBaseType

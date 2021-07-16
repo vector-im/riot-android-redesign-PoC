@@ -144,6 +144,8 @@ android {
 
         buildConfigField "im.vector.app.features.crypto.keysrequest.OutboundSessionKeySharingStrategy", "outboundSessionKeySharingStrategy", "im.vector.app.features.crypto.keysrequest.OutboundSessionKeySharingStrategy.WhenTyping"
 
+        buildConfigField "Long", "VOICE_MESSAGE_DURATION_LIMIT_MS", "120_000L"
+
         //  If set, MSC3086 asserted identity messages sent on VoIP calls will cause the call to appear in the room corresponding to the asserted identity.
         //  This *must* only be set in trusted environments.
         buildConfigField "Boolean", "handleCallAssertedIdentityEvents", "false"
@@ -339,7 +341,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0-beta02'
     implementation "androidx.sharetarget:sharetarget:1.1.0"
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation "androidx.media:media:1.3.1"
@@ -401,12 +403,16 @@ dependencies {
     implementation "androidx.autofill:autofill:$autofill_version"
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
     implementation 'com.github.vector-im:PFLockScreen-Android:1.0.0-beta12'
+    implementation 'com.github.Armen101:AudioRecordView:1.0.5'
 
     // Custom Tab
     implementation 'androidx.browser:browser:1.3.0'
 
     // Passphrase strength helper
     implementation 'com.nulab-inc:zxcvbn:1.5.2'
+
+    // To convert voice message on old platforms
+    implementation 'com.arthenica:ffmpeg-kit-audio:4.4.LTS'
 
     //Alerter
     implementation 'com.tapadoo.android:alerter:7.0.1'

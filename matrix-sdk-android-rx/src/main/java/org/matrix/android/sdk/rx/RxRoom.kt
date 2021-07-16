@@ -23,6 +23,7 @@ import io.reactivex.Single
 import kotlinx.coroutines.rx2.rxCompletable
 import kotlinx.coroutines.rx2.rxSingle
 import org.matrix.android.sdk.api.query.QueryStringValue
+import org.matrix.android.sdk.api.session.content.ContentAttachmentData
 import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.identity.ThreePid
 import org.matrix.android.sdk.api.session.room.Room
@@ -145,6 +146,10 @@ class RxRoom(private val room: Room) {
 
     fun deleteAvatar(): Completable = rxCompletable {
         room.deleteAvatar()
+    }
+
+    fun sendMedia(attachment: ContentAttachmentData, compressBeforeSending: Boolean, roomIds: Set<String>): Completable = rxCompletable {
+        room.sendMedia(attachment, compressBeforeSending, roomIds)
     }
 }
 

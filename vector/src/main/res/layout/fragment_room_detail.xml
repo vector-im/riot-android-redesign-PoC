@@ -130,14 +130,14 @@
     <com.google.android.material.chip.Chip
         android:id="@+id/jumpToReadMarkerView"
         style="?vctr_jump_to_unread_style"
-        app:chipIcon="@drawable/ic_jump_to_unread"
-        app:closeIcon="@drawable/ic_close_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="24dp"
         android:text="@string/room_jump_to_first_unread"
         android:visibility="invisible"
+        app:chipIcon="@drawable/ic_jump_to_unread"
+        app:closeIcon="@drawable/ic_close_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/activeConferenceView"
@@ -170,9 +170,21 @@
         android:background="?android:colorBackground"
         android:minHeight="56dp"
         android:transitionName="composer"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
+    <im.vector.app.features.home.room.detail.composer.VoiceMessageRecorderView
+        android:id="@+id/voiceMessageRecorderView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 
     <im.vector.app.features.invite.VectorInviteView
         android:id="@+id/inviteView"

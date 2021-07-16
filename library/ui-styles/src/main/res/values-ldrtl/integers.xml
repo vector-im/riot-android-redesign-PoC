@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <integer name="rtl_x_multiplier">-1</integer>
     <integer name="rtl_mirror_flip">180</integer>
 
 </resources>

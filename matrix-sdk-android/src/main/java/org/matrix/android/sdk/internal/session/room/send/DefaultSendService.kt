@@ -184,7 +184,8 @@ internal class DefaultSendService @AssistedInject constructor(
                             mimeType = messageContent.mimeType,
                             name = messageContent.body,
                             queryUri = Uri.parse(messageContent.url),
-                            type = ContentAttachmentData.Type.AUDIO
+                            type = ContentAttachmentData.Type.AUDIO,
+                            waveform = messageContent.audioWaveformInfo?.waveform
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
                     internalSendMedia(listOf(localEcho.root), attachmentData, true)

@@ -132,6 +132,13 @@
             android:layout_marginEnd="56dp"
             android:layout="@layout/item_timeline_event_option_buttons_stub" />
 
+        <ViewStub
+            android:id="@+id/messageContentVoiceStub"
+            style="@style/TimelineContentStubBaseParams"
+            android:layout_marginEnd="56dp"
+            android:layout="@layout/item_timeline_event_voice_stub"
+            tools:visibility="visible" />
+
     </FrameLayout>
 
     <im.vector.app.core.ui.views.SendStateImageView

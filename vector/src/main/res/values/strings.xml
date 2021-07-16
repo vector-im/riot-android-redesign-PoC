@@ -389,6 +389,7 @@
     <!-- Permissions denied forever -->
     <string name="denied_permission_generic">Some permissions are missing to perform this action, please grant the permissions from the system settings.</string>
     <string name="denied_permission_camera">To perform this action, please grant the Camera permission from the system settings.</string>
+    <string name="denied_permission_voice_message">To send voice messages, please grant the Microphone permission.</string>
 
     <!-- First param will be replace by the value of ongoing_conference_call_voice, and second one by the value of ongoing_conference_call_video -->
     <string name="ongoing_conference_call">Ongoing conference call.\nJoin as %1$s or %2$s</string>
@@ -2614,6 +2615,7 @@
     <string name="sent_a_video">Video.</string>
     <string name="sent_an_image">Image.</string>
     <string name="sent_an_audio_file">Audio</string>
+    <string name="sent_a_voice_message">Voice</string>
     <string name="sent_a_file">File</string>
     <string name="send_a_sticker">Sticker</string>
     <string name="sent_a_poll">Poll</string>
@@ -3437,4 +3439,19 @@
     <string name="room_upgrade_to_recommended_version">Upgrade to the recommended room version</string>
 
     <string name="error_failed_to_join_room">Sorry, an error occurred while trying to join: %s</string>
+    
+    <string name="a11y_start_voice_message">Start Voice Message</string>
+    <string name="voice_message_slide_to_cancel">Slide to cancel</string>
+    <string name="a11y_lock_voice_message">Voice Message Lock</string>
+    <string name="a11y_play_voice_message">Play Voice Message</string>
+    <string name="a11y_pause_voice_message">Pause Voice Message</string>
+    <string name="a11y_recording_voice_message">Recording voice message</string>
+    <string name="a11y_delete_recorded_voice_message">Delete recorded voice message</string>
+    <string name="voice_message_release_to_send_toast">Hold to record, release to send</string>
+    <string name="voice_message_n_seconds_warning_toast">%1$ds left</string>
+    <string name="voice_message_tap_on_waveform_to_stop_toast">Tap on the waveform to stop and playback</string>
+    <string name="labs_use_voice_message">Enable voice message</string>
+    <string name="voice_message_tap_to_stop_toast">Tap on the wavelength to stop and playback</string>
+    <string name="error_voice_message_unable_to_play">Cannot play this voice message</string>
+    <string name="error_voice_message_unable_to_record">Cannot record a voice message</string>
 </resources>

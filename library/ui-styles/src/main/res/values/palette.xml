@@ -23,7 +23,7 @@
 
     <!-- For light themes -->
     <color name="palette_gray_25">#F4F6FA</color>
-    <color name="palette_gray_50">#E6E8F0</color>
+    <color name="palette_gray_50">#E3E8F0</color>
     <color name="palette_gray_100">#C1C6CD</color>
     <color name="palette_gray_150">#8D97A5</color>
     <color name="palette_gray_200">#737D8C</color>

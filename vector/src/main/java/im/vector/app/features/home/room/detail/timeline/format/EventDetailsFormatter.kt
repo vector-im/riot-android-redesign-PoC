@@ -76,7 +76,11 @@ class EventDetailsFormatter @Inject constructor(
      */
     private fun formatForAudioMessage(event: Event): CharSequence? {
         return event.getClearContent().toModel<MessageAudioContent>()?.audioInfo
-                ?.let { "${it.duration.asDuration()} - ${it.size.asFileSize()}" }
+                ?.let { audioInfo ->
+                    listOfNotNull(audioInfo.duration?.asDuration(), audioInfo.size?.asFileSize())
+                            .joinToString(" - ")
+                            .takeIf { it.isNotEmpty() }
+                }
     }
 
     /**
