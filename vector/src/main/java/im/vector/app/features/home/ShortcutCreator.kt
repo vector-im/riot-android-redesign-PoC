@@ -17,7 +17,9 @@
 package im.vector.app.features.home
 
 import android.content.Context
+import android.content.pm.ShortcutInfo
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Build
 import androidx.annotation.WorkerThread
 import androidx.core.content.pm.ShortcutInfoCompat
@@ -45,7 +47,7 @@ class ShortcutCreator @Inject constructor(
     private val adaptiveIconOuterSides = dimensionConverter.dpToPx(adaptiveIconOuterSidesDp)
     private val iconSize by lazy {
         if (useAdaptiveIcon) {
-            adaptiveIconSize - adaptiveIconOuterSides
+            adaptiveIconSize - (adaptiveIconOuterSides * 2)
         } else {
             dimensionConverter.dpToPx(72)
         }
@@ -67,16 +69,23 @@ class ShortcutCreator @Inject constructor(
                 .setShortLabel(roomSummary.displayName)
                 .setIcon(bitmap?.toProfileImageIcon())
                 .setIntent(intent)
+                .setLongLived(true)
 
                 // Make it show up in the direct share menu
-                .setCategories(setOf(directShareCategory))
+                .setCategories(setOf(
+                        directShareCategory,
+                        ShortcutInfo.SHORTCUT_CATEGORY_CONVERSATION))
 
                 .build()
     }
 
     private fun Bitmap.toProfileImageIcon(): IconCompat {
         return if (useAdaptiveIcon) {
-            IconCompat.createWithAdaptiveBitmap(this)
+            val insetBmp = Bitmap.createBitmap(adaptiveIconSize, adaptiveIconSize, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(insetBmp)
+            canvas.drawBitmap(this, adaptiveIconOuterSides.toFloat(), adaptiveIconOuterSides.toFloat(), null)
+
+            IconCompat.createWithAdaptiveBitmap(insetBmp)
         } else {
             IconCompat.createWithBitmap(this)
         }

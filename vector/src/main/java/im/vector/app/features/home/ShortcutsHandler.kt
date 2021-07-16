@@ -24,7 +24,7 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import im.vector.app.core.di.ActiveSessionHolder
 import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
-import org.matrix.android.sdk.api.query.RoomTagQueryFilter
+import org.matrix.android.sdk.api.session.room.RoomSortOrder
 import org.matrix.android.sdk.api.session.room.model.Membership
 import org.matrix.android.sdk.api.session.room.roomSummaryQueryParams
 import org.matrix.android.sdk.rx.asObservable
@@ -46,17 +46,25 @@ class ShortcutsHandler @Inject constructor(
                 ?.getPagedRoomSummariesLive(
                         roomSummaryQueryParams {
                             memberships = listOf(Membership.JOIN)
-                            roomTagQueryFilter = RoomTagQueryFilter(isFavorite = true, null, null)
-                        }
+                        },
+                        sortOrder = RoomSortOrder.PRIORITY_AND_ACTIVITY
                 )
                 ?.asObservable()
                 ?.subscribe { rooms ->
+                    // Remove dead shortcuts (i.e. deleted rooms)
+                    val roomIds = rooms.map { it.roomId }
+                    val deadShortcutIds = ShortcutManagerCompat.getShortcuts(context, ShortcutManagerCompat.FLAG_MATCH_DYNAMIC)
+                            .map { it.id }
+                            .filter { !roomIds.contains(it) }
+                    ShortcutManagerCompat.removeLongLivedShortcuts(context, deadShortcutIds)
+
                     val shortcuts = rooms
-                            .take(n = 4) // Android only allows us to create 4 shortcuts
+                            .asReversed()
                             .map { shortcutCreator.create(it) }
 
-                    ShortcutManagerCompat.removeAllDynamicShortcuts(context)
-                    ShortcutManagerCompat.addDynamicShortcuts(context, shortcuts)
+                    shortcuts.forEach { shortcut ->
+                        ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
+                    }
                 }
                 ?: Disposables.empty()
     }

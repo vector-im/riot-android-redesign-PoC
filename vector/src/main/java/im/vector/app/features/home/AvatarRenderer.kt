@@ -171,6 +171,7 @@ class AvatarRenderer @Inject constructor(private val activeSessionHolder: Active
                                 .toBitmap(width = iconSize, height = iconSize))
                     }
                 }
+                .apply(RequestOptions.centerCropTransform())
                 .submit(iconSize, iconSize)
                 .get()
     }
