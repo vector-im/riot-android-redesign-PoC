@@ -131,8 +131,14 @@ internal class DefaultFileService @Inject constructor(
                     Timber.v("Response size ${response.body?.contentLength()} - Stream available: ${!source.exhausted()}")
 
                     // Write the file to cache (encrypted version if the file is encrypted)
-                    writeToFile(source.inputStream(), cachedFiles.file)
+                    // Write to a tmp file first, so if we abort before done, we don't have a broken cached file
+                    val tmpFile = File(cachedFiles.file.parentFile, "${cachedFiles.file.name}.tmp")
+                    if (tmpFile.exists()) {
+                        Timber.v("## FileService: discard aborted tmp file ${tmpFile.path}")
+                    }
+                    writeToFile(source.inputStream(), tmpFile)
                     response.close()
+                    tmpFile.renameTo(cachedFiles.file)
                 } else {
                     Timber.v("## FileService: cache hit for $url")
                 }
@@ -145,8 +151,13 @@ internal class DefaultFileService @Inject constructor(
                     Timber.v("## FileService: decrypt file")
                     // Ensure the parent folder exists
                     cachedFiles.decryptedFile.parentFile?.mkdirs()
+                    // Write to a tmp file first, so if we abort before done, we don't have a broken cached file
+                    val tmpFile = File(cachedFiles.decryptedFile.parentFile, "${cachedFiles.decryptedFile.name}.tmp")
+                    if (tmpFile.exists()) {
+                        Timber.v("## FileService: discard aborted tmp file ${tmpFile.path}")
+                    }
                     val decryptSuccess = cachedFiles.file.inputStream().use { inputStream ->
-                        cachedFiles.decryptedFile.outputStream().buffered().use { outputStream ->
+                        tmpFile.outputStream().buffered().use { outputStream ->
                             MXEncryptedAttachments.decryptAttachment(
                                     inputStream,
                                     elementToDecrypt,
@@ -154,6 +165,7 @@ internal class DefaultFileService @Inject constructor(
                             )
                         }
                     }
+                    tmpFile.renameTo(cachedFiles.decryptedFile)
                     if (!decryptSuccess) {
                         throw IllegalStateException("Decryption error")
                     }
